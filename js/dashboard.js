@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			const data = await response.json();
 
 			usernameSpan.textContent = `@${data.username}`;
-			fotoPerfil.src = data.foto_perfil ? `${API_URL}${data.foto_perfil}` : "default-avatar.png";
+			fotoPerfil.src = data.foto_perfil ? `${API}${data.foto_perfil}` : "default-avatar.png";
 
 			renderLinks(data.links);
 		} catch (error) {
