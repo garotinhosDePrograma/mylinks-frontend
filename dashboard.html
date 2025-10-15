@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard - MyLinks</title>
+</head>
+<body>
+	<header>
+		<h2>MyLinks Dashboard</h2>
+		<div id="user-info">
+			<img id="fotoPerfil" src="" alt="Foto de perfil" width="60" height="60" style="border-radius:50%; object-fit:cover;">
+			<span id="username"></span>
+		</div>
+		<nav>
+			<button id="btnUpload">Alterar Foto</button>
+			<button id="btnLogout">Sair</button>
+		</nav>
+	</header>
+
+	<hr>
+
+	<main>
+		<section id="linksSection">
+			<h3>Seus Links</h3>
+			<ul id="linksList">
+		        
+			</ul>
+
+			<h4>Adicionar Novo Link</h4>
+			<form id="formAddLink">
+				<input type="text" id="titulo" placeholder="Título do link" required>
+				<input type="url" id="url" placeholder="URL do link" required>
+				<button type="submit">Adicionar</button>
+			</form>
+		</section>
+	</main>
+
+	<hr>
+
+	<footer>
+		<p>MyLinks © 2025 - Gerencie seus links em um só lugar</p>
+	</footer>
+
+	<script src="js/dashboard.js"></script>
+</body>
+</html>
