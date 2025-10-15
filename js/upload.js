@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("foto", file);
 
         try {
-            const response = await fetch(`${API}/upload`, {
+            const response = await fetch(`${API}/auth/upload`, {
                 method: "POST",
                 headers: {
                     "Authorization": `Bearer ${token}`
