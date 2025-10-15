@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
 			usernameSpan.textContent = `@${data.username}`;
 			fotoPerfil.src = data.foto_perfil ? `${API}${data.foto_perfil}` : "default-avatar.png";
 
-			renderLinks(data.links);
+			carregarLinks();
 		} catch (error) {
 			console.error("Erro ao carregar perfil:", error);
 			alert("Erro ao carregar dados do usuário. Faça login novamente.");
@@ -35,6 +35,23 @@ document.addEventListener("DOMContentLoaded", () => {
 			window.location.href = "index.html";
 		}
 	}
+
+	async function carregarLinks() {
+        try {
+            const response = await fetch(`${API}/links`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+
+            if (!response.ok) throw new Error("Erro ao carregar links");
+
+            const links = await response.json();
+            renderLinks(links);
+        } catch (error) {
+            linksList.style.color = "red";
+            linksList.textContent = "Não foi possível carregar seus links.";
+            console.error(error);
+        }
+    }
 
 	function renderLinks(links) {
 		linksList.innerHTML = "";
