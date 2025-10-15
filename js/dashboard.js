@@ -1,164 +1,163 @@
 const API = "https://pygre.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
-    const user = JSON.parse(localStorage.getItem("user"));
-    const mensagem = document.getElementById("mensagem");
-    const usernameDisplay = document.getElementById("usernameDisplay");
-    const linkForm = document.getElementById("linkForm");
-    const linksList = document.getElementById("linksList");
-    const logoutBtn = document.getElementById("logoutBtn");
-    const linkIdInput = document.getElementById("linkId");
-    const saveBtn = document.getElementById("saveBtn");
+	const usernameSpan = document.getElementById("username");
+	const fotoPerfil = document.getElementById("fotoPerfil");
+	const btnLogout = document.getElementById("btnLogout");
+	const btnUpload = document.getElementById("btnUpload");
+	const linksList = document.getElementById("linksList");
+	const formAddLink = document.getElementById("formAddLink");
+	const tituloInput = document.getElementById("titulo");
+	const urlInput = document.getElementById("url");
 
-    if (!token || !user) {
-        window.location.href = "index.html";
-        return;
-    }
+	const token = localStorage.getItem("token");
+	if (!token) {
+		window.location.href = "index.html";
+		return;
+	}
 
-    usernameDisplay.textContent = `Olá, ${user.username}!`;
+	async function getUserData() {
+		try {
+			const payload = JSON.parse(atob(token.split(".")[1]));
+			const username = payload.username;
 
-    logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
-    });
+			const response = await fetch(`${API}/user/${username}`);
+			const data = await response.json();
 
-    async function carregarLinks() {
-        try {
-            const response = await fetch(`${API}/links`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+			usernameSpan.textContent = `@${data.username}`;
+			fotoPerfil.src = data.foto_perfil ? `${API_URL}${data.foto_perfil}` : "default-avatar.png";
 
-            if (!response.ok) throw new Error("Erro ao carregar links");
+			renderLinks(data.links);
+		} catch (error) {
+			console.error("Erro ao carregar perfil:", error);
+			alert("Erro ao carregar dados do usuário. Faça login novamente.");
+			localStorage.removeItem("token");
+			window.location.href = "index.html";
+		}
+	}
 
-            const links = await response.json();
-            renderLinks(links);
-        } catch (error) {
-            mensagem.style.color = "red";
-            mensagem.textContent = "Não foi possível carregar seus links.";
-            console.error(error);
-        }
-    }
+	function renderLinks(links) {
+		linksList.innerHTML = "";
+		if (!links || links.length === 0) {
+			linksList.innerHTML = "<li>Nenhum link adicionado ainda.</li>";
+			return;
+		}
 
-    function renderLinks(links) {
-        linksList.innerHTML = "";
+		links.forEach(link => {
+			const li = document.createElement("li");
+			li.innerHTML = `
+				<strong>${link.titulo}</strong><br>
+				<a href="${link.url}" target="_blank">${link.url}</a><br>
+				<button class="editar" data-id="${link.id}">Editar</button>
+				<button class="excluir" data-id="${link.id}">Excluir</button>
+			`;
+			linksList.appendChild(li);
+		});
+	}
 
-        if (links.length === 0) {
-            linksList.innerHTML = "<li>Nenhum link adicionado ainda.</li>";
-            return;
-        }
+	formAddLink.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const titulo = tituloInput.value.trim();
+		const url = urlInput.value.trim();
 
-        links
-            .sort((a, b) => a.ordem - b.ordem)
-            .forEach(link => {
-                const li = document.createElement("li");
-                li.style.marginBottom = "10px";
+		if (!titulo || !url) return alert("Preencha todos os campos.");
 
-                const linkText = document.createElement("a");
-                linkText.href = link.url;
-                linkText.target = "_blank";
-                linkText.textContent = `${link.titulo} → ${link.url}`;
-                linkText.style.marginRight = "10px";
+		try {
+			const response = await fetch(`${API}/links`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${token}`
+				},
+				body: JSON.stringify({ titulo, url })
+			});
 
-                const editBtn = document.createElement("button");
-                editBtn.textContent = "Editar";
-                editBtn.addEventListener("click", () => preencherFormulario(link));
+			const data = await response.json();
 
-                const deleteBtn = document.createElement("button");
-                deleteBtn.textContent = "Excluir";
-                deleteBtn.addEventListener("click", () => excluirLink(link.id));
+			if (response.ok) {
+				alert("Link adicionado com sucesso!");
+				formAddLink.reset();
+				getUserData();
+			} else {
+				alert(data.message || "Erro ao adicionar link.");
+			}
+		} catch (error) {
+			console.error(error);
+			alert("Falha na conexão com o servidor.");
+		}
+	});
 
-                li.appendChild(linkText);
-                li.appendChild(editBtn);
-                li.appendChild(deleteBtn);
+	linksList.addEventListener("click", async (e) => {
+		const id = e.target.dataset.id;
+		if (!id) return;
 
-                linksList.appendChild(li);
-            });
-    }
+		if (e.target.classList.contains("excluir")) {
+			if (confirm("Deseja realmente excluir este link?")) {
+				await deleteLink(id);
+			}
+		}
 
-    function preencherFormulario(link) {
-        linkIdInput.value = link.id;
-        document.getElementById("titulo").value = link.titulo;
-        document.getElementById("url").value = link.url;
-        saveBtn.textContent = "Salvar Alterações";
-    }
+		if (e.target.classList.contains("editar")) {
+			const novoTitulo = prompt("Novo título:");
+			const novaUrl = prompt("Nova URL:");
+			if (novoTitulo && novaUrl) {
+				await updateLink(id, novoTitulo, novaUrl);
+			}
+		}
+	});
 
-    function limparFormulario() {
-        linkIdInput.value = "";
-        linkForm.reset();
-        saveBtn.textContent = "Adicionar Link";
-    }
+	async function deleteLink(id) {
+		try {
+			const response = await fetch(`${API}/links/${id}`, {
+				method: "DELETE",
+				headers: {
+					"Authorization": `Bearer ${token}`
+				}
+			});
+			const data = await response.json();
+			if (response.ok) {
+				alert("Link removido com sucesso!");
+				getUserData();
+			} else {
+				alert(data.message || "Erro ao remover link.");
+			}
+		} catch (error) {
+			console.error(error);
+			alert("Erro ao remover link.");
+		}
+	}
 
-    linkForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
+	async function updateLink(id, titulo, url) {
+		try {
+			const response = await fetch(`${API}/links/${id}`, {
+				method: "PUT",
+				headers: {
+					"Content-Type": "application/json",
+					"Authorization": `Bearer ${token}`
+				},
+				body: JSON.stringify({ titulo, url })
+			});
+			const data = await response.json();
+			if (response.ok) {
+				alert("Link atualizado!");
+				getUserData();
+			} else {
+				alert(data.message || "Erro ao atualizar link.");
+			}
+		} catch (error) {
+			console.error(error);
+			alert("Erro ao atualizar link.");
+		}
+	}
 
-        const id = linkIdInput.value;
-        const titulo = document.getElementById("titulo").value.trim();
-        const url = document.getElementById("url").value.trim();
+	btnLogout.addEventListener("click", () => {
+		localStorage.removeItem("token");
+		window.location.href = "index.html";
+	});
 
-        if (!titulo || !url) {
-            mensagem.style.color = "red";
-            mensagem.textContent = "Preencha todos os campos.";
-            return;
-        }
-
-        try {
-            const method = id ? "PUT" : "POST";
-            const endpoint = id ? `${API}/links/${id}` : `${API}/links`;
-
-            const response = await fetch(endpoint, {
-                method,
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({ titulo, url })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                mensagem.style.color = "green";
-                mensagem.textContent = data.message;
-                limparFormulario();
-                carregarLinks();
-            } else {
-                mensagem.style.color = "red";
-                mensagem.textContent = data.message || "Erro ao salvar link.";
-            }
-        } catch (error) {
-            console.error("Erro:", error);
-            mensagem.style.color = "red";
-            mensagem.textContent = "Falha na conexão com o servidor.";
-        }
-    });
-
-    async function excluirLink(id) {
-        if (!confirm("Tem certeza que deseja excluir este link?")) return;
-
-        try {
-            const response = await fetch(`${API}/links/${id}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                mensagem.style.color = "green";
-                mensagem.textContent = data.message;
-                carregarLinks();
-            } else {
-                mensagem.style.color = "red";
-                mensagem.textContent = data.message || "Erro ao excluir link.";
-            }
-        } catch (error) {
-            console.error(error);
-            mensagem.style.color = "red";
-            mensagem.textContent = "Falha ao excluir o link.";
-        }
-    }
-
-    carregarLinks();
+	btnUpload.addEventListener("click", () => {
+		window.location.href = "upload.html";
+	});
+    
+	getUserData();
 });
