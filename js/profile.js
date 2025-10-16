@@ -18,7 +18,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const response = await fetch(`${API_URL}/user/${username}`);
         const data = await response.json();
 
-        if (!response.ok) {
+        if (data.status === 404) {
             mensagem.textContent = data.message || "Usuário não encontrado.";
             return;
         }
