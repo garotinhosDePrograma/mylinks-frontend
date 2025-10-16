@@ -10,9 +10,9 @@ body {
 
 body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
     min-height: 100vh;
-    color: #333;
+    color: #e0e6ed;
     line-height: 1.6;
 }
 
@@ -22,10 +22,10 @@ h2 {
     left: 50%;
     transform: translateX(-50%);
     color: white;
-    font-size: 1.5rem;
-    font-weight: 700;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    letter-spacing: 0.5px;
+    font-size: 2.5rem;
+    font-weight: 800;
+    text-shadow: 0 4px 8px rgba(0,0,0,0.4);
+    letter-spacing: 1px;
 }
 
 main {
@@ -44,8 +44,8 @@ main {
 }
 
 #fotoPerfil {
-    width: 120px;
-    height: 120px;
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     object-fit: cover;
     border: 4px solid white;
@@ -81,24 +81,25 @@ main {
 }
 
 #linksList li {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(30, 41, 59, 0.8);
     backdrop-filter: blur(10px);
     border-radius: 15px;
     padding: 18px 24px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     transition: all 0.3s ease;
-    border: 1px solid rgba(255,255,255,0.2);
+    border: 1px solid rgba(100, 116, 139, 0.3);
 }
 
 #linksList li:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 30px rgba(0,0,0,0.15);
-    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+    background: rgba(51, 65, 85, 0.9);
+    border: 1px solid rgba(147, 197, 253, 0.5);
 }
 
 #linksList li a {
     text-decoration: none;
-    color: #333;
+    color: #e2e8f0;
     font-weight: 500;
     font-size: 1.1rem;
     display: block;
@@ -107,7 +108,7 @@ main {
 }
 
 #linksList li:hover a {
-    color: #667eea;
+    color: #93c5fd;
 }
 
 #mensagem {
@@ -121,9 +122,10 @@ main {
 }
 
 #mensagem:not(:empty) {
-    background: rgba(255, 255, 255, 0.9);
-    color: #e74c3c;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    background: rgba(30, 41, 59, 0.9);
+    color: #f87171;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    border: 1px solid rgba(248, 113, 113, 0.3);
 }
 
 @keyframes fadeInUp {
@@ -157,8 +159,8 @@ main {
     }
 
     #fotoPerfil {
-        width: 100px;
-        height: 100px;
+        width: 140px;
+        height: 140px;
     }
 
     #username {
