@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyLinks - Enviar Foto</title>
+</head>
+<body>
+    <main style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh;">
+
+        <h2>Atualizar Foto de Perfil</h2>
+
+        <div style="margin-top: 20px; text-align: center;">
+            <img id="preview" src="https://via.placeholder.com/150?text=Prévia" 
+                 alt="Prévia da foto" width="150" height="150" 
+                 style="border-radius: 50%; object-fit: cover; border: 2px solid #ccc;">
+        </div>
+
+        <form id="uploadForm" style="margin-top: 20px; display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <input type="file" id="fotoInput" accept="image/*" required>
+            <button type="submit">Enviar Foto</button>
+        </form>
+
+        <div id="mensagem" style="margin-top: 15px;"></div>
+
+        <button id="voltarBtn" style="margin-top: 25px;">Voltar</button>
+    </main>
+
+    <script src="js/upload.js"></script>
+</body>
+</html>

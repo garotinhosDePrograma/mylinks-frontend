@@ -5,11 +5,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const mensagem = document.getElementById("mensagem");
     const usernameDisplay = document.getElementById("usernameDisplay");
+    const fotoPerfil = document.getElementById("fotoPerfil");
     const linkForm = document.getElementById("linkForm");
     const linksList = document.getElementById("linksList");
     const logoutBtn = document.getElementById("logoutBtn");
     const linkIdInput = document.getElementById("linkId");
     const saveBtn = document.getElementById("saveBtn");
+    const btnUpload = document.getElementById("btnUpload");
 
     if (!token || !user) {
         window.location.href = "index.html";
@@ -24,6 +26,28 @@ document.addEventListener("DOMContentLoaded", () => {
         window.location.href = "index.html";
     });
 
+    btnUpload.addEventListener("click", () => {
+        window.location.href = "upload.html";
+    });
+
+    async function carregarFotoPerfil() {
+        try {
+            const response = await fetch(`${API_URL}/user/${user.username}`);
+            if (!response.ok) throw new Error("Erro ao carregar perfil");
+
+            const data = await response.json();
+
+            if (data.foto_perfil) {
+                fotoPerfil.src = `${API_URL}/${data.foto_perfil}`;
+            } else {
+                fotoPerfil.src = "assets/default-avatar.png";
+            }
+        } catch (err) {
+            console.error("Erro ao carregar foto:", err);
+            fotoPerfil.src = "assets/default-avatar.png";
+        }
+    }
+
     async function carregarLinks() {
         try {
             const response = await fetch(`${API_URL}/links`, {
@@ -33,6 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!response.ok) throw new Error("Erro ao carregar links");
 
             const links = await response.json();
+            console.log(links);
             renderLinks(links);
         } catch (error) {
             mensagem.style.color = "red";
@@ -44,38 +69,45 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderLinks(links) {
         linksList.innerHTML = "";
 
-        if (links.length === 0) {
+        if (!Array.isArray(links) || links.length === 0) {
             linksList.innerHTML = "<li>Nenhum link adicionado ainda.</li>";
             return;
         }
 
-        links
-            .sort((a, b) => a.ordem - b.ordem)
-            .forEach(link => {
-                const li = document.createElement("li");
-                li.style.marginBottom = "10px";
+        links.sort((a, b) => (a[4] || 0) - (b[4] || 0));
 
-                const linkText = document.createElement("a");
-                linkText.href = link.url;
-                linkText.target = "_blank";
-                linkText.textContent = `${link.titulo} → ${link.url}`;
-                linkText.style.marginRight = "10px";
+        links.forEach(link => {
+            const id = link[0];
+            const titulo = link[2];
+            const url = link[3];
 
-                const editBtn = document.createElement("button");
-                editBtn.textContent = "Editar";
-                editBtn.addEventListener("click", () => preencherFormulario(link));
+            const li = document.createElement("li");
+            li.style.marginBottom = "10px";
 
-                const deleteBtn = document.createElement("button");
-                deleteBtn.textContent = "Excluir";
-                deleteBtn.addEventListener("click", () => excluirLink(link.id));
+            const linkText = document.createElement("a");
+            linkText.href = url.startsWith("http") ? url : `https://${url}`;
+            linkText.target = "_blank";
+            linkText.textContent = `${titulo} → ${url}`;
+            linkText.style.marginRight = "10px";
 
-                li.appendChild(linkText);
-                li.appendChild(editBtn);
-                li.appendChild(deleteBtn);
+            const editBtn = document.createElement("button");
+            editBtn.textContent = "Editar";
+            editBtn.addEventListener("click", () =>
+                preencherFormulario({ id, titulo, url })
+            );
 
-                linksList.appendChild(li);
-            });
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "Excluir";
+            deleteBtn.addEventListener("click", () => excluirLink(id));
+
+            li.appendChild(linkText);
+            li.appendChild(editBtn);
+            li.appendChild(deleteBtn);
+
+            linksList.appendChild(li);
+        });
     }
+
 
     function preencherFormulario(link) {
         linkIdInput.value = link.id;
@@ -160,5 +192,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    carregarFotoPerfil();
     carregarLinks();
 });
