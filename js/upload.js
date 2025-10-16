@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (response.ok) {
                 mensagem.style.color = "green";
                 mensagem.textContent = "Foto enviada com sucesso!";
-                preview.src = `${API_URL}/${data.file_path}`;
+                preview.src = `${data.foto_perfil}`;
             } else {
                 mensagem.style.color = "red";
                 mensagem.textContent = data.message || "Erro ao enviar foto.";
