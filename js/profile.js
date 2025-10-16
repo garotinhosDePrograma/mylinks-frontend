@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (data.foto_perfil) {
             fotoPerfil.src = `${data.foto_perfil}`;
         } else {
-            fotoPerfil.src = "https://via.placeholder.com/120?text=Sem+Foto";
+            fotoPerfil.src = "assets/default-avatar.png";
         }
 
         if (data.links && data.links.length > 0) {
