@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     try {
-        const response = await fetch(`${API_URL}/user/${user.username}`);
+        const response = await fetch(`${API_URL}/user/${username}`);
         const data = await response.json();
 
         if (!response.ok) {
