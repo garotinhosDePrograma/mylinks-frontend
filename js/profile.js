@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         usernameEl.textContent = data.username;
 
         if (data.foto_perfil) {
-            fotoPerfil.src = `${API_URL}${data.foto_perfil}`;
+            fotoPerfil.src = `${data.foto_perfil}`;
         } else {
             fotoPerfil.src = "https://via.placeholder.com/120?text=Sem+Foto";
         }
