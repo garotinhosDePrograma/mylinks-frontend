@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await response.json();
 
             if (data.foto_perfil) {
-                fotoPerfil.src = `${API_URL}/${data.foto_perfil}`;
+                fotoPerfil.src = `${data.foto_perfil}`;
             } else {
                 fotoPerfil.src = "assets/default-avatar.png";
             }
