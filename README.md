@@ -14,16 +14,17 @@ Estrutura de arquivos principal:
 
 ```
 
-
+mylinks-frontend/
+│
 ├── assets/
-        default-avatar.png
+│     └── default-avatar.png
 ├── css/
-        profile.css
+│     └── profile.css
 ├── js/
-        profile.js
-        dashboard.js
-        auth.js
-        upload.js
+│     ├── profile.js
+│     ├── dashboard.js
+│     ├── auth.js
+│     └── upload.js
 ├── dashboard.html
 ├── index.html
 ├── profile.html
