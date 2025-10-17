@@ -14,10 +14,16 @@ Estrutura de arquivos principal:
 
 ```
 
-/
+
 ├── assets/
-│   ├── css/
-│   └── js/
+        default-avatar.png
+├── css/
+        profile.css
+├── js/
+        profile.js
+        dashboard.js
+        auth.js
+        upload.js
 ├── dashboard.html
 ├── index.html
 ├── profile.html
