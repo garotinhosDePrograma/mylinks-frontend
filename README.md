@@ -1,7 +1,4 @@
 # mylinks-frontend
 
-# GUIA
-
----
 TESTE
 ---
