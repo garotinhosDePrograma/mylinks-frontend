@@ -32,7 +32,8 @@ Estrutura de arquivos principal:
 
 ````
 
-- `assets/css/` — folhas de estilo  
+- `assets/` — foto de perfil padrão
+- `css/` — folhas de estilo  
 - `assets/js/` — scripts JavaScript  
 - Páginas principais da aplicação: dashboard, perfil, cadastro, upload, etc.
 
