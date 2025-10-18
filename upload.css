@@ -1,0 +1,152 @@
+/* ======= RESET ======= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", system-ui, sans-serif;
+}
+
+/* ======= BODY ======= */
+body {
+  background: linear-gradient(135deg, #0d1117, #1a1f25);
+  color: #f1f5f9;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* ======= CONTEÚDO PRINCIPAL ======= */
+main {
+  background: rgba(24, 26, 32, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 40px 30px;
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+
+/* ======= TÍTULO ======= */
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f8fafc;
+  margin-bottom: 20px;
+}
+
+/* ======= PRÉVIA DA FOTO ======= */
+#preview {
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #22c55e;
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+  width: 150px;
+  height: 150px;
+  transition: all 0.3s ease;
+}
+
+#preview:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+}
+
+/* ======= FORMULÁRIO ======= */
+form {
+  margin-top: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+}
+
+input[type="file"] {
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 10px;
+  color: #e2e8f0;
+  width: 100%;
+  cursor: pointer;
+  transition: border 0.3s ease, background 0.3s ease;
+}
+
+input[type="file"]:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #22c55e;
+}
+
+/* ======= BOTÕES ======= */
+button {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #0f1115;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+  box-shadow: 0 3px 8px rgba(34, 197, 94, 0.25);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45);
+}
+
+/* ======= BOTÃO VOLTAR ======= */
+#voltarBtn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #f8fafc;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  margin-top: 20px;
+  transition: all 0.3s ease;
+}
+
+#voltarBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  border-color: #22c55e;
+  color: #22c55e;
+}
+
+/* ======= MENSAGEM ======= */
+#mensagem {
+  margin-top: 15px;
+  font-size: 0.95rem;
+  color: #22c55e;
+  font-weight: 500;
+  min-height: 22px;
+}
+
+/* ======= SCROLLBAR ======= */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* ======= RESPONSIVO ======= */
+@media (max-width: 500px) {
+  main {
+    padding: 30px 20px;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  #preview {
+    width: 120px;
+    height: 120px;
+  }
+}

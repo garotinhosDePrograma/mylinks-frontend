@@ -1,0 +1,91 @@
+:root{
+  --bg:#0f1724;
+  --card:#0b1220;
+  --accent:#06b6d4;
+  --muted:#94a3b8;
+  --text:#e6eef6;
+  --radius:12px;
+  --shadow: 0 6px 18px rgba(2,6,23,0.6);
+  --gap:14px;
+  --maxw:420px;
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background: linear-gradient(180deg, #071024 0%, #0d1a2b 100%);
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+
+main{
+  width:100%;
+  max-width:var(--maxw);
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:var(--radius);
+  padding:28px;
+  box-shadow:var(--shadow);
+  text-align:center;
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+h1{margin:0 0 6px;font-size:28px;letter-spacing:0.2px}
+h2{margin:0 0 18px;font-weight:500;color:var(--muted);font-size:14px}
+
+form{
+  display:flex;
+  flex-direction:column;
+  gap:var(--gap);
+  margin:8px 0 12px;
+}
+
+label{font-size:13px;color:var(--muted);text-align:left}
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="url"]{
+  width:100%;
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.02);
+  color:var(--text);
+  outline:none;
+  transition:box-shadow .15s, border-color .15s;
+  font-size:14px;
+}
+
+input:focus{
+  box-shadow:0 6px 18px rgba(6,182,212,0.08);
+  border-color:rgba(6,182,212,0.6);
+}
+
+button{
+  padding:12px 14px;
+  border-radius:10px;
+  border:0;
+  background:linear-gradient(90deg,var(--accent), #0ea5b3);
+  color:#042028;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow: 0 8px 20px rgba(6,182,212,0.12);
+  transition:transform .12s ease;
+}
+
+button:hover{transform:translateY(-2px)}
+p{font-size:13px;color:var(--muted);margin-top:10px}
+
+a{color:var(--accent);text-decoration:none;font-weight:600}
+a:hover{text-decoration:underline}
+
+#mensagem{
+  margin-top:12px;
+  min-height:20px;
+  font-size:13px;
+}

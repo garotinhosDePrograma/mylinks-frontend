@@ -1,0 +1,60 @@
+:root{
+  --bg:#0b1220;
+  --card:#081023;
+  --muted:#9aa6b2;
+  --accent:#7dd3fc;
+  --text:#e6eef6;
+  --radius:14px;
+  --maxw:720px;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  background:linear-gradient(180deg,#061024 0%, #081425 100%);
+  color:var(--text);
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:32px;
+}
+
+main{
+  width:100%;
+  max-width:var(--maxw);
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-radius:var(--radius);
+  padding:26px;
+  box-shadow: 0 12px 32px rgba(2,6,23,0.6);
+  border:1px solid rgba(255,255,255,0.03);
+}
+
+#perfil{display:flex;flex-direction:column;align-items:center;gap:12px}
+#perfil img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.06)}
+#perfil h1{margin:0;font-size:22px;letter-spacing:0.2px}
+
+#linksSection{margin-top:18px}
+#linksList{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;align-items:center}
+
+#linksList li{width:100%;max-width:420px}
+#linksList a{
+  display:block;
+  padding:12px 14px;
+  border-radius:12px;
+  text-decoration:none;
+  font-weight:600;
+  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border:1px solid rgba(255,255,255,0.03);
+  text-align:center;
+  color:var(--text);
+  transition:transform .12s, box-shadow .12s;
+}
+
+#linksList a:hover{
+  transform:translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+}
+
+#mensagem{margin-top:12px;color:#fecaca;font-size:14px;text-align:center}
