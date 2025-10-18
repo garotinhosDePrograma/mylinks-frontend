@@ -1,48 +1,44 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MyLinks - Dashboard</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Dashboard - MyLinks</title>
 	<link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-        <h1>MyLinks</h1>
-        <div>
-            <div id="user-info">
+	<header>
+		<h2>MyLinks Dashboard</h2>
+		<div id="user-info">
 			<img id="fotoPerfil" src="" alt="Foto de perfil" width="60" height="60" style="border-radius:50%; object-fit:cover;">
+			<span id="username"></span>
 		</div>
-            <span id="usernameDisplay"></span>
-            <button id="btnUpload">Alterar Foto</button>
-            <button id="logoutBtn">Sair</button>
-        </div>
-    </header>
+		<nav>
+			<button id="btnUpload">Alterar Foto</button>
+			<button id="btnLogout">Sair</button>
+		</nav>
+	</header>
+	
+	<main>
+		<section id="linksSection">
+		        
+			</ul>
 
-    <main style="max-width: 600px; margin: 0 auto; padding: 20px;">
-        <h2>Seus Links</h2>
+			<h4>Adicionar Novo Link</h4>
+			<form id="formAddLink">
+				<input type="text" id="titulo" placeholder="Título do link" required>
+				<input type="url" id="url" placeholder="URL do link" required>
+				<button type="submit">Adicionar</button>
+			</form>
+		</section>
+	</main>
 
-        <section id="formSection" style="margin-bottom: 20px;">
-            <form id="linkForm" style="display: flex; flex-direction: column; gap: 10px;">
-                <input type="hidden" id="linkId">
+	<hr>
 
-                <label for="titulo">Título</label>
-                <input type="text" id="titulo" placeholder="Ex: Meu GitHub" required>
+	<footer>
+		<p>MyLinks © 2025 - Gerencie seus links em um só lugar</p>
+	</footer>
 
-                <label for="url">URL</label>
-                <input type="url" id="url" placeholder="https://..." required>
-
-                <button type="submit" id="saveBtn">Adicionar Link</button>
-            </form>
-        </section>
-
-        <section id="linksSection">
-            <ul id="linksList" style="list-style: none; padding: 0;"></ul>
-        </section>
-
-        <div id="mensagem" style="margin-top: 15px; color: red;"></div>
-    </main>
-
-    <script src="js/dashboard.js"></script>
+	<script src="/js/dashboard.js"></script>
 </body>
 </html>
