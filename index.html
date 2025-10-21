@@ -53,24 +53,7 @@
         window.addEventListener("beforeinstallprompt", (e) => {
             e.preventDefault();
             deferredPrompt = e;
-
-            const querInstalar = confirm("📲 Deseja instalar o aplicativo MyLinks?");
-
-            if (querInstalar) {
-                deferredPrompt.prompt();
-            
-                deferredPrompt.userChoice.then(({ outcome }) => {
-                    if (outcome === "accepted") {
-                        alert("✅ MyLinks foi instalado com sucesso!");
-                        console.log("Usuário aceitou instalar MyLinks!");
-                    } else {
-                        console.log("Usuário cancelou a instalação.");
-                    }
-                    deferredPrompt = null;
-                });
-            } else {
-                console.log("Usuário fechou o alerta sem instalar.");
-            }
+            alert("📲 Dica: você pode instalar o MyLinks pelo menu ⋮ → 'Adicionar à tela inicial'.");
         });
     </script>
 </body>
