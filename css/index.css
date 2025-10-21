@@ -23,7 +23,7 @@ main {
 h1 {
     font-size: 3rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #0950bb 0%, #114575 100%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -81,7 +81,7 @@ input:focus {
 
 button {
     padding: 12px 20px;
-    background: #0950bb 100%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 8px;
@@ -141,5 +141,48 @@ a:hover {
     #loginForm {
         width: 100%;
         max-width: 300px;
+    }
+}
+
+/* Install Button PWA */
+#installBtn,
+button[style*="fixed"] {
+    position: fixed !important;
+    bottom: 20px !important;
+    right: 20px !important;
+    padding: 12px 24px !important;
+    border-radius: 12px !important;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+    color: #fff !important;
+    border: none !important;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+    cursor: pointer !important;
+    z-index: 9999 !important;
+    font-size: 0.95rem !important;
+    font-weight: 600 !important;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+    transition: all 0.3s ease !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+#installBtn:hover,
+button[style*="fixed"]:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
+}
+
+#installBtn:active,
+button[style*="fixed"]:active {
+    transform: translateY(-1px) !important;
+}
+
+@media (max-width: 768px) {
+    #installBtn,
+    button[style*="fixed"] {
+        bottom: 15px !important;
+        right: 15px !important;
+        padding: 10px 20px !important;
+        font-size: 0.9rem !important;
     }
 }
