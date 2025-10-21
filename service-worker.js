@@ -1,5 +1,5 @@
 // Nome do cache (você pode mudar a versão quando atualizar o site)
-const CACHE_NAME = "mylinks-cache-v1.06";
+const CACHE_NAME = "mylinks-cache-v1.07";
 
 // Lista de arquivos que serão armazenados no cache
 const urlsToCache = [
@@ -39,10 +39,23 @@ self.addEventListener("activate", (event) => {
 
 // Intercepta requisições e responde com cache (quando offline)
 self.addEventListener("fetch", (event) => {
+  const requestUrl = new URL(event.request.url);
+
+  // ⚠️ Ignora requisições da API ou rotas privadas
+  if (requestUrl.pathname.startsWith("/auth/") || requestUrl.pathname.startsWith("/api/")) {
+    // Não intercepta — deixa seguir direto pra rede
+    return;
+  }
+
+  // ⚙️ Responde com cache se disponível, senão busca na rede
   event.respondWith(
     caches.match(event.request).then((response) => {
-      // Retorna do cache se disponível, senão busca na rede
-      return response || fetch(event.request);
+      if (response) {
+        console.log("Service Worker: Recurso do cache →", requestUrl.pathname);
+        return response;
+      }
+      console.log("Service Worker: Recurso da rede →", requestUrl.pathname);
+      return fetch(event.request);
     })
   );
 });
