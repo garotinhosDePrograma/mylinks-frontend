@@ -1,6 +1,7 @@
 const API_URL = "https://pygre.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
+    const token = 
     const uploadForm = document.getElementById("uploadForm");
     const fotoInput = document.getElementById("fotoInput");
     const preview = document.getElementById("preview");
