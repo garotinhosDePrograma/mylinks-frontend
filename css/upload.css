@@ -1,152 +1,259 @@
-/* ======= RESET ======= */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ======= BODY ======= */
 body {
-  background: linear-gradient(135deg, #0d1117, #1a1f25);
-  color: #f1f5f9;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
 }
 
-/* ======= CONTEÚDO PRINCIPAL ======= */
+/* Main Container */
 main {
-  background: rgba(24, 26, 32, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 40px 30px;
-  width: 100%;
-  max-width: 420px;
-  text-align: center;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
 }
 
-/* ======= TÍTULO ======= */
 h2 {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: #f8fafc;
-  margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: 600;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -0.5px;
+    margin-bottom: 20px;
+    text-align: center;
 }
 
-/* ======= PRÉVIA DA FOTO ======= */
+/* Preview Container */
+main > div {
+    margin-top: 30px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
 #preview {
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #22c55e;
-  box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
-  width: 150px;
-  height: 150px;
-  transition: all 0.3s ease;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(102, 126, 234, 0.5);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+    transition: all 0.4s ease;
 }
 
 #preview:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 20px rgba(34, 197, 94, 0.6);
+    transform: scale(1.05);
+    border-color: #667eea;
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
 }
 
-/* ======= FORMULÁRIO ======= */
-form {
-  margin-top: 25px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 14px;
+/* Upload Form */
+#uploadForm {
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    padding: 30px 40px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    min-width: 350px;
 }
 
-input[type="file"] {
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  color: #e2e8f0;
-  width: 100%;
-  cursor: pointer;
-  transition: border 0.3s ease, background 0.3s ease;
+/* File Input Styling */
+#fotoInput {
+    padding: 12px 20px;
+    border: 2px dashed rgba(102, 126, 234, 0.5);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    color: #e0e0e0;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    text-align: center;
 }
 
-input[type="file"]:hover {
-  background: rgba(255, 255, 255, 0.1);
-  border-color: #22c55e;
+#fotoInput:hover {
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
 }
 
-/* ======= BOTÕES ======= */
-button {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: #0f1115;
-  border: none;
-  padding: 12px 22px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  width: 100%;
-  box-shadow: 0 3px 8px rgba(34, 197, 94, 0.25);
+#fotoInput:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
-button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45);
+#fotoInput::file-selector-button {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: all 0.3s ease;
 }
 
-/* ======= BOTÃO VOLTAR ======= */
+#fotoInput::file-selector-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Submit Button */
+#uploadForm button[type="submit"] {
+    width: 100%;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+#uploadForm button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+#uploadForm button[type="submit"]:active {
+    transform: translateY(0);
+}
+
+#uploadForm button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Messages */
+#mensagem {
+    margin-top: 20px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    text-align: center;
+    font-weight: 500;
+    min-width: 300px;
+    transition: all 0.3s ease;
+}
+
+#mensagem:not(:empty) {
+    animation: fadeInMessage 0.3s ease;
+}
+
+@keyframes fadeInMessage {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Voltar Button */
 #voltarBtn {
-  background: rgba(255, 255, 255, 0.08);
-  color: #f8fafc;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  margin-top: 20px;
-  transition: all 0.3s ease;
+    margin-top: 30px;
+    padding: 10px 30px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #c0c0c0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
 #voltarBtn:hover {
-  background: rgba(255, 255, 255, 0.15);
-  border-color: #22c55e;
-  color: #22c55e;
+    background: rgba(255, 255, 255, 0.08);
+    color: #e0e0e0;
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
 }
 
-/* ======= MENSAGEM ======= */
-#mensagem {
-  margin-top: 15px;
-  font-size: 0.95rem;
-  color: #22c55e;
-  font-weight: 500;
-  min-height: 22px;
+#voltarBtn:active {
+    transform: translateY(0);
 }
 
-/* ======= SCROLLBAR ======= */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
+/* Responsividade */
+@media (max-width: 768px) {
+    h2 {
+        font-size: 1.6rem;
+    }
+
+    #uploadForm {
+        min-width: auto;
+        width: 90%;
+        max-width: 400px;
+        padding: 25px 30px;
+    }
+
+    #preview {
+        width: 130px;
+        height: 130px;
+    }
+
+    #mensagem {
+        min-width: auto;
+        width: 90%;
+        max-width: 400px;
+    }
 }
 
-/* ======= RESPONSIVO ======= */
-@media (max-width: 500px) {
-  main {
-    padding: 30px 20px;
-  }
+@media (max-width: 480px) {
+    main {
+        padding: 30px 15px;
+    }
 
-  h2 {
-    font-size: 1.3rem;
-  }
+    h2 {
+        font-size: 1.4rem;
+    }
 
-  #preview {
-    width: 120px;
-    height: 120px;
-  }
+    #uploadForm {
+        padding: 20px 25px;
+        width: 95%;
+    }
+
+    #preview {
+        width: 120px;
+        height: 120px;
+    }
+
+    #fotoInput {
+        font-size: 0.85rem;
+        padding: 10px 15px;
+    }
+
+    #fotoInput::file-selector-button {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        margin-right: 10px;
+    }
 }

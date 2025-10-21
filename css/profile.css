@@ -1,60 +1,251 @@
-:root{
-  --bg:#0b1220;
-  --card:#081023;
-  --muted:#9aa6b2;
-  --accent:#7dd3fc;
-  --text:#e6eef6;
-  --radius:14px;
-  --maxw:720px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
-  background:linear-gradient(180deg,#061024 0%, #081425 100%);
-  color:var(--text);
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:32px;
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
 }
 
-main{
-  width:100%;
-  max-width:var(--maxw);
-  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border-radius:var(--radius);
-  padding:26px;
-  box-shadow: 0 12px 32px rgba(2,6,23,0.6);
-  border:1px solid rgba(255,255,255,0.03);
+/* Main Container */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 40px 20px;
 }
 
-#perfil{display:flex;flex-direction:column;align-items:center;gap:12px}
-#perfil img{width:120px;height:120px;border-radius:50%;object-fit:cover;border:3px solid rgba(255,255,255,0.06)}
-#perfil h1{margin:0;font-size:22px;letter-spacing:0.2px}
-
-#linksSection{margin-top:18px}
-#linksList{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:12px;align-items:center}
-
-#linksList li{width:100%;max-width:420px}
-#linksList a{
-  display:block;
-  padding:12px 14px;
-  border-radius:12px;
-  text-decoration:none;
-  font-weight:600;
-  background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
-  border:1px solid rgba(255,255,255,0.03);
-  text-align:center;
-  color:var(--text);
-  transition:transform .12s, box-shadow .12s;
+/* Perfil Section */
+#perfil {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 40px;
+    animation: fadeInUp 0.6s ease;
 }
 
-#linksList a:hover{
-  transform:translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-#mensagem{margin-top:12px;color:#fecaca;font-size:14px;text-align:center}
+#fotoPerfil {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid rgba(102, 126, 234, 0.5);
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.4);
+    transition: all 0.4s ease;
+}
+
+#fotoPerfil:hover {
+    transform: scale(1.05);
+    border-color: #667eea;
+    box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
+}
+
+#perfil h1 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    letter-spacing: -1px;
+    text-align: center;
+}
+
+/* Links Section */
+#linksSection {
+    margin-top: 20px;
+    width: 80%;
+    max-width: 500px;
+    animation: fadeIn 0.8s ease 0.2s backwards;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#linksList {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+#linksList li {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 0;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    animation: slideIn 0.5s ease backwards;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+#linksList li:nth-child(1) { animation-delay: 0.1s; }
+#linksList li:nth-child(2) { animation-delay: 0.2s; }
+#linksList li:nth-child(3) { animation-delay: 0.3s; }
+#linksList li:nth-child(4) { animation-delay: 0.4s; }
+#linksList li:nth-child(5) { animation-delay: 0.5s; }
+#linksList li:nth-child(n+6) { animation-delay: 0.6s; }
+
+#linksList li:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+#linksList li a {
+    display: block;
+    padding: 20px 25px;
+    color: #e0e0e0;
+    text-decoration: none;
+    font-size: 1.1rem;
+    font-weight: 500;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+#linksList li a::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+#linksList li:hover a::before {
+    transform: scaleY(1);
+}
+
+#linksList li a:hover {
+    color: #667eea;
+    padding-left: 35px;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #a0a0a0;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+}
+
+/* Messages */
+#mensagem {
+    margin-top: 30px;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    text-align: center;
+    font-weight: 500;
+    max-width: 500px;
+    transition: all 0.3s ease;
+}
+
+#mensagem:not(:empty) {
+    animation: fadeInMessage 0.3s ease;
+}
+
+@keyframes fadeInMessage {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    #perfil h1 {
+        font-size: 2rem;
+    }
+
+    #fotoPerfil {
+        width: 100px;
+        height: 100px;
+    }
+
+    #linksSection {
+        width: 90%;
+        max-width: 100%;
+    }
+
+    #linksList li a {
+        font-size: 1rem;
+        padding: 18px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    main {
+        padding: 30px 15px;
+    }
+
+    #perfil h1 {
+        font-size: 1.8rem;
+    }
+
+    #fotoPerfil {
+        width: 90px;
+        height: 90px;
+    }
+
+    #linksSection {
+        width: 95%;
+    }
+
+    #linksList li a {
+        font-size: 0.95rem;
+        padding: 16px 18px;
+    }
+}

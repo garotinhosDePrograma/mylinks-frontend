@@ -1,156 +1,145 @@
-/* ======= RESET ======= */
 * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Inter", system-ui, sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
-/* ======= BODY ======= */
 body {
-  background: linear-gradient(135deg, #0d1117, #1a1f25);
-  color: #f1f5f9;
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    color: #e0e0e0;
+    min-height: 100vh;
 }
 
-/* ======= CONTAINER PRINCIPAL ======= */
 main {
-  background: rgba(24, 26, 32, 0.85);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 20px;
-  padding: 40px 35px;
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    padding: 20px;
 }
 
-/* ======= TÍTULOS ======= */
 h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #22c55e;
-  margin-bottom: 10px;
-  letter-spacing: 1px;
+    font-size: 3rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, #0950bb 0%, #114575 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
 }
 
 h2 {
-  font-size: 1.2rem;
-  font-weight: 500;
-  color: #e2e8f0;
-  margin-bottom: 25px;
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: #b0b0b0;
+    margin-bottom: 30px;
 }
 
-/* ======= FORMULÁRIO ======= */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  text-align: left;
+#registerForm {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 250px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 label {
-  font-size: 0.9rem;
-  color: #cbd5e1;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #c0c0c0;
+    margin-bottom: -5px;
 }
 
 input {
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 10px;
-  color: #f8fafc;
-  font-size: 0.95rem;
-  transition: all 0.3s ease;
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+    color: #e0e0e0;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
 }
 
 input::placeholder {
-  color: rgba(255, 255, 255, 0.5);
+    color: #666;
 }
 
 input:focus {
-  border-color: #22c55e;
-  background: rgba(34, 197, 94, 0.08);
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.3);
-  outline: none;
+    border-color: #667eea;
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-/* ======= BOTÃO CADASTRAR ======= */
 button {
-  background: linear-gradient(135deg, #22c55e, #16a34a);
-  color: #0f1115;
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  padding: 12px;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 3px 8px rgba(34, 197, 94, 0.25);
-  margin-top: 10px;
+    padding: 12px 20px;
+    background: #0950bb;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
 button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.45);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-/* ======= LINK DE LOGIN ======= */
+button:active {
+    transform: translateY(0);
+}
+
 p {
-  margin-top: 15px;
-  font-size: 0.95rem;
-  color: #e2e8f0;
+    margin-top: 20px;
+    color: #a0a0a0;
+    font-size: 0.95rem;
 }
 
 a {
-  color: #22c55e;
-  text-decoration: none;
-  font-weight: 500;
-  transition: color 0.3s ease;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
 }
 
 a:hover {
-  color: #4ade80;
-  text-decoration: underline;
+    color: #764ba2;
+    text-decoration: underline;
 }
 
-/* ======= MENSAGEM DE ERRO / SUCESSO ======= */
 #mensagem {
-  margin-top: 15px;
-  font-size: 0.95rem;
-  min-height: 20px;
-  text-align: center;
-  transition: color 0.3s ease;
+    margin-top: 15px;
+    color: #ff6b6b;
+    font-size: 0.9rem;
+    text-align: center;
+    min-height: 20px;
 }
 
-/* ======= SCROLLBAR ======= */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.25);
-}
-
-/* ======= RESPONSIVO ======= */
+/* Responsividade */
 @media (max-width: 480px) {
-  main {
-    padding: 30px 20px;
-  }
+    h1 {
+        font-size: 2.5rem;
+    }
 
-  h1 {
-    font-size: 1.7rem;
-  }
+    h2 {
+        font-size: 1.2rem;
+    }
 
-  h2 {
-    font-size: 1rem;
-  }
+    #registerForm {
+        width: 100%;
+        max-width: 300px;
+    }
 }
-
