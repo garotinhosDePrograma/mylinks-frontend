@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    mensagem.textContent = "Escolha uma imagem para fazer o upload.";
+
     fotoInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -26,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        mensagem.textContent = "Escolha uma imagem para fazer o upload.";
+        mensagem.textContent = "";
 
         if (!token) {
             mensagem.style.color = "red";
