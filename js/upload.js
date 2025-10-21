@@ -1,12 +1,16 @@
 const API_URL = "https://pygre.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const token = 
+    const token = localStorage.getItem("token");
     const uploadForm = document.getElementById("uploadForm");
     const fotoInput = document.getElementById("fotoInput");
     const preview = document.getElementById("preview");
     const mensagem = document.getElementById("mensagem");
     const voltarBtn = document.getElementById("voltarBtn");
+
+    if (!token) {
+        window.location.href = "index.html";
+    }
 
     fotoInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
