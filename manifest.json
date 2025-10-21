@@ -2,7 +2,7 @@
   "name": "MyLinks",
   "short_name": "MyLinks",
   "description": "Organize e compartilhe todos os seus links em um só lugar.",
-  "start_url": "/index.html",
+  "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
