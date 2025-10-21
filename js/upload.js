@@ -26,9 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        mensagem.textContent = "";
+        mensagem.textContent = "Escolha uma imagem para fazer o upload.";
 
-        const token = localStorage.getItem("token");
         if (!token) {
             mensagem.style.color = "red";
             mensagem.textContent = "Você precisa estar logado para enviar uma foto.";
