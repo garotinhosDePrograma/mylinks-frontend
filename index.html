@@ -54,23 +54,23 @@
             e.preventDefault();
             deferredPrompt = e;
 
-            const installBtn = document.createElement("button");
-            installBtn.textContent = "Instalar MyLinks";
+            const installBtn = confirm("Deseja instalar o aplicativo MyLinks?");
 
-            document.body.appendChild(installBtn);
-
-            installBtn.addEventListener("click", async () => {
-                installBtn.style.display = "none";
+            if (installBtn) {
                 deferredPrompt.prompt();
-
-                const { outcome } = await deferredPrompt.userChoice;
-                if (outcome === "accepted") {
-                    console.log("Usuário aceitou instalar MyLinks!");
-                } else {
-                    console.log("Usuário cancelou a instalação.");
-                }
-                deferredPrompt = null;
-            });
+            
+                deferredPrompt.userChoice.then(({ outcome }) => {
+                    if (outcome === "accepted") {
+                        alert("MyLinks instalado com sucesso!");
+                        console.log("Usuário aceitou instalar MyLinks!");
+                    } else {
+                        console.log("Usuário cancelou a instalação.");
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                console.log("Usuário fechou o alerta sem instalar.");
+            }
         });
     </script>
 </body>
