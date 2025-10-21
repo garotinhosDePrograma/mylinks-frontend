@@ -46,5 +46,43 @@
             });
         }
     </script>
+
+    <script>
+        let deferredPrompt;
+
+        window.addEventListener("beforeinstallprompt", (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+
+            const installBtn = document.createElement("button");
+            installBtn.textContent = "Instalar MyLinks";
+            installBtn.style.position = "fixed";
+            installBtn.style.bottom = "20px";
+            installBtn.style.right = "20px";
+            installBtn.style.padding = "10px 20px";
+            installBtn.style.borderRadius = "10px";
+            installBtn.style.background = "#0078ff";
+            installBtn.style.color = "#fff";
+            installBtn.style.border = "none";
+            installBtn.style.boxShadow = "0 2px 5px rgba(0, 0, 0, 0.2)";
+            installBtn.style.cursor = "pointer";
+            installBtn.style.zIndex = "9999";
+
+            document.body.appendChild(installBtn);
+
+            installBtn.addEventListener("click", async () => {
+                installBtn.style.display = "none";
+                deferredPrompt.prompt();
+
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === "accepted") {
+                    console.log("Usuário aceitou instalar MyLinks!");
+                } else {
+                    console.log("Usuário cancelou a instalação.");
+                }
+                deferredPrompt = null;
+            });
+        });
+    </script>
 </body>
 </html>
