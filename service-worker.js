@@ -1,10 +1,11 @@
 // Nome do cache (você pode mudar a versão quando atualizar o site)
-const CACHE_NAME = "mylinks-cache-v1.11";
+const CACHE_NAME = "mylinks-cache-v1.12";
 
 // Lista de arquivos que serão armazenados no cache
 const urlsToCache = [
   "/",
   "/index.html",
+  "index.css",
   "/manifest.json",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png"
