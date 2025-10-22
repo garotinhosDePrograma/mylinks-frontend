@@ -110,8 +110,85 @@ main h2 {
     font-size: 2rem;
     font-weight: 600;
     color: #e0e0e0;
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     text-align: center;
+}
+
+/* Profile Link Section */
+.profile-link-section {
+    margin-bottom: 30px;
+    background: rgba(102, 126, 234, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(102, 126, 234, 0.2);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    transition: all 0.3s ease;
+}
+
+.profile-link-section:hover {
+    background: rgba(102, 126, 234, 0.15);
+    border-color: rgba(102, 126, 234, 0.3);
+}
+
+.profile-link-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-link-info p {
+    color: #c0c0c0;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.profile-link-info a {
+    color: #667eea;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    word-break: break-all;
+    transition: color 0.3s ease;
+}
+
+.profile-link-info a:hover {
+    color: #764ba2;
+    text-decoration: underline;
+}
+
+#btnCopyProfile {
+    padding: 10px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    white-space: nowrap;
+}
+
+#btnCopyProfile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+#btnCopyProfile:active {
+    transform: translateY(0);
+}
+
+#btnCopyProfile.copied {
+    background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
+}
+
+#btnCopyProfile.copied::after {
+    content: " ✓";
 }
 
 /* Form Section */
@@ -335,6 +412,15 @@ main h2 {
 
     main h2 {
         font-size: 1.5rem;
+    }
+
+    .profile-link-section {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    #btnCopyProfile {
+        width: 100%;
     }
 
     #formSection {
