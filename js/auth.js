@@ -10,11 +10,11 @@ const auth = {
 
         const data = await res.json();
 
-        if (res.ok && data.token) {
+        if (res.ok && data.access_token) {
             const agora = new Date().getTime();
             const expiraEm = agora + 4 * 60 * 60 * 1000; // 4 horas
 
-            localStorage.setItem("accessToken", data.token);
+            localStorage.setItem("accessToken", data.access_token);
             localStorage.setItem("tokenExp", expiraEm);
             localStorage.setItem("user", JSON.stringify(data.user));
 
