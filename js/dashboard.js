@@ -20,6 +20,10 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    document.addEventListener("DOMContentLoaded", () => {
+		auth.verificarLogin();
+	});
+
     usernameDisplay.textContent = `Olá, ${user.username}!`;
 
     logoutBtn.addEventListener("click", () => {
