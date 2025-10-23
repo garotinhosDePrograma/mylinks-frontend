@@ -1,7 +1,6 @@
 const API_URL = "https://pygre.onrender.com";
 
 document.addEventListener("DOMContentLoaded", () => {
-    const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
     const mensagem = document.getElementById("mensagem");
     const usernameDisplay = document.getElementById("usernameDisplay");
@@ -15,7 +14,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileLink = document.getElementById("profileLink");
     const btnCopyProfile = document.getElementById("btnCopyProfile");
 
-    if (!token || !user) {
+    // 🔒 Verifica login (usando auth.js)
+    if (!user || !localStorage.getItem("accessToken")) {
         window.location.href = "index.html";
         return;
     }
@@ -23,9 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     usernameDisplay.textContent = `Olá, ${user.username}!`;
 
     logoutBtn.addEventListener("click", () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        window.location.href = "index.html";
+        auth.logout();
     });
 
     btnUpload.addEventListener("click", () => {
@@ -36,34 +34,31 @@ document.addEventListener("DOMContentLoaded", () => {
     profileLink.href = profileUrl;
     profileLink.textContent = profileUrl;
 
+    // ================================
+    // 📸 FOTO DE PERFIL
+    // ================================
     async function carregarFotoPerfil() {
         try {
-            const response = await fetch(`${API_URL}/user/${user.username}`);
+            const response = await auth.fetchAutenticado(`${API_URL}/user/${user.username}`);
             if (!response.ok) throw new Error("Erro ao carregar perfil");
 
             const data = await response.json();
-
-            if (data.foto_perfil) {
-                fotoPerfil.src = `${data.foto_perfil}`;
-            } else {
-                fotoPerfil.src = "assets/default-avatar.png";
-            }
+            fotoPerfil.src = data.foto_perfil || "assets/default-avatar.png";
         } catch (err) {
             console.error("Erro ao carregar foto:", err);
             fotoPerfil.src = "assets/default-avatar.png";
         }
     }
 
+    // ================================
+    // 🔗 LINKS
+    // ================================
     async function carregarLinks() {
         try {
-            const response = await fetch(`${API_URL}/links`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
-
+            const response = await auth.fetchAutenticado(`${API_URL}/links`);
             if (!response.ok) throw new Error("Erro ao carregar links");
 
             const links = await response.json();
-            console.log(links);
             renderLinks(links);
         } catch (error) {
             mensagem.style.color = "red";
@@ -114,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-
     function preencherFormulario(link) {
         linkIdInput.value = link.id;
         document.getElementById("titulo").value = link.titulo;
@@ -145,12 +139,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const method = id ? "PUT" : "POST";
             const endpoint = id ? `${API_URL}/links/${id}` : `${API_URL}/links`;
 
-            const response = await fetch(endpoint, {
+            const response = await auth.fetchAutenticado(endpoint, {
                 method,
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
                 body: JSON.stringify({ titulo, url })
             });
 
@@ -176,9 +166,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!confirm("Tem certeza que deseja excluir este link?")) return;
 
         try {
-            const response = await fetch(`${API_URL}/links/${id}`, {
-                method: "DELETE",
-                headers: { Authorization: `Bearer ${token}` }
+            const response = await auth.fetchAutenticado(`${API_URL}/links/${id}`, {
+                method: "DELETE"
             });
 
             const data = await response.json();
@@ -198,6 +187,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    // ================================
+    // 🔗 Copiar link do perfil
+    // ================================
     btnCopyProfile.addEventListener("click", async () => {
         try {
             await navigator.clipboard.writeText(profileUrl);
@@ -210,20 +202,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 2000);
         } catch (err) {
             console.error("Erro ao copiar:", err);
-            const textarea = document.createElement("textarea");
-            textarea.value = profileUrl;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand("Copy");
-            document.body.removeChild(textarea);
-
-            btnCopyProfile.textContent = "Copiado!";
-            btnCopyProfile.classList.add("copied");
-
-            setTimeout(() => {
-                btnCopyProfile.textContent = "Copiar Link";
-                btnCopyProfile.classList.remove("copied");
-            }, 2000);
         }
     });
 
