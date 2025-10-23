@@ -12,6 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const linkIdInput = document.getElementById("linkId");
     const saveBtn = document.getElementById("saveBtn");
     const btnUpload = document.getElementById("btnUpload");
+    const profileLink = document.getElementById("profileLink");
+    const btnCopyProfile = document.getElementById("btnCopyProfile");
 
     if (!token || !user) {
         window.location.href = "index.html";
@@ -29,6 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
     btnUpload.addEventListener("click", () => {
         window.location.href = "upload.html";
     });
+
+    const profileUrl = `${API_URL}/${user.username}`;
+    profileLink.href = profileUrl;
+    profileLink.textContent = profileUrl;
 
     async function carregarFotoPerfil() {
         try {
@@ -191,6 +197,35 @@ document.addEventListener("DOMContentLoaded", () => {
             mensagem.textContent = "Falha ao excluir o link.";
         }
     }
+
+    btnCopyProfile.addEventListener("click", async () => {
+        try {
+            await navigator.clipboard.writeText(profileUrl);
+            btnCopyProfile.textContent = "Copiado!";
+            btnCopyProfile.classList.add("copied");
+
+            setTimeout(() => {
+                btnCopyProfile.textContent = "Copiar Link";
+                btnCopyProfile.classList.remove("copied");
+            }, 2000);
+        } catch (err) {
+            console.error("Erro ao copiar:", err);
+            const textarea = document.createElement("textarea");
+            textarea.value = profileUrl;
+            document.body.appendChild(textarea);
+            textarea.select();
+            document.execCommand("Copy");
+            document.body.removeChild(textarea);
+
+            btnCopyProfile.textContent = "Copiado!";
+            btnCopyProfile.classList.add("copied");
+
+            setTimeout(() => {
+                btnCopyProfile.textContent = "Copiar Link";
+                btnCopyProfile.classList.remove("copied");
+            }, 2000);
+        }
+    });
 
     carregarFotoPerfil();
     carregarLinks();
