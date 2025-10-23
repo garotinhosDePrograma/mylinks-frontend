@@ -1,6 +1,9 @@
 const API_URL = "https://pygre.onrender.com";
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+    // Verifica login logo no início
+    auth.verificarLogin();
+
     const user = JSON.parse(localStorage.getItem("user"));
     const mensagem = document.getElementById("mensagem");
     const usernameDisplay = document.getElementById("usernameDisplay");
@@ -14,26 +17,18 @@ document.addEventListener("DOMContentLoaded", () => {
     const profileLink = document.getElementById("profileLink");
     const btnCopyProfile = document.getElementById("btnCopyProfile");
 
-    // 🔒 Verifica login (usando auth.js)
-    if (!user || !localStorage.getItem("accessToken")) {
+    if (!user) {
         window.location.href = "index.html";
         return;
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-		auth.verificarLogin();
-	});
-
     usernameDisplay.textContent = `Olá, ${user.username}!`;
 
-    logoutBtn.addEventListener("click", () => {
-        auth.logout();
-    });
+    // Botões principais
+    logoutBtn?.addEventListener("click", () => auth.logout());
+    btnUpload?.addEventListener("click", () => (window.location.href = "upload.html"));
 
-    btnUpload.addEventListener("click", () => {
-        window.location.href = "upload.html";
-    });
-
+    // Configuração do link público
     const profileUrl = `${API_URL}/${user.username}`;
     profileLink.href = profileUrl;
     profileLink.textContent = profileUrl;
@@ -126,6 +121,9 @@ document.addEventListener("DOMContentLoaded", () => {
         saveBtn.textContent = "Adicionar Link";
     }
 
+    // ================================
+    // 💾 SALVAR OU EDITAR LINK
+    // ================================
     linkForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -166,6 +164,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // ================================
+    // ❌ EXCLUIR LINK
+    // ================================
     async function excluirLink(id) {
         if (!confirm("Tem certeza que deseja excluir este link?")) return;
 
@@ -192,7 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // ================================
-    // 🔗 Copiar link do perfil
+    // 📋 COPIAR LINK DO PERFIL
     // ================================
     btnCopyProfile.addEventListener("click", async () => {
         try {
@@ -201,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
             btnCopyProfile.classList.add("copied");
 
             setTimeout(() => {
-                btnCopyProfile.textContent = "Copiar Link";
+                btnCopyProfile.textContent = "📋 Copiar Link";
                 btnCopyProfile.classList.remove("copied");
             }, 2000);
         } catch (err) {
@@ -209,6 +210,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+    // ================================
+    // 🚀 INICIALIZAÇÃO
+    // ================================
     carregarFotoPerfil();
     carregarLinks();
 });
