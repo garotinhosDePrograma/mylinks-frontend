@@ -15,7 +15,7 @@
 		</div>
             <span id="usernameDisplay"></span>
             <button id="btnUpload">Alterar Foto</button>
-            <button onclick="logout()">Sair</button>
+            <button onclick="auth.logout()">Sair</button>
         </div>
     </header>
 
@@ -51,12 +51,7 @@
         <div id="mensagem" style="margin-top: 15px; color: red;"></div>
     </main>
 
-    <script src="/js/dashboard.js"></script>
-	<script src="/js/auth.js"></script>
-	<script>
-		document.addEventListener("DOMContentLoaded", () => {
-			auth.verificarLogin();
-		});
-	</script>
+    <script src="/js/auth.js"></script>
+	<script src="/js/dashboard.js"></script>
 </body>
 </html>
