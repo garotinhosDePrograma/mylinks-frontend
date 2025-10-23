@@ -1,179 +1,115 @@
-// ===============================
-// 🔐 Configurações principais
-// ===============================
 const API_URL = "https://pygre.onrender.com";
-const REFRESH_THRESHOLD = 5 * 60 * 1000; // 5 minutos antes de expirar
 
-// ===============================
-// ⚙️ Funções utilitárias
-// ===============================
-
-// Salva sessão no localStorage
-function salvarSessao(accessToken, refreshToken, user) {
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
-    localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("loginTime", Date.now());
-}
-
-// Remove sessão e volta ao login
-function logout() {
-    localStorage.clear();
-    window.location.href = "index.html";
-}
-
-// Decodifica o token JWT para ver a expiração
-function decodeJwt(token) {
-    try {
-        const payload = JSON.parse(atob(token.split(".")[1]));
-        return payload;
-    } catch (e) {
-        return null;
-    }
-}
-
-// Retorna true se o token estiver expirando ou expirado
-function tokenExpirando(token) {
-    const payload = decodeJwt(token);
-    if (!payload || !payload.exp) return true;
-    const exp = payload.exp * 1000;
-    const agora = Date.now();
-    return exp - agora < REFRESH_THRESHOLD;
-}
-
-// Tenta renovar o token automaticamente
-async function renovarToken() {
-    const refreshToken = localStorage.getItem("refreshToken");
-    if (!refreshToken) return logout();
-
-    try {
-        const response = await fetch(`${API_URL}/auth/refresh`, {
+const auth = {
+    async login(email, senha) {
+        const res = await fetch(`${API_URL}/auth/login`, {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, senha }),
+        });
+
+        const data = await res.json();
+
+        if (res.ok && data.token) {
+            const agora = new Date().getTime();
+            const expiraEm = agora + 4 * 60 * 60 * 1000; // 4 horas
+
+            localStorage.setItem("accessToken", data.token);
+            localStorage.setItem("tokenExp", expiraEm);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            window.location.href = "dashboard.html";
+        } else {
+            throw new Error(data.message || "Erro ao fazer login");
+        }
+    },
+
+    verificarLogin() {
+        const token = localStorage.getItem("accessToken");
+        const user = JSON.parse(localStorage.getItem("user"));
+        const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
+
+        // Se não houver token ou expiração inválida, redireciona
+        if (!token || !tokenExp || !user) {
+            console.warn("Nenhum token encontrado — redirecionando para login.");
+            window.location.href = "index.html";
+            return;
+        }
+
+        const agora = new Date().getTime();
+
+        // Se o token expirou
+        if (agora > tokenExp) {
+            console.warn("Token expirado — redirecionando para login.");
+            auth.logout();
+        }
+    },
+
+    async fetchAutenticado(url, options = {}) {
+        let token = localStorage.getItem("accessToken");
+        const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
+        const agora = new Date().getTime();
+
+        // Se o token expirou, tenta renovar
+        if (agora > tokenExp) {
+            console.log("Token expirado — tentando renovar...");
+            const novoToken = await auth.renovarToken();
+            if (novoToken) {
+                token = novoToken;
+            } else {
+                console.warn("Falha ao renovar token — redirecionando.");
+                auth.logout();
+                return;
+            }
+        }
+
+        // Faz a requisição com token válido
+        return fetch(url, {
+            ...options,
             headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${refreshToken}`
-            }
+                Authorization: `Bearer ${token}`,
+                ...(options.headers || {}),
+            },
         });
+    },
 
-        const data = await response.json();
-        if (response.ok && data.access_token) {
-            localStorage.setItem("accessToken", data.access_token);
-            localStorage.setItem("loginTime", Date.now());
-            console.log("🔁 Token renovado automaticamente.");
-            return data.access_token;
-        } else {
-            console.warn("⚠️ Refresh token inválido, sessão encerrada.");
-            logout();
+    async renovarToken() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) return null;
+
+        try {
+            // A rota /auth/refresh pode ser implementada depois no backend
+            const res = await fetch(`${API_URL}/auth/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: user.email, // ⚠ precisa incluir email no login inicial
+                    senha: user.senha, // ⚠ ou implementar refresh real no backend
+                }),
+            });
+
+            const data = await res.json();
+            if (res.ok && data.token) {
+                const agora = new Date().getTime();
+                const expiraEm = agora + 4 * 60 * 60 * 1000;
+
+                localStorage.setItem("accessToken", data.token);
+                localStorage.setItem("tokenExp", expiraEm);
+
+                return data.token;
+            }
+        } catch (err) {
+            console.error("Erro ao renovar token:", err);
         }
-    } catch (error) {
-        console.error("Erro ao renovar token:", error);
-        logout();
+
+        return null;
+    },
+
+    logout() {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("tokenExp");
+        localStorage.removeItem("user");
+        window.location.href = "index.html";
     }
-}
-
-// Faz uma requisição autenticada com renovação automática
-async function fetchAutenticado(url, options = {}) {
-    let token = localStorage.getItem("accessToken");
-
-    // Se o token estiver expirando, renova
-    if (tokenExpirando(token)) {
-        token = await renovarToken();
-    }
-
-    if (!token) return logout();
-
-    const headers = {
-        ...(options.headers || {}),
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json"
-    };
-
-    return fetch(url, { ...options, headers });
-}
-
-// ===============================
-// 📥 Lógica de login e registro
-// ===============================
-document.addEventListener("DOMContentLoaded", () => {
-    const loginForm = document.getElementById("loginForm");
-    const registerForm = document.getElementById("registerForm");
-    const mensagem = document.getElementById("mensagem");
-
-    // Redireciona direto se o usuário já estiver logado
-    const accessToken = localStorage.getItem("accessToken");
-    if (accessToken && !tokenExpirando(accessToken)) {
-        window.location.href = "dashboard.html";
-        return;
-    }
-
-    // LOGIN
-    if (loginForm) {
-        loginForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const email = document.getElementById("email").value.trim();
-            const senha = document.getElementById("senha").value.trim();
-
-            try {
-                const response = await fetch(`${API_URL}/auth/login`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ email, senha })
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.access_token && data.refresh_token) {
-                    salvarSessao(data.access_token, data.refresh_token, data.user);
-                    mensagem.style.color = "green";
-                    mensagem.textContent = "Login realizado com sucesso!";
-                    setTimeout(() => (window.location.href = "dashboard.html"), 1000);
-                } else {
-                    mensagem.style.color = "red";
-                    mensagem.textContent = data.message || "Erro ao fazer login";
-                }
-            } catch (error) {
-                console.error("Erro:", error);
-                mensagem.style.color = "red";
-                mensagem.textContent = "Falha na conexão com o servidor";
-            }
-        });
-    }
-
-    // REGISTRO
-    if (registerForm) {
-        registerForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const username = document.getElementById("username").value.trim();
-            const email = document.getElementById("email").value.trim();
-            const senha = document.getElementById("senha").value.trim();
-
-            try {
-                const response = await fetch(`${API_URL}/auth/register`, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ username, email, senha })
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    mensagem.style.color = "green";
-                    mensagem.textContent = "Cadastro realizado! Redirecionando...";
-                    setTimeout(() => (window.location.href = "index.html"), 1500);
-                } else {
-                    mensagem.style.color = "red";
-                    mensagem.textContent = data.message || "Erro ao cadastrar";
-                }
-            } catch (error) {
-                console.error("Erro:", error);
-                mensagem.style.color = "red";
-                mensagem.textContent = "Falha na conexão com o servidor";
-            }
-        });
-    }
-});
-
-// ===============================
-// 🌐 Exporta globalmente
-// ===============================
-window.auth = { fetchAutenticado, renovarToken, logout };
+};
