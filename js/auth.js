@@ -13,6 +13,7 @@ const auth = {
             });
 
             const data = await res.json();
+            console.log(data);
 
             if (res.ok && data.access_token) {
                 const agora = Date.now();
@@ -76,8 +77,6 @@ const auth = {
             this.logout();
             return;
         }
-
-        console.log(token);
 
         if (agora > tokenExp) {
             console.log("Token expirado - Tentando renovar...");
