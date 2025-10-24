@@ -75,6 +75,9 @@ const auth = {
             return;
         }
 
+        console.log(token);
+        console.log(refreshToken);
+
         const agora = Date.now();
 
         if (agora > tokenExp) {
