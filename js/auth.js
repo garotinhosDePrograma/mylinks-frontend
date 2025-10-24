@@ -161,6 +161,26 @@ const auth = {
 };
 
 // ==================================================
+// 🎨 CONTROLE DE LOADING
+// ==================================================
+function mostrarLoading(mostrar) {
+    const loader = document.getElementById("loader");
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    if (loader && submitBtn) {
+        if (mostrar) {
+            loader.classList.add("active");
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Entrando...";
+        } else {
+            loader.classList.remove("active");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Entrar";
+        }
+    }
+}
+
+// ==================================================
 // 🧠 EVENTO DE LOGIN (executado se existir o form)
 // ==================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -177,10 +197,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const senha = document.getElementById("senha").value.trim();
             mensagem.textContent = "";
 
+            // Inicia loading
+            mostrarLoading(true);
+
             try {
                 await auth.login(email, senha);
             } catch {
-                mensagem.style.color = "red";
+                mostrarLoading(false);
+                mensagem.style.color = "#ff6b6b";
                 mensagem.textContent = "E-mail ou senha incorretos.";
             }
         });
@@ -198,12 +222,19 @@ document.addEventListener("DOMContentLoaded", () => {
             mensagem.textContent = "";
 
             if (!username || !email || !senha) {
-                mensagem.style.color = "red";
+                mensagem.style.color = "#ff6b6b";
                 mensagem.textContent = "Preencha todos os campos.";
                 return;
             }
 
-            await auth.register(username, email, senha);
+            // Inicia loading
+            mostrarLoading(true);
+
+            try {
+                await auth.register(username, email, senha);
+            } catch {
+                mostrarLoading(false);
+            }
         });
     }
 });
