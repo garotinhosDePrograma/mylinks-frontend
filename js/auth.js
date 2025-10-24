@@ -65,28 +65,24 @@ const auth = {
     // ==================================================
     async verificarLogin() {
         const token = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
         const user = JSON.parse(localStorage.getItem("user"));
+        const agora = Date.now();
 
-        if (!token || !refreshToken || !tokenExp || !user) {
-            console.warn("Sessão inválida — redirecionando para login.");
+        if (!token || !user) {
+            console.warn("Sem token - Tentando renovar...");
+            const novoToken = await this.renovarToken();
+            if (novoToken) return;
             this.logout();
             return;
         }
 
         console.log(token);
-        console.log(refreshToken);
-
-        const agora = Date.now();
 
         if (agora > tokenExp) {
-            console.log("Token expirado — tentando renovar...");
+            console.log("Token expirado - Tentando renovar...");
             const novoToken = await this.renovarToken();
-            if (!novoToken) {
-                console.warn("Falha ao renovar token — redirecionando.");
-                this.logout();
-            }
+            if (!novoToken) this.logout();
         }
     },
 
@@ -96,6 +92,8 @@ const auth = {
     async renovarToken() {
         const refreshToken = localStorage.getItem("refreshToken");
         if (!refreshToken) return null;
+
+        console.log(refreshToken);
 
         try {
             const res = await fetch(`${API_URL}/auth/refresh`, {
@@ -135,11 +133,10 @@ const auth = {
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
         const agora = Date.now();
 
-        if (agora > tokenExp) {
+        if (!token || agora > tokenExp) {
             console.log("Access token expirado — tentando renovar...");
-            const novoToken = await this.renovarToken();
-            if (novoToken) token = novoToken;
-            else {
+            token = await this.renovarToken()
+            if (!token) {
                 this.logout();
                 return;
             }
@@ -168,6 +165,43 @@ const auth = {
 };
 
 // ==================================================
+// 🎨 CONTROLE DE LOADING
+// ==================================================
+function loginLoading(mostrar) {
+    const loader = document.getElementById("loader");
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    if (loader && submitBtn) {
+        if (mostrar) {
+            loader.classList.add("active");
+            submitBtn.disabled = true;
+            submitBtn.textContent = "Entrando...";
+        } else {
+            loader.classList.remove("active");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Entrar";
+        }
+    }
+}
+
+function registerLoading(mostrar) {
+    const loader = document.getElementById("loader");
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    if (loader && submitBtn) {
+        if (mostrar) {
+            loader.classList.add("active");
+            submitBtn.disabled = true;
+            submitBtn.textContent = "cadastrando...";
+        } else {
+            loader.classList.remove("active");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Entrar";
+        }
+    }
+}
+
+// ==================================================
 // 🧠 EVENTO DE LOGIN (executado se existir o form)
 // ==================================================
 document.addEventListener("DOMContentLoaded", () => {
@@ -184,10 +218,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const senha = document.getElementById("senha").value.trim();
             mensagem.textContent = "";
 
+            // Inicia loading
+            loginLoading(true);
+
             try {
                 await auth.login(email, senha);
             } catch {
-                mensagem.style.color = "red";
+                loginLoading(false);
+                mensagem.style.color = "#ff6b6b";
                 mensagem.textContent = "E-mail ou senha incorretos.";
             }
         });
@@ -205,12 +243,19 @@ document.addEventListener("DOMContentLoaded", () => {
             mensagem.textContent = "";
 
             if (!username || !email || !senha) {
-                mensagem.style.color = "red";
+                mensagem.style.color = "#ff6b6b";
                 mensagem.textContent = "Preencha todos os campos.";
                 return;
             }
 
-            await auth.register(username, email, senha);
+            // Inicia loading
+            registerLoading(true);
+
+            try {
+                await auth.register(username, email, senha);
+            } catch {
+                registerLoading(false);
+            }
         });
     }
 });

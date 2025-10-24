@@ -3,14 +3,12 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
     color: #e0e0e0;
     min-height: 100vh;
 }
-
 main {
     display: flex;
     flex-direction: column;
@@ -19,7 +17,6 @@ main {
     height: 100vh;
     padding: 20px;
 }
-
 h1 {
     font-size: 3rem;
     font-weight: 700;
@@ -30,14 +27,12 @@ h1 {
     margin-bottom: 10px;
     letter-spacing: -1px;
 }
-
 h2 {
     font-size: 1.5rem;
     font-weight: 400;
     color: #b0b0b0;
     margin-bottom: 30px;
 }
-
 #loginForm {
     display: flex;
     flex-direction: column;
@@ -50,14 +45,12 @@ h2 {
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
-
 label {
     font-size: 0.9rem;
     font-weight: 500;
     color: #c0c0c0;
     margin-bottom: -5px;
 }
-
 input {
     padding: 12px 15px;
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -68,11 +61,9 @@ input {
     transition: all 0.3s ease;
     outline: none;
 }
-
 input::placeholder {
     color: #666;
 }
-
 input:focus {
     border-color: #667eea;
     background: rgba(255, 255, 255, 0.08);
@@ -92,34 +83,33 @@ button {
     transition: all 0.3s ease;
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
-
-button:hover {
+button:hover:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
-
-button:active {
+button:active:not(:disabled) {
     transform: translateY(0);
 }
-
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
 p {
     margin-top: 20px;
     color: #a0a0a0;
     font-size: 0.95rem;
 }
-
 a {
     color: #667eea;
     text-decoration: none;
     font-weight: 500;
     transition: color 0.3s ease;
 }
-
 a:hover {
     color: #764ba2;
     text-decoration: underline;
 }
-
 #mensagem {
     margin-top: 15px;
     color: #ff6b6b;
@@ -127,23 +117,19 @@ a:hover {
     text-align: center;
     min-height: 20px;
 }
-
 /* Responsividade */
 @media (max-width: 480px) {
     h1 {
         font-size: 2.5rem;
     }
-
     h2 {
         font-size: 1.2rem;
     }
-
     #loginForm {
         width: 100%;
         max-width: 300px;
     }
 }
-
 /* Install Button PWA */
 #installBtn,
 button[style*="fixed"] {
@@ -165,18 +151,15 @@ button[style*="fixed"] {
     backdrop-filter: blur(10px) !important;
     border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
-
 #installBtn:hover,
 button[style*="fixed"]:hover {
     transform: translateY(-3px) !important;
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.5) !important;
 }
-
 #installBtn:active,
 button[style*="fixed"]:active {
     transform: translateY(-1px) !important;
 }
-
 @media (max-width: 768px) {
     #installBtn,
     button[style*="fixed"] {
@@ -186,3 +169,4 @@ button[style*="fixed"]:active {
         font-size: 0.9rem !important;
     }
 }
+
