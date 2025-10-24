@@ -1,5 +1,3 @@
-const API_URL = "https://pygre.onrender.com";
-
 document.addEventListener("DOMContentLoaded", async () => {
     // Verifica login logo no início
     auth.verificarLogin();
