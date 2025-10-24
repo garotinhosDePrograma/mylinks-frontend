@@ -65,25 +65,22 @@ const auth = {
     // ==================================================
     async verificarLogin() {
         const token = localStorage.getItem("accessToken");
-        const refreshToken = localStorage.getItem("refreshToken");
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
         const user = JSON.parse(localStorage.getItem("user"));
+        const agora = Date.now();
 
-        if (!token || !refreshToken || !tokenExp || !user) {
-            console.warn("Sessão inválida — redirecionando para login.");
+        if (!token || !user) {
+            console.warn("Sem token - Tentando renovar...");
+            const novoToken = await this.renovarToken();
+            if (novoToken) return;
             this.logout();
             return;
         }
 
-        const agora = Date.now();
-
         if (agora > tokenExp) {
-            console.log("Token expirado — tentando renovar...");
+            console.log("Token expirado - Tentando renovar...");
             const novoToken = await this.renovarToken();
-            if (!novoToken) {
-                console.warn("Falha ao renovar token — redirecionando.");
-                this.logout();
-            }
+            if (!novoToken) this.logout();
         }
     },
 
@@ -132,11 +129,10 @@ const auth = {
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
         const agora = Date.now();
 
-        if (agora > tokenExp) {
+        if (!token || agora > tokenExp) {
             console.log("Access token expirado — tentando renovar...");
-            const novoToken = await this.renovarToken();
-            if (novoToken) token = novoToken;
-            else {
+            token = await this.renovarToken()
+            if (!token) {
                 this.logout();
                 return;
             }
