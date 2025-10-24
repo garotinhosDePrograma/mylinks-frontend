@@ -163,7 +163,7 @@ const auth = {
 // ==================================================
 // 🎨 CONTROLE DE LOADING
 // ==================================================
-function mostrarLoading(mostrar) {
+function loginLoading(mostrar) {
     const loader = document.getElementById("loader");
     const submitBtn = document.querySelector('button[type="submit"]');
     
@@ -172,6 +172,23 @@ function mostrarLoading(mostrar) {
             loader.classList.add("active");
             submitBtn.disabled = true;
             submitBtn.textContent = "Entrando...";
+        } else {
+            loader.classList.remove("active");
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Entrar";
+        }
+    }
+}
+
+function registerLoading(mostrar) {
+    const loader = document.getElementById("loader");
+    const submitBtn = document.querySelector('button[type="submit"]');
+    
+    if (loader && submitBtn) {
+        if (mostrar) {
+            loader.classList.add("active");
+            submitBtn.disabled = true;
+            submitBtn.textContent = "cadastrando...";
         } else {
             loader.classList.remove("active");
             submitBtn.disabled = false;
@@ -198,12 +215,12 @@ document.addEventListener("DOMContentLoaded", () => {
             mensagem.textContent = "";
 
             // Inicia loading
-            mostrarLoading(true);
+            loginLoading(true);
 
             try {
                 await auth.login(email, senha);
             } catch {
-                mostrarLoading(false);
+                loginLoading(false);
                 mensagem.style.color = "#ff6b6b";
                 mensagem.textContent = "E-mail ou senha incorretos.";
             }
@@ -228,12 +245,12 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             // Inicia loading
-            mostrarLoading(true);
+            registerLoading(true);
 
             try {
                 await auth.register(username, email, senha);
             } catch {
-                mostrarLoading(false);
+                registerLoading(false);
             }
         });
     }
