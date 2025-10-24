@@ -1,5 +1,5 @@
 // Nome do cache (você pode mudar a versão quando atualizar o site)
-const CACHE_NAME = "mylinks-cache-v1.22";
+const CACHE_NAME = "mylinks-cache-v1.23";
 
 // Lista de arquivos que serão armazenados no cache
 const urlsToCache = [
