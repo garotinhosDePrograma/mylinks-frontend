@@ -1,4 +1,4 @@
-const API_URL = "https://pygre.onrender.com";
+const API_URL = window.CONFIG.API_URL;
 
 const auth = {
     // ==================================================
@@ -17,7 +17,7 @@ const auth = {
 
             if (res.ok && data.access_token) {
                 const agora = Date.now();
-                const expiraEm = agora + 60 * 60 * 1000; // 1 hora
+                const expiraEm = agora + window.CONFIG.TOKEN_EXPIRATION_TIME;
 
                 // Armazena tokens e dados do usuário
                 localStorage.setItem("accessToken", data.access_token);
@@ -57,7 +57,7 @@ const auth = {
             }
         } catch (err) {
             console.error("Erro no registro:", err);
-            alert("Falha ao registrar. Verifique os dados e tente novamente.");
+            throw err;
         }
     },
 
@@ -92,7 +92,7 @@ const auth = {
         const refreshToken = localStorage.getItem("refreshToken");
         if (!refreshToken) return null;
 
-        console.log(refreshToken);
+        console.log("Tentando renovar token...");
 
         try {
             const res = await fetch(`${API_URL}/auth/refresh`, {
@@ -107,7 +107,7 @@ const auth = {
 
             if (res.ok && data.access_token) {
                 const agora = Date.now();
-                const expiraEm = agora + 60 * 60 * 1000; // 1 hora
+                const expiraEm = agora + window.CONFIG.TOKEN_EXPIRATION_TIME;
 
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenExp", expiraEm);
@@ -134,7 +134,7 @@ const auth = {
 
         if (!token || agora > tokenExp) {
             console.log("Access token expirado — tentando renovar...");
-            token = await this.renovarToken()
+            token = await this.renovarToken();
             if (!token) {
                 this.logout();
                 return;
@@ -191,12 +191,24 @@ function registerLoading(mostrar) {
         if (mostrar) {
             loader.classList.add("active");
             submitBtn.disabled = true;
-            submitBtn.textContent = "cadastrando...";
+            submitBtn.textContent = "Cadastrando...";
         } else {
             loader.classList.remove("active");
             submitBtn.disabled = false;
-            submitBtn.textContent = "Entrar";
+            submitBtn.textContent = "Cadastrar";
         }
+    }
+}
+
+// ==================================================
+// 🎯 VALIDAÇÃO DE URL
+// ==================================================
+function isValidUrl(string) {
+    try {
+        const url = new URL(string);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+        return false;
     }
 }
 
@@ -252,8 +264,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             try {
                 await auth.register(username, email, senha);
-            } catch {
+            } catch (err) {
                 registerLoading(false);
+                mensagem.style.color = "#ff6b6b";
+                mensagem.textContent = err.message || "Erro ao cadastrar. Tente novamente.";
             }
         });
     }
