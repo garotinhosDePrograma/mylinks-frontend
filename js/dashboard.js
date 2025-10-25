@@ -1,4 +1,4 @@
-const API_URL = window.CONFIG.API_URL;
+
 
 document.addEventListener("DOMContentLoaded", async () => {
     // Verifica login logo no início
