@@ -1,4 +1,4 @@
-const API_URL = "https://pygre.onrender.com";
+const API_URL = window.CONFIG.API_URL;
 
 document.addEventListener("DOMContentLoaded", async () => {
     const mensagem = document.getElementById("mensagem");
@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const username = params.get("user");
 
     if (!username) {
+        mensagem.style.color = "red";
         mensagem.textContent = "Usuário não especificado.";
         return;
     }
@@ -19,16 +20,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await response.json();
 
         if (!response.ok) {
-            mensagem.textContent = data.message || "Usuário não encontrado.";
+            mensagem.style.color = "red";
+            mensagem.textContent = data.error || "Usuário não encontrado.";
             return;
         }
 
         usernameEl.textContent = data.username;
 
         if (data.foto_perfil) {
-            fotoPerfil.src = `${data.foto_perfil}`;
+            fotoPerfil.src = data.foto_perfil;
         } else {
-            fotoPerfil.src = "assets/default-avatar.png";
+            fotoPerfil.src = window.CONFIG.DEFAULT_AVATAR;
         }
 
         if (data.links && data.links.length > 0) {
@@ -37,23 +39,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .forEach(link => {
                     const li = document.createElement("li");
                     const a = document.createElement("a");
-                    a.href = link.url;
+                    a.href = link.url.startsWith("http") ? link.url : `https://${link.url}`;
                     a.textContent = link.titulo;
                     a.target = "_blank";
-                    a.style.textAlign = "center";
-                    a.style.display = "block";
-                    a.style.padding = "10px";
-                    a.style.border = "1px solid #ccc";
-                    a.style.borderRadius = "8px";
                     li.appendChild(a);
                     linksList.appendChild(li);
                 });
         } else {
-            linksList.innerHTML = "<li>Nenhum link encontrado.</li>";
+            linksList.innerHTML = '<li class="empty-state"><p>Nenhum link encontrado.</p></li>';
         }
 
     } catch (error) {
         console.error("Erro ao carregar perfil:", error);
+        mensagem.style.color = "red";
         mensagem.textContent = "Falha ao carregar dados do usuário.";
     }
 });
