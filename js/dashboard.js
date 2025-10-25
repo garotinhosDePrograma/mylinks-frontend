@@ -1,5 +1,3 @@
-
-
 document.addEventListener("DOMContentLoaded", async () => {
     // Verifica login logo no início
     await auth.verificarLogin();
