@@ -1,6 +1,8 @@
+const API_URL = window.CONFIG.API_URL;
+
 document.addEventListener("DOMContentLoaded", async () => {
     // Verifica login logo no início
-    auth.verificarLogin();
+    await auth.verificarLogin();
 
     const user = JSON.parse(localStorage.getItem("user"));
     const mensagem = document.getElementById("mensagem");
@@ -40,10 +42,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!response.ok) throw new Error("Erro ao carregar perfil");
 
             const data = await response.json();
-            fotoPerfil.src = data.foto_perfil || "assets/default-avatar.png";
+            fotoPerfil.src = data.foto_perfil || window.CONFIG.DEFAULT_AVATAR;
         } catch (err) {
             console.error("Erro ao carregar foto:", err);
-            fotoPerfil.src = "assets/default-avatar.png";
+            fotoPerfil.src = window.CONFIG.DEFAULT_AVATAR;
         }
     }
 
@@ -68,25 +70,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         linksList.innerHTML = "";
 
         if (!Array.isArray(links) || links.length === 0) {
-            linksList.innerHTML = "<li>Nenhum link adicionado ainda.</li>";
+            linksList.innerHTML = '<li class="empty-state"><p>Nenhum link adicionado ainda.</p></li>';
             return;
         }
 
-        links.sort((a, b) => (a[4] || 0) - (b[4] || 0));
+        // ✅ CORRIGIDO: Agora usa objetos ao invés de arrays
+        links.sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
         links.forEach(link => {
-            const id = link[0];
-            const titulo = link[2];
-            const url = link[3];
+            const id = link.id;
+            const titulo = link.titulo;
+            const url = link.url;
 
             const li = document.createElement("li");
-            li.style.marginBottom = "10px";
 
             const linkText = document.createElement("a");
             linkText.href = url.startsWith("http") ? url : `https://${url}`;
             linkText.target = "_blank";
             linkText.textContent = `${titulo} → ${url}`;
-            linkText.style.marginRight = "10px";
 
             const editBtn = document.createElement("button");
             editBtn.textContent = "Editar";
@@ -129,9 +130,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         const titulo = document.getElementById("titulo").value.trim();
         const url = document.getElementById("url").value.trim();
 
+        mensagem.textContent = "";
+
         if (!titulo || !url) {
             mensagem.style.color = "red";
             mensagem.textContent = "Preencha todos os campos.";
+            return;
+        }
+
+        // ✅ ADICIONADO: Validação de URL no frontend
+        if (!isValidUrl(url)) {
+            mensagem.style.color = "red";
+            mensagem.textContent = "URL inválida. Use o formato: https://exemplo.com";
             return;
         }
 
@@ -153,7 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 carregarLinks();
             } else {
                 mensagem.style.color = "red";
-                mensagem.textContent = data.message || "Erro ao salvar link.";
+                mensagem.textContent = data.error || "Erro ao salvar link.";
             }
         } catch (error) {
             console.error("Erro:", error);
@@ -181,7 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 carregarLinks();
             } else {
                 mensagem.style.color = "red";
-                mensagem.textContent = data.message || "Erro ao excluir link.";
+                mensagem.textContent = data.error || "Erro ao excluir link.";
             }
         } catch (error) {
             console.error(error);
@@ -205,6 +215,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }, 2000);
         } catch (err) {
             console.error("Erro ao copiar:", err);
+            mensagem.style.color = "red";
+            mensagem.textContent = "Não foi possível copiar o link.";
         }
     });
 
