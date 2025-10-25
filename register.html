@@ -7,11 +7,11 @@
     <link rel="stylesheet" href="/css/register.css">
 </head>
 <body>
-    <main style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh;">
+    <main>
         <h1>MyLinks</h1>
         <h2>Criar nova conta</h2>
 
-        <form id="registerForm" style="display: flex; flex-direction: column; gap: 10px; width: 250px;">
+        <form id="registerForm">
             <label for="username">Nome de usuário</label>
             <input type="text" id="username" placeholder="Digite seu nome de usuário" required>
 
@@ -25,14 +25,15 @@
             <div class="loader" id="loader"></div>
         </form>
 
-        <p style="margin-top: 10px;">
+        <p>
             Já tem uma conta?
             <a href="index.html">Entrar</a>
         </p>
 
-        <div id="mensagem" style="margin-top: 15px; color: red;"></div>
+        <div id="mensagem"></div>
     </main>
 
+    <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
 </body>
 </html>
