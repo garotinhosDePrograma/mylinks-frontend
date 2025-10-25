@@ -8,26 +8,57 @@
 </head>
 <body>
     <main>
-        <h1>MyLinks</h1>
-        <h2>Entrar na sua conta</h2>
-        <form id="loginForm">
-            <label for="email">E-mail</label>
-            <input type="email" id="email" placeholder="Digite seu e-mail" required>
-            <label for="senha">Senha</label>
-            <input type="password" id="senha" placeholder="Digite sua senha" required>
-            
-            <button type="submit">Entrar</button>
-            <div class="loader" id="loader"></div>
-        </form>
-        <p>
-            Não tem conta?
-            <a href="register.html">Cadastre-se aqui</a>
-        </p>
-        <div id="mensagem"></div>
+        <!-- Estado de carregamento -->
+        <div id="checkingAuth" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
+            <h1>MyLinks</h1>
+            <p style="color: #b0b0b0;">Verificando credenciais...</p>
+            <div class="loader active"></div>
+        </div>
+
+        <!-- Formulário de login (oculto inicialmente) -->
+        <div id="loginContainer" style="display: none;">
+            <h1>MyLinks</h1>
+            <h2>Entrar na sua conta</h2>
+            <form id="loginForm">
+                <label for="email">E-mail</label>
+                <input type="email" id="email" placeholder="Digite seu e-mail" required>
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" placeholder="Digite sua senha" required>
+                
+                <button type="submit">Entrar</button>
+                <div class="loader" id="loader"></div>
+            </form>
+            <p>
+                Não tem conta?
+                <a href="register.html">Cadastre-se aqui</a>
+            </p>
+            <div id="mensagem"></div>
+        </div>
     </main>
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
+        // ✅ VERIFICA SE JÁ ESTÁ LOGADO ANTES DE MOSTRAR O FORMULÁRIO
+        document.addEventListener("DOMContentLoaded", async () => {
+            const refreshToken = localStorage.getItem("refreshToken");
+            const user = localStorage.getItem("user");
+            
+            // Se tem credenciais, tenta renovar e redirecionar
+            if (refreshToken && user) {
+                console.log("🔍 Credenciais encontradas, verificando validade...");
+                
+                const isValid = await auth.verificarLogin();
+                
+                if (isValid) {
+                    console.log("✅ Usuário já está logado, redirecionando...");
+                    window.location.href = "dashboard.html";
+                    return;
+                }
+                
+                console.log("⚠️ Credenciais inválidas, mostrando tela de login");
+            }
+        });
+
         let deferredPrompt;
         window.addEventListener("beforeinstallprompt", (e) => {
             e.preventDefault();
