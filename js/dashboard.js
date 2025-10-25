@@ -77,8 +77,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         links.forEach(link => {
             const id = link[0];
-            const titulo = link[1];
-            const url = link[2];
+            const titulo = link[2];
+            const url = link[3];
 
             const li = document.createElement("li");
 
