@@ -161,5 +161,9 @@ a:hover {
     align-items: center;
     justify-content: center;
     gap: 10px;
+}
+
+#loginContainer h1,
+#loginContainer h2 {
     text-align: center;
 }
