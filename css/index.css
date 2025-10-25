@@ -155,6 +155,7 @@ a:hover {
 }
 
 #loginContainer h1,
-#loginContainer h2 {
+#loginContainer h2,
+#loginContainer p {
     text-align: center;
 }
