@@ -57,6 +57,9 @@
                 
                 console.log("⚠️ Credenciais inválidas, mostrando tela de login");
             }
+
+            document.getElementById("checkingAuth").style.display = "none";
+            document.getElementById("loginContainer").style.display = "block";
         });
 
         let deferredPrompt;
