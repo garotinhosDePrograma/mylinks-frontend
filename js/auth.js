@@ -65,24 +65,39 @@ const auth = {
     // 🔍 VERIFICA LOGIN E RENOVA TOKEN SE PRECISAR
     // ==================================================
     async verificarLogin() {
+        const refreshToken = localStorage.getItem("refreshToken");
+        const user = localStorage.getItem("user");
+
+        // ✅ MUDANÇA: Verifica primeiro se tem refresh token válido
+        if (!refreshToken || !user) {
+            console.warn("⚠️ Sem credenciais salvas - Redirecionando para login");
+            this.logout();
+            return false;
+        }
+
         const token = localStorage.getItem("accessToken");
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
-        const user = JSON.parse(localStorage.getItem("user"));
         const agora = Date.now();
 
-        if (!token || !user) {
-            console.warn("Sem token - Tentando renovar...");
-            const novoToken = await this.renovarToken();
-            if (novoToken) return;
-            this.logout();
-            return;
+        // Se o access token ainda é válido, não precisa fazer nada
+        if (token && agora < tokenExp) {
+            console.log("✅ Access token válido");
+            return true;
         }
 
-        if (agora > tokenExp) {
-            console.log("Token expirado - Tentando renovar...");
-            const novoToken = await this.renovarToken();
-            if (!novoToken) this.logout();
+        // Access token expirado, tenta renovar
+        console.log("🔄 Access token expirado, renovando...");
+        const novoToken = await this.renovarToken();
+        
+        if (novoToken) {
+            console.log("✅ Token renovado com sucesso!");
+            return true;
         }
+
+        // ✅ MUDANÇA: Só faz logout se refresh token realmente estiver inválido
+        console.error("❌ Não foi possível renovar o token - Redirecionando para login");
+        this.logout();
+        return false;
     },
 
     // ==================================================
@@ -90,9 +105,12 @@ const auth = {
     // ==================================================
     async renovarToken() {
         const refreshToken = localStorage.getItem("refreshToken");
-        if (!refreshToken) return null;
+        if (!refreshToken) {
+            console.warn("⚠️ Refresh token não encontrado");
+            return null;
+        }
 
-        console.log("Tentando renovar token...");
+        console.log("🔄 Tentando renovar token...");
 
         try {
             const res = await fetch(`${API_URL}/auth/refresh`, {
@@ -112,14 +130,23 @@ const auth = {
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenExp", expiraEm);
 
-                console.log("🔄 Token renovado com sucesso!");
+                console.log("✅ Token renovado com sucesso!");
                 return data.access_token;
             } else {
-                console.warn("Falha ao renovar token:", data.error || data.message);
+                console.warn("⚠️ Falha ao renovar token:", data.error || data.message);
+                
+                // ✅ MUDANÇA: Se o refresh token expirou, limpa tudo
+                if (data.error === "Refresh token expirado" || data.error === "Token inválido") {
+                    console.error("❌ Refresh token inválido - Limpando credenciais");
+                    return null;
+                }
+                
                 return null;
             }
         } catch (err) {
-            console.error("Erro ao renovar token:", err);
+            console.error("❌ Erro ao renovar token:", err);
+            // ✅ MUDANÇA: Em caso de erro de rede, não faz logout imediato
+            // Deixa o usuário tentar novamente
             return null;
         }
     },
@@ -132,12 +159,15 @@ const auth = {
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
         const agora = Date.now();
 
+        // Se o token expirou, tenta renovar antes de fazer a requisição
         if (!token || agora > tokenExp) {
-            console.log("Access token expirado — tentando renovar...");
+            console.log("🔄 Access token expirado, renovando antes da requisição...");
             token = await this.renovarToken();
+            
             if (!token) {
+                console.error("❌ Não foi possível renovar token");
                 this.logout();
-                return;
+                throw new Error("Sessão expirada");
             }
         }
 
@@ -155,6 +185,7 @@ const auth = {
     // 🚪 LOGOUT
     // ==================================================
     logout() {
+        console.log("🚪 Fazendo logout...");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("tokenExp");
