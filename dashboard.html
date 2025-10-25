@@ -7,19 +7,19 @@
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-    <header style="display: flex; justify-content: space-between; align-items: center; padding: 10px;">
+    <header>
         <h1>MyLinks</h1>
         <div>
             <div id="user-info">
-                <img id="fotoPerfil" src="" alt="Foto de perfil" width="60" height="60" style="border-radius:50%; object-fit:cover;">
+                <img id="fotoPerfil" src="" alt="Foto de perfil">
             </div>
             <span id="usernameDisplay"></span>
             <button id="btnUpload">Alterar Foto</button>
-            <button onclick="auth.logout()">Sair</button>
+            <button id="logoutBtn">Sair</button>
         </div>
     </header>
 
-    <main style="max-width: 600px; margin: 0 auto; padding: 20px;">
+    <main>
         <h2>Seus Links</h2>
 
         <div class="profile-link-section">
@@ -30,8 +30,8 @@
             <button id="btnCopyProfile">📋 Copiar Link</button>
         </div>
 
-        <section id="formSection" style="margin-bottom: 20px;">
-            <form id="linkForm" style="display: flex; flex-direction: column; gap: 10px;">
+        <section id="formSection">
+            <form id="linkForm">
                 <input type="hidden" id="linkId">
 
                 <label for="titulo">Título</label>
@@ -45,12 +45,13 @@
         </section>
 
         <section id="linksSection">
-            <ul id="linksList" style="list-style: none; padding: 0;"></ul>
+            <ul id="linksList"></ul>
         </section>
 
-        <div id="mensagem" style="margin-top: 15px; color: red;"></div>
+        <div id="mensagem"></div>
     </main>
 
+    <script src="/js/config.js"></script>
     <script src="/js/auth.js"></script>
     <script src="/js/dashboard.js"></script>
 </body>
