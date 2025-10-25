@@ -154,15 +154,6 @@ a:hover {
     }
 }
 
-/* Correção do layout da tela de login */
-#loginContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-}
-
 #loginContainer h1,
 #loginContainer h2 {
     text-align: center;
