@@ -198,7 +198,7 @@ const auth = {
 // 🎨 CONTROLE DE LOADING
 // ==================================================
 function loginLoading(mostrar) {
-    const loader = document.getElementById("loader");
+    const loader = document.getElementById("Logloader");
     const submitBtn = document.querySelector('button[type="submit"]');
     
     if (loader && submitBtn) {
@@ -215,7 +215,7 @@ function loginLoading(mostrar) {
 }
 
 function registerLoading(mostrar) {
-    const loader = document.getElementById("loader");
+    const loader = document.getElementById("Regloader");
     const submitBtn = document.querySelector('button[type="submit"]');
     
     if (loader && submitBtn) {
