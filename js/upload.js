@@ -1,6 +1,8 @@
-document.addEventListener("DOMContentLoaded", () => {
+const API_URL = window.CONFIG.API_URL;
+
+document.addEventListener("DOMContentLoaded", async () => {
     // Garante que o usuário está logado
-    auth.verificarLogin();
+    await auth.verificarLogin();
 
     const token = localStorage.getItem("accessToken");
     const uploadForm = document.getElementById("uploadForm");
@@ -15,13 +17,50 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
     }
 
+    // ✅ ADICIONADO: Carrega a foto atual do usuário
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+        try {
+            const response = await auth.fetchAutenticado(`${API_URL}/user/${user.username}`);
+            if (response.ok) {
+                const data = await response.json();
+                if (data.foto_perfil) {
+                    preview.src = data.foto_perfil;
+                } else {
+                    preview.src = window.CONFIG.DEFAULT_AVATAR;
+                }
+            }
+        } catch (err) {
+            console.error("Erro ao carregar foto atual:", err);
+            preview.src = window.CONFIG.DEFAULT_AVATAR;
+        }
+    }
+
     // Mostra prévia da imagem
     fotoInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (file) {
+            // Valida tipo de arquivo
+            const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
+            if (!validTypes.includes(file.type)) {
+                mensagem.style.color = "red";
+                mensagem.textContent = "Formato inválido. Use PNG, JPG ou JPEG.";
+                fotoInput.value = "";
+                return;
+            }
+
+            // Valida tamanho (máx 5MB)
+            if (file.size > 15 * 1024 * 1024) {
+                mensagem.style.color = "red";
+                mensagem.textContent = "Imagem muito grande. Máximo: 15MB.";
+                fotoInput.value = "";
+                return;
+            }
+
             const reader = new FileReader();
             reader.onload = () => (preview.src = reader.result);
             reader.readAsDataURL(file);
+            mensagem.textContent = "";
         }
     });
 
@@ -39,6 +78,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const formData = new FormData();
         formData.append("file", file);
+
+        const submitBtn = uploadForm.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = "Enviando...";
 
         try {
             const response = await fetch(`${API_URL}/auth/upload`, {
@@ -62,6 +105,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     user.foto_perfil = data.foto_perfil;
                     localStorage.setItem("user", JSON.stringify(user));
                 }
+
+                // Redireciona após 2 segundos
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 2000);
             } else {
                 mensagem.style.color = "red";
                 mensagem.textContent = data.error || data.message || "Erro ao enviar foto.";
@@ -70,6 +118,9 @@ document.addEventListener("DOMContentLoaded", () => {
             console.error("Erro:", error);
             mensagem.style.color = "red";
             mensagem.textContent = "Falha na conexão com o servidor.";
+        } finally {
+            submitBtn.disabled = false;
+            submitBtn.textContent = "Enviar Foto";
         }
     });
 
