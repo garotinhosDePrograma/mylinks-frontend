@@ -76,9 +76,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         links.sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
         links.forEach(link => {
-            const id = link.id;
-            const titulo = link.titulo;
-            const url = link.url;
+            const id = link[0];
+            const titulo = link[1];
+            const url = link[2];
 
             const li = document.createElement("li");
 
