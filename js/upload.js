@@ -1,5 +1,3 @@
-const API_URL = window.CONFIG.API_URL;
-
 document.addEventListener("DOMContentLoaded", async () => {
     // Garante que o usuário está logado
     await auth.verificarLogin();
