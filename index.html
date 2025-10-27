@@ -8,14 +8,12 @@
 </head>
 <body>
     <main>
-        <!-- Estado de carregamento -->
         <div id="checkingAuth" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
             <h1>MyLinks</h1>
             <p style="color: #b0b0b0;">Verificando credenciais...</p>
             <div class="loader active"></div>
         </div>
 
-        <!-- Formulário de login (oculto inicialmente) -->
         <div id="loginContainer" style="display: none;">
             <h1>MyLinks</h1>
             <h2>Entrar na sua conta</h2>
@@ -38,24 +36,22 @@
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
-        // ✅ VERIFICA SE JÁ ESTÁ LOGADO ANTES DE MOSTRAR O FORMULÁRIO
         document.addEventListener("DOMContentLoaded", async () => {
             const refreshToken = localStorage.getItem("refreshToken");
             const user = localStorage.getItem("user");
             
-            // Se tem credenciais, tenta renovar e redirecionar
             if (refreshToken && user) {
-                console.log("🔍 Credenciais encontradas, verificando validade...");
+                console.log("Credenciais encontradas, verificando validade...");
                 
                 const isValid = await auth.verificarLogin();
                 
                 if (isValid) {
-                    console.log("✅ Usuário já está logado, redirecionando...");
+                    console.log("Usuário já está logado, redirecionando...");
                     window.location.href = "dashboard.html";
                     return;
                 }
                 
-                console.log("⚠️ Credenciais inválidas, mostrando tela de login");
+                console.log("Credenciais inválidas, mostrando tela de login");
             }
 
             document.getElementById("checkingAuth").style.display = "none";

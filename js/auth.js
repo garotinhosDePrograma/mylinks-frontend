@@ -1,9 +1,6 @@
 const API_URL = window.CONFIG.API_URL;
 
 const auth = {
-    // ==================================================
-    // 🔐 LOGIN
-    // ==================================================
     async login(email, senha) {
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
@@ -13,19 +10,16 @@ const auth = {
             });
 
             const data = await res.json();
-            console.log(data);
 
             if (res.ok && data.access_token) {
                 const agora = Date.now();
                 const expiraEm = agora + window.CONFIG.TOKEN_EXPIRATION_TIME;
 
-                // Armazena tokens e dados do usuário
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("refreshToken", data.refresh_token);
                 localStorage.setItem("tokenExp", expiraEm);
                 localStorage.setItem("user", JSON.stringify(data.user));
 
-                // Redireciona ao dashboard
                 window.location.href = "dashboard.html";
             } else {
                 throw new Error(data.error || "Erro ao fazer login");
@@ -36,9 +30,6 @@ const auth = {
         }
     },
 
-    // ==================================================
-    // 🧾 REGISTRO DE NOVO USUÁRIO
-    // ==================================================
     async register(username, email, senha) {
         try {
             const res = await fetch(`${API_URL}/auth/register`, {
@@ -50,7 +41,7 @@ const auth = {
             const data = await res.json();
 
             if (res.ok) {
-                alert("✅ Cadastro realizado com sucesso! Faça login para continuar.");
+                alert("Cadastro realizado com sucesso! Faça login para continuar.");
                 window.location.href = "index.html";
             } else {
                 throw new Error(data.error || "Erro ao registrar usuário");
@@ -61,16 +52,12 @@ const auth = {
         }
     },
 
-    // ==================================================
-    // 🔍 VERIFICA LOGIN E RENOVA TOKEN SE PRECISAR
-    // ==================================================
     async verificarLogin() {
         const refreshToken = localStorage.getItem("refreshToken");
         const user = localStorage.getItem("user");
 
-        // ✅ MUDANÇA: Verifica primeiro se tem refresh token válido
         if (!refreshToken || !user) {
-            console.warn("⚠️ Sem credenciais salvas - Redirecionando para login");
+            console.warn("Sem credenciais salvas - Redirecionando para login");
             this.logout();
             return false;
         }
@@ -79,38 +66,32 @@ const auth = {
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
         const agora = Date.now();
 
-        // Se o access token ainda é válido, não precisa fazer nada
         if (token && agora < tokenExp) {
-            console.log("✅ Access token válido");
+            console.log("Access token válido");
             return true;
         }
 
-        // Access token expirado, tenta renovar
-        console.log("🔄 Access token expirado, renovando...");
+        console.log("Access token expirado, renovando...");
         const novoToken = await this.renovarToken();
         
         if (novoToken) {
-            console.log("✅ Token renovado com sucesso!");
+            console.log("Token renovado com sucesso!");
             return true;
         }
 
-        // ✅ MUDANÇA: Só faz logout se refresh token realmente estiver inválido
-        console.error("❌ Não foi possível renovar o token - Redirecionando para login");
+        console.error("Não foi possível renovar o token - Redirecionando para login");
         this.logout();
         return false;
     },
 
-    // ==================================================
-    // ♻️ RENOVA TOKEN USANDO REFRESH TOKEN
-    // ==================================================
     async renovarToken() {
         const refreshToken = localStorage.getItem("refreshToken");
         if (!refreshToken) {
-            console.warn("⚠️ Refresh token não encontrado");
+            console.warn("Refresh token não encontrado");
             return null;
         }
 
-        console.log("🔄 Tentando renovar token...");
+        console.log("Tentando renovar token...");
 
         try {
             const res = await fetch(`${API_URL}/auth/refresh`, {
@@ -130,42 +111,35 @@ const auth = {
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenExp", expiraEm);
 
-                console.log("✅ Token renovado com sucesso!");
+                console.log("Token renovado com sucesso!");
                 return data.access_token;
             } else {
-                console.warn("⚠️ Falha ao renovar token:", data.error || data.message);
-                
-                // ✅ MUDANÇA: Se o refresh token expirou, limpa tudo
+                console.warn("Falha ao renovar token:", data.error || data.message);
+
                 if (data.error === "Refresh token expirado" || data.error === "Token inválido") {
-                    console.error("❌ Refresh token inválido - Limpando credenciais");
+                    console.error("Refresh token inválido - Limpando credenciais");
                     return null;
                 }
                 
                 return null;
             }
         } catch (err) {
-            console.error("❌ Erro ao renovar token:", err);
-            // ✅ MUDANÇA: Em caso de erro de rede, não faz logout imediato
-            // Deixa o usuário tentar novamente
+            console.error("Erro ao renovar token:", err);
             return null;
         }
     },
 
-    // ==================================================
-    // 🚀 REQUISIÇÃO AUTENTICADA
-    // ==================================================
     async fetchAutenticado(url, options = {}) {
         let token = localStorage.getItem("accessToken");
         const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
         const agora = Date.now();
 
-        // Se o token expirou, tenta renovar antes de fazer a requisição
         if (!token || agora > tokenExp) {
-            console.log("🔄 Access token expirado, renovando antes da requisição...");
+            console.log("Access token expirado, renovando antes da requisição...");
             token = await this.renovarToken();
             
             if (!token) {
-                console.error("❌ Não foi possível renovar token");
+                console.error("Não foi possível renovar token");
                 this.logout();
                 throw new Error("Sessão expirada");
             }
@@ -181,11 +155,8 @@ const auth = {
         });
     },
 
-    // ==================================================
-    // 🚪 LOGOUT
-    // ==================================================
     logout() {
-        console.log("🚪 Fazendo logout...");
+        console.log("Fazendo logout...");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("tokenExp");
@@ -194,9 +165,6 @@ const auth = {
     },
 };
 
-// ==================================================
-// 🎨 CONTROLE DE LOADING
-// ==================================================
 function loginLoading(mostrar) {
     const loader = document.getElementById("Logloader");
     const submitBtn = document.querySelector('button[type="submit"]');
@@ -231,9 +199,6 @@ function registerLoading(mostrar) {
     }
 }
 
-// ==================================================
-// 🎯 VALIDAÇÃO DE URL
-// ==================================================
 function isValidUrl(string) {
     try {
         const url = new URL(string);
@@ -243,15 +208,11 @@ function isValidUrl(string) {
     }
 }
 
-// ==================================================
-// 🧠 EVENTO DE LOGIN (executado se existir o form)
-// ==================================================
 document.addEventListener("DOMContentLoaded", () => {
     const loginForm = document.getElementById("loginForm");
     const registerForm = document.getElementById("registerForm");
     const mensagem = document.getElementById("mensagem");
 
-    // LOGIN
     if (loginForm) {
         loginForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -260,7 +221,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const senha = document.getElementById("senha").value.trim();
             mensagem.textContent = "";
 
-            // Inicia loading
             loginLoading(true);
 
             try {
@@ -273,7 +233,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // REGISTRO
     if (registerForm) {
         registerForm.addEventListener("submit", async (e) => {
             e.preventDefault();
@@ -290,7 +249,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Inicia loading
             registerLoading(true);
 
             try {

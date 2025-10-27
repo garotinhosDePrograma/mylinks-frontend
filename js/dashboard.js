@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // Verifica login logo no início
     await auth.verificarLogin();
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -22,18 +21,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     usernameDisplay.textContent = `Olá, ${user.username}!`;
 
-    // Botões principais
     logoutBtn?.addEventListener("click", () => auth.logout());
     btnUpload?.addEventListener("click", () => (window.location.href = "upload.html"));
 
-    // Configuração do link público
     const profileUrl = `${API_URL}/${user.username}`;
     profileLink.href = profileUrl;
     profileLink.textContent = profileUrl;
 
-    // ================================
-    // 📸 FOTO DE PERFIL
-    // ================================
     async function carregarFotoPerfil() {
         try {
             const response = await auth.fetchAutenticado(`${API_URL}/user/${user.username}`);
@@ -47,9 +41,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // ================================
-    // 🔗 LINKS
-    // ================================
     async function carregarLinks() {
         try {
             const response = await auth.fetchAutenticado(`${API_URL}/links`);
@@ -72,7 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // ✅ CORRIGIDO: Agora usa objetos ao invés de arrays
         links.sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
         links.forEach(link => {
@@ -118,9 +108,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         saveBtn.textContent = "Adicionar Link";
     }
 
-    // ================================
-    // 💾 SALVAR OU EDITAR LINK
-    // ================================
     linkForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
@@ -136,7 +123,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // ✅ ADICIONADO: Validação de URL no frontend
         if (!isValidUrl(url)) {
             mensagem.style.color = "red";
             mensagem.textContent = "URL inválida. Use o formato: https://exemplo.com";
@@ -170,9 +156,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ================================
-    // ❌ EXCLUIR LINK
-    // ================================
     async function excluirLink(id) {
         if (!confirm("Tem certeza que deseja excluir este link?")) return;
 
@@ -198,9 +181,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // ================================
-    // 📋 COPIAR LINK DO PERFIL
-    // ================================
     btnCopyProfile.addEventListener("click", async () => {
         try {
             await navigator.clipboard.writeText(profileUrl);
@@ -208,7 +188,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnCopyProfile.classList.add("copied");
 
             setTimeout(() => {
-                btnCopyProfile.textContent = "📋 Copiar Link";
+                btnCopyProfile.textContent = "Copiar Link";
                 btnCopyProfile.classList.remove("copied");
             }, 2000);
         } catch (err) {
@@ -218,9 +198,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ================================
-    // 🚀 INICIALIZAÇÃO
-    // ================================
     carregarFotoPerfil();
     carregarLinks();
 });

@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // Garante que o usuário está logado
     await auth.verificarLogin();
 
     const token = localStorage.getItem("accessToken");
@@ -9,13 +8,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const mensagem = document.getElementById("mensagem");
     const voltarBtn = document.getElementById("voltarBtn");
 
-    // Se não houver token, redireciona
     if (!token) {
         auth.logout();
         return;
     }
 
-    // ✅ ADICIONADO: Carrega a foto atual do usuário
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
         try {
@@ -34,11 +31,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Mostra prévia da imagem
     fotoInput.addEventListener("change", (e) => {
         const file = e.target.files[0];
         if (file) {
-            // Valida tipo de arquivo
             const validTypes = ['image/png', 'image/jpeg', 'image/jpg'];
             if (!validTypes.includes(file.type)) {
                 mensagem.style.color = "red";
@@ -47,7 +42,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
 
-            // Valida tamanho (máx 5MB)
             if (file.size > 15 * 1024 * 1024) {
                 mensagem.style.color = "red";
                 mensagem.textContent = "Imagem muito grande. Máximo: 15MB.";
@@ -62,7 +56,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Envia foto para o servidor
     uploadForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         mensagem.textContent = "";
@@ -97,14 +90,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 mensagem.textContent = "Foto enviada com sucesso!";
                 preview.src = data.foto_perfil || preview.src;
 
-                // Atualiza no localStorage o novo perfil
                 const user = JSON.parse(localStorage.getItem("user"));
                 if (user) {
                     user.foto_perfil = data.foto_perfil;
                     localStorage.setItem("user", JSON.stringify(user));
                 }
 
-                // Redireciona após 2 segundos
                 setTimeout(() => {
                     window.location.href = "dashboard.html";
                 }, 2000);
