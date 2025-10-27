@@ -128,7 +128,6 @@ a:hover {
     min-height: 20px;
 }
 
-/* Responsividade */
 @media (max-width: 480px) {
     h1 {
         font-size: 2.5rem;

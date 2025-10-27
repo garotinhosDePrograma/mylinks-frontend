@@ -11,7 +11,6 @@ body {
     min-height: 100vh;
 }
 
-/* Main Container */
 main {
     display: flex;
     flex-direction: column;
@@ -33,7 +32,6 @@ h2 {
     text-align: center;
 }
 
-/* Preview Container */
 main > div {
     margin-top: 30px;
     text-align: center;
@@ -61,7 +59,6 @@ main > div {
     box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
 }
 
-/* Upload Form */
 #uploadForm {
     margin-top: 30px;
     display: flex;
@@ -77,7 +74,6 @@ main > div {
     min-width: 350px;
 }
 
-/* File Input Styling */
 #fotoInput {
     padding: 12px 20px;
     border: 2px dashed rgba(102, 126, 234, 0.5);
@@ -120,7 +116,6 @@ main > div {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
-/* Submit Button */
 #uploadForm button[type="submit"] {
     width: 100%;
     padding: 12px 20px;
@@ -150,7 +145,6 @@ main > div {
     transform: none;
 }
 
-/* Messages */
 #mensagem {
     margin-top: 20px;
     padding: 12px 20px;
@@ -177,7 +171,6 @@ main > div {
     }
 }
 
-/* Voltar Button */
 #voltarBtn {
     margin-top: 30px;
     padding: 10px 30px;
@@ -202,7 +195,6 @@ main > div {
     transform: translateY(0);
 }
 
-/* Responsividade */
 @media (max-width: 768px) {
     h2 {
         font-size: 1.6rem;

@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // ========================================
-    // 🔐 VERIFICA SE ESTÁ LOGADO
-    // ========================================
     await auth.verificarLogin();
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -10,41 +7,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // ========================================
-    // 🎯 ELEMENTOS DO DOM
-    // ========================================
     const btnVoltar = document.getElementById("btnVoltar");
     const currentUsername = document.getElementById("currentUsername");
     const currentEmail = document.getElementById("currentEmail");
-
-    // Formulários
     const usernameForm = document.getElementById("usernameForm");
     const emailForm = document.getElementById("emailForm");
     const passwordForm = document.getElementById("passwordForm");
     const btnDeleteAccount = document.getElementById("btnDeleteAccount");
-
-    // Mensagens
     const usernameMessage = document.getElementById("usernameMessage");
     const emailMessage = document.getElementById("emailMessage");
     const passwordMessage = document.getElementById("passwordMessage");
     const dangerMessage = document.getElementById("dangerMessage");
 
-    // ========================================
-    // 📋 CARREGA INFORMAÇÕES DO USUÁRIO
-    // ========================================
     currentUsername.textContent = user.username || "N/A";
     currentEmail.textContent = user.email || "N/A";
 
-    // ========================================
-    // ⬅️ BOTÃO VOLTAR
-    // ========================================
     btnVoltar.addEventListener("click", () => {
         window.location.href = "dashboard.html";
     });
 
-    // ========================================
-    // ✏️ ALTERAR USERNAME
-    // ========================================
     usernameForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
@@ -54,7 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         usernameMessage.textContent = "";
         usernameMessage.className = "message";
 
-        // Validações
         if (newUsername.length < 3) {
             showMessage(usernameMessage, "Username deve ter no mínimo 3 caracteres", "error");
             return;
@@ -65,7 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Desabilita botão durante requisição
         const submitBtn = usernameForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.textContent = "Salvando...";
@@ -107,9 +86,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ========================================
-    // 📧 ALTERAR E-MAIL
-    // ========================================
     emailForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
@@ -119,7 +95,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         emailMessage.textContent = "";
         emailMessage.className = "message";
 
-        // Validação
         if (!isValidEmail(newEmail)) {
             showMessage(emailMessage, "E-mail inválido", "error");
             return;
@@ -170,9 +145,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ========================================
-    // 🔒 ALTERAR SENHA
-    // ========================================
     passwordForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
@@ -183,7 +155,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         passwordMessage.textContent = "";
         passwordMessage.className = "message";
 
-        // Validações
         if (newPassword.length < 6) {
             showMessage(passwordMessage, "A nova senha deve ter no mínimo 6 caracteres", "error");
             return;
@@ -233,16 +204,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ========================================
-    // 🗑️ EXCLUIR CONTA
-    // ========================================
     btnDeleteAccount.addEventListener("click", async () => {
         dangerMessage.textContent = "";
         dangerMessage.className = "message";
 
-        // Confirmação dupla
         const confirmacao1 = confirm(
-            "⚠️ ATENÇÃO!\n\nVocê está prestes a EXCLUIR sua conta permanentemente.\n\nTodos os seus dados, links e configurações serão perdidos para sempre.\n\nDeseja continuar?"
+            "ATENÇÃO!\n\nVocê está prestes a EXCLUIR sua conta permanentemente.\n\nTodos os seus dados, links e configurações serão perdidos para sempre.\n\nDeseja continuar?"
         );
 
         if (!confirmacao1) return;
@@ -294,16 +261,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnDeleteAccount.textContent = "🗑️ Excluir Conta Permanentemente";
         }
     });
-
-    // ========================================
-    // 🛠️ FUNÇÕES AUXILIARES
-    // ========================================
     
     function showMessage(element, message, type) {
         element.textContent = message;
         element.className = `message ${type}`;
-        
-        // Auto-limpa mensagens de sucesso após 5 segundos
+
         if (type === "success") {
             setTimeout(() => {
                 element.textContent = "";
@@ -317,7 +279,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return emailRegex.test(email);
     }
 
-    // Função para simular delay de API (remover em produção)
     function simulateApiCall(ms) {
         return new Promise(resolve => setTimeout(resolve, ms));
     }
