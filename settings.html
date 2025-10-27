@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyLinks - Configurações</title>
+    <link rel="stylesheet" href="/css/settings.css">
+</head>
+<body>
+    <header>
+        <h1>⚙️ Configurações</h1>
+        <button id="btnVoltar">← Voltar ao Dashboard</button>
+    </header>
+
+    <main>
+        <!-- Informações do Usuário Atual -->
+        <section id="userInfoSection" class="config-section">
+            <h2>📋 Suas Informações</h2>
+            <div class="info-card">
+                <div class="info-item">
+                    <span class="info-label">Username:</span>
+                    <span class="info-value" id="currentUsername">carregando...</span>
+                </div>
+                <div class="info-item">
+                    <span class="info-label">E-mail:</span>
+                    <span class="info-value" id="currentEmail">carregando...</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Alterar Username -->
+        <section id="usernameSection" class="config-section">
+            <h2>✏️ Alterar Username</h2>
+            <form id="usernameForm">
+                <div class="form-group">
+                    <label for="newUsername">Novo Username</label>
+                    <input 
+                        type="text" 
+                        id="newUsername" 
+                        placeholder="Digite o novo username" 
+                        minlength="3"
+                        maxlength="20"
+                        required>
+                    <small class="form-hint">Mínimo 3 caracteres, máximo 20</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="usernamePassword">Senha Atual (para confirmar)</label>
+                    <input 
+                        type="password" 
+                        id="usernamePassword" 
+                        placeholder="Digite sua senha" 
+                        required>
+                </div>
+
+                <button type="submit" class="btn-primary">Salvar Username</button>
+                <div class="message" id="usernameMessage"></div>
+            </form>
+        </section>
+
+        <!-- Alterar E-mail -->
+        <section id="emailSection" class="config-section">
+            <h2>📧 Alterar E-mail</h2>
+            <form id="emailForm">
+                <div class="form-group">
+                    <label for="newEmail">Novo E-mail</label>
+                    <input 
+                        type="email" 
+                        id="newEmail" 
+                        placeholder="Digite o novo e-mail" 
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailPassword">Senha Atual (para confirmar)</label>
+                    <input 
+                        type="password" 
+                        id="emailPassword" 
+                        placeholder="Digite sua senha" 
+                        required>
+                </div>
+
+                <button type="submit" class="btn-primary">Salvar E-mail</button>
+                <div class="message" id="emailMessage"></div>
+            </form>
+        </section>
+
+        <!-- Alterar Senha -->
+        <section id="passwordSection" class="config-section">
+            <h2>🔒 Alterar Senha</h2>
+            <form id="passwordForm">
+                <div class="form-group">
+                    <label for="currentPassword">Senha Atual</label>
+                    <input 
+                        type="password" 
+                        id="currentPassword" 
+                        placeholder="Digite sua senha atual" 
+                        required>
+                </div>
+
+                <div class="form-group">
+                    <label for="newPassword">Nova Senha</label>
+                    <input 
+                        type="password" 
+                        id="newPassword" 
+                        placeholder="Digite a nova senha" 
+                        minlength="6"
+                        required>
+                    <small class="form-hint">Mínimo 6 caracteres</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPassword">Confirmar Nova Senha</label>
+                    <input 
+                        type="password" 
+                        id="confirmPassword" 
+                        placeholder="Digite a nova senha novamente" 
+                        minlength="6"
+                        required>
+                </div>
+
+                <button type="submit" class="btn-primary">Salvar Senha</button>
+                <div class="message" id="passwordMessage"></div>
+            </form>
+        </section>
+
+        <!-- Zona de Perigo -->
+        <section id="dangerZone" class="config-section danger-section">
+            <h2>⚠️ Zona de Perigo</h2>
+            <p class="danger-warning">
+                As ações abaixo são irreversíveis. Tenha certeza antes de continuar.
+            </p>
+            
+            <button type="button" id="btnDeleteAccount" class="btn-danger">
+                🗑️ Excluir Conta Permanentemente
+            </button>
+            
+            <div class="message" id="dangerMessage"></div>
+        </section>
+    </main>
+
+    <script src="/js/config.js"></script>
+    <script src="/js/auth.js"></script>
+    <script src="/js/settings.js"></script>
+</body>
+</html>

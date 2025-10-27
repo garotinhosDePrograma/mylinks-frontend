@@ -13,6 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const btnUpload = document.getElementById("btnUpload");
     const profileLink = document.getElementById("profileLink");
     const btnCopyProfile = document.getElementById("btnCopyProfile");
+    const btnConfig = document.getElementById("btnConfig");
 
     if (!user) {
         window.location.href = "index.html";
@@ -23,6 +24,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     logoutBtn?.addEventListener("click", () => auth.logout());
     btnUpload?.addEventListener("click", () => (window.location.href = "upload.html"));
+    btnConfig?.addEventListener("click", () => (window.location.href = "settings.html"));
 
     const profileUrl = `${API_URL}/${user.username}`;
     profileLink.href = profileUrl;
