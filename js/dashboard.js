@@ -7,13 +7,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     const fotoPerfil = document.getElementById("fotoPerfil");
     const linkForm = document.getElementById("linkForm");
     const linksList = document.getElementById("linksList");
-    const logoutBtn = document.getElementById("logoutBtn");
     const linkIdInput = document.getElementById("linkId");
     const saveBtn = document.getElementById("saveBtn");
-    const btnUpload = document.getElementById("btnUpload");
     const profileLink = document.getElementById("profileLink");
     const btnCopyProfile = document.getElementById("btnCopyProfile");
-    const btnConfig = document.getElementById("btnConfig");
+
+    const btnMenu = document.getElementById("btnMenu");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+    const menuUpload = document.getElementById("menuUpload");
+    const menuConfig = document.getElementById("menuConfig");
+    const menuLogout = document.getElementById("menuLogout");
 
     if (!user) {
         window.location.href = "index.html";
@@ -22,9 +25,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     usernameDisplay.textContent = `Olá, ${user.username}!`;
 
-    logoutBtn?.addEventListener("click", () => auth.logout());
-    btnUpload?.addEventListener("click", () => (window.location.href = "upload.html"));
-    btnConfig?.addEventListener("click", () => (window.location.href = "settings.html"));
+    btnMenu.addEventListener("click", (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle("show");
+        btnMenu.classList.toggle("active");
+    });
+
+    document.addEventListener("click", (e) => {
+        if (!dropdownMenu.contains(e.target) && e.target !== btnMenu) {
+            dropdownMenu.classList.remove("show");
+            btnMenu.classList.remove("active");
+        }
+    });
+
+    menuUpload.addEventListener("click", () => {
+        window.location.href = "upload.html";
+    });
+
+    menuConfig.addEventListener("click", () => {
+        window.location.href = "settings.html";
+    });
+
+    menuLogout.addEventListener("click", () => {
+        if (confirm("Tem certeza que deseja sair?")) {
+            auth.logout();
+        }
+    });
 
     const profileUrl = `${API_URL}/${user.username}`;
     profileLink.href = profileUrl;
