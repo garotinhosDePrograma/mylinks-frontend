@@ -25,6 +25,7 @@ header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     position: relative;
+    z-index: 1000; /* Garante que header fique acima do main */
 }
 
 header h1 {
@@ -116,9 +117,9 @@ header > div {
 
 /* Dropdown Menu */
 .dropdown-menu {
-    position: absolute;
-    top: calc(100% + 10px);
-    right: 0;
+    position: fixed; /* Mudou de absolute para fixed */
+    top: auto; /* Remove top fixo */
+    right: 20px; /* Alinha com a margem do header */
     min-width: 220px;
     background: rgba(30, 30, 46, 0.98);
     backdrop-filter: blur(20px);
@@ -129,7 +130,7 @@ header > div {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 1000;
+    z-index: 9999; /* Z-index mais alto */
     overflow: hidden;
 }
 
@@ -219,6 +220,8 @@ main h2 {
     justify-content: space-between;
     gap: 15px;
     transition: all 0.3s ease;
+    position: relative; /* Adiciona contexto de empilhamento */
+    z-index: 1; /* Menor que o dropdown */
 }
 
 .profile-link-section:hover {
@@ -608,8 +611,7 @@ main h2 {
 
     .dropdown-menu {
         min-width: 180px;
-        right: 0;
-        left: auto;
+        right: 15px; /* Alinhado com padding do header mobile */
     }
 
     .dropdown-item {
@@ -736,6 +738,7 @@ main h2 {
 
     .dropdown-menu {
         min-width: 160px;
+        right: 10px; /* Alinhado com padding menor */
     }
 
     main {

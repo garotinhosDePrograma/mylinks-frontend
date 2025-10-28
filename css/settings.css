@@ -11,6 +11,10 @@ body {
     min-height: 100vh;
 }
 
+/* ========================================
+   HEADER
+   ======================================== */
+
 header {
     display: flex;
     justify-content: space-between;
@@ -55,6 +59,10 @@ header h1 {
     transform: translateY(0);
 }
 
+/* ========================================
+   MAIN CONTAINER
+   ======================================== */
+
 main {
     max-width: 700px;
     margin: 40px auto;
@@ -63,6 +71,10 @@ main {
     flex-direction: column;
     gap: 30px;
 }
+
+/* ========================================
+   SEÇÕES DE CONFIGURAÇÃO
+   ======================================== */
 
 .config-section {
     background: rgba(255, 255, 255, 0.05);
@@ -88,6 +100,10 @@ main {
     align-items: center;
     gap: 10px;
 }
+
+/* ========================================
+   CARD DE INFORMAÇÕES
+   ======================================== */
 
 .info-card {
     background: rgba(255, 255, 255, 0.03);
@@ -122,6 +138,10 @@ main {
     color: #667eea;
     font-size: 1rem;
 }
+
+/* ========================================
+   FORMULÁRIOS
+   ======================================== */
 
 form {
     display: flex;
@@ -171,6 +191,10 @@ input:focus {
     font-style: italic;
 }
 
+/* ========================================
+   BOTÕES
+   ======================================== */
+
 .btn-primary {
     padding: 12px 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -198,6 +222,10 @@ input:focus {
     cursor: not-allowed;
     transform: none;
 }
+
+/* ========================================
+   ZONA DE PERIGO
+   ======================================== */
 
 .danger-section {
     border-color: rgba(255, 107, 107, 0.3);
@@ -243,6 +271,10 @@ input:focus {
     transform: translateY(0);
 }
 
+/* ========================================
+   MENSAGENS DE FEEDBACK
+   ======================================== */
+
 .message {
     padding: 12px 15px;
     border-radius: 8px;
@@ -286,15 +318,26 @@ input:focus {
     }
 }
 
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+
 @media (max-width: 768px) {
     header {
-        flex-direction: column;
+        flex-direction: row; /* Mantém lado a lado */
         gap: 15px;
         padding: 20px;
     }
 
     header h1 {
         font-size: 1.6rem;
+        flex: 1; /* Ocupa espaço disponível */
+    }
+
+    #btnVoltar {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+        white-space: nowrap; /* Não quebra texto */
     }
 
     main {
@@ -312,8 +355,18 @@ input:focus {
 }
 
 @media (max-width: 480px) {
+    header {
+        padding: 15px;
+        gap: 10px;
+    }
+
     header h1 {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
+    }
+
+    #btnVoltar {
+        font-size: 0.85rem;
+        padding: 8px 14px;
     }
 
     .config-section {

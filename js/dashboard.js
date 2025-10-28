@@ -29,12 +29,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         e.stopPropagation();
         dropdownMenu.classList.toggle("show");
         btnMenu.classList.toggle("active");
+
+        if (dropdownMenu.classList.contains("show")) {
+            const btnRect = btnMenu.getBoundingClientRect();
+            dropdownMenu.style.top = `${btnRect.bottom + 10}px`;
+        }
     });
 
     document.addEventListener("click", (e) => {
         if (!dropdownMenu.contains(e.target) && e.target !== btnMenu) {
             dropdownMenu.classList.remove("show");
             btnMenu.classList.remove("active");
+        }
+    });
+
+    window.addEventListener("relize", () => {
+        if (dropdownMenu.classList.contains("show")) {
+            const btnRect = btnMenu.getBoundingClientRect();
+            dropdownMenu.style.top = `${btnRect.bottom + 10}px`;
         }
     });
 
