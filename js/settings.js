@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         e.preventDefault();
         
         const newUsername = document.getElementById("newUsername").value.trim();
-        const password = document.getElementById("usernamePassword").value;
+        const senha = document.getElementById("usernamePassword").value;
 
         usernameMessage.textContent = "";
         usernameMessage.className = "message";
@@ -50,33 +50,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         submitBtn.textContent = "Salvando...";
 
         try {
-            // TODO: Implementar rota no backend
-            // const response = await auth.fetchAutenticado(`${API_URL}/auth/update-username`, {
-            //     method: "PUT",
-            //     body: JSON.stringify({ newUsername, password })
-            // });
+            const response = await auth.fetchAutenticado(`${API_URL}/auth/update-username`, {
+                method: "PUT",
+                body: JSON.stringify({ newUsername, senha })
+            });
 
-            // const data = await response.json();
+            const data = await response.json();
 
-            // if (response.ok) {
-            //     // Atualiza localStorage
-            //     user.username = newUsername;
-            //     localStorage.setItem("user", JSON.stringify(user));
-            //     currentUsername.textContent = newUsername;
-            //     usernameForm.reset();
-            //     showMessage(usernameMessage, "Username atualizado com sucesso! ✅", "success");
-            // } else {
-            //     throw new Error(data.error || "Erro ao atualizar username");
-            // }
-
-            // ⚠️ SIMULAÇÃO (remover quando a rota estiver pronta)
-            await simulateApiCall(1500);
-            user.username = newUsername;
-            localStorage.setItem("user", JSON.stringify(user));
-            currentUsername.textContent = newUsername;
-            usernameForm.reset();
-            showMessage(usernameMessage, "Username atualizado com sucesso! ✅ (SIMULAÇÃO)", "success");
-
+            if (response.ok) {
+                 user.username = newUsername;
+                 localStorage.setItem("user", JSON.stringify(user));
+                 currentUsername.textContent = newUsername;
+                 usernameForm.reset();
+                 showMessage(usernameMessage, "Username atualizado com sucesso!", "success");
+             } else {
+                 throw new Error(data.error || "Erro ao atualizar username");
+             }
         } catch (error) {
             console.error("Erro ao atualizar username:", error);
             showMessage(usernameMessage, error.message || "Erro ao atualizar username", "error");
@@ -110,32 +99,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         submitBtn.textContent = "Salvando...";
 
         try {
-            // TODO: Implementar rota no backend
-            // const response = await auth.fetchAutenticado(`${API_URL}/auth/update-email`, {
-            //     method: "PUT",
-            //     body: JSON.stringify({ newEmail, password })
-            // });
+             const response = await auth.fetchAutenticado(`${API_URL}/auth/update-email`, {
+                 method: "PUT",
+                 body: JSON.stringify({ newEmail, password })
+             });
 
-            // const data = await response.json();
+             const data = await response.json();
 
-            // if (response.ok) {
-            //     user.email = newEmail;
-            //     localStorage.setItem("user", JSON.stringify(user));
-            //     currentEmail.textContent = newEmail;
-            //     emailForm.reset();
-            //     showMessage(emailMessage, "E-mail atualizado com sucesso! ✅", "success");
-            // } else {
-            //     throw new Error(data.error || "Erro ao atualizar e-mail");
-            // }
-
-            // ⚠️ SIMULAÇÃO (remover quando a rota estiver pronta)
-            await simulateApiCall(1500);
-            user.email = newEmail;
-            localStorage.setItem("user", JSON.stringify(user));
-            currentEmail.textContent = newEmail;
-            emailForm.reset();
-            showMessage(emailMessage, "E-mail atualizado com sucesso! ✅ (SIMULAÇÃO)", "success");
-
+             if (response.ok) {
+                 user.email = newEmail;
+                 localStorage.setItem("user", JSON.stringify(user));
+                 currentEmail.textContent = newEmail;
+                 emailForm.reset();
+                 showMessage(emailMessage, "E-mail atualizado com sucesso!", "success");
+             } else {
+                 throw new Error(data.error || "Erro ao atualizar e-mail");
+             }
         } catch (error) {
             console.error("Erro ao atualizar e-mail:", error);
             showMessage(emailMessage, error.message || "Erro ao atualizar e-mail", "error");
@@ -175,26 +154,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         submitBtn.textContent = "Salvando...";
 
         try {
-            // TODO: Implementar rota no backend
-            // const response = await auth.fetchAutenticado(`${API_URL}/auth/update-password`, {
-            //     method: "PUT",
-            //     body: JSON.stringify({ currentPassword, newPassword })
-            // });
+             const response = await auth.fetchAutenticado(`${API_URL}/auth/update-password`, {
+                 method: "PUT",
+                 body: JSON.stringify({ currentPassword, newPassword })
+             });
 
-            // const data = await response.json();
+             const data = await response.json();
 
-            // if (response.ok) {
-            //     passwordForm.reset();
-            //     showMessage(passwordMessage, "Senha atualizada com sucesso! ✅", "success");
-            // } else {
-            //     throw new Error(data.error || "Erro ao atualizar senha");
-            // }
-
-            // ⚠️ SIMULAÇÃO (remover quando a rota estiver pronta)
-            await simulateApiCall(1500);
-            passwordForm.reset();
-            showMessage(passwordMessage, "Senha atualizada com sucesso! ✅ (SIMULAÇÃO)", "success");
-
+             if (response.ok) {
+                 passwordForm.reset();
+                 showMessage(passwordMessage, "Senha atualizada com sucesso!", "success");
+             } else {
+                 throw new Error(data.error || "Erro ao atualizar senha");
+             }
         } catch (error) {
             console.error("Erro ao atualizar senha:", error);
             showMessage(passwordMessage, error.message || "Erro ao atualizar senha", "error");
@@ -231,34 +203,27 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         btnDeleteAccount.disabled = true;
-        btnDeleteAccount.textContent = "🗑️ Excluindo...";
+        btnDeleteAccount.textContent = "Excluindo...";
 
         try {
-            // TODO: Implementar rota no backend
-            // const response = await auth.fetchAutenticado(`${API_URL}/auth/delete-account`, {
-            //     method: "DELETE",
-            //     body: JSON.stringify({ password: senha })
-            // });
+             const response = await auth.fetchAutenticado(`${API_URL}/auth/delete-account`, {
+                 method: "DELETE",
+                 body: JSON.stringify({ password: senha })
+             });
 
-            // const data = await response.json();
+             const data = await response.json();
 
-            // if (response.ok) {
-            //     alert("✅ Conta excluída com sucesso. Você será redirecionado.");
-            //     auth.logout();
-            // } else {
-            //     throw new Error(data.error || "Erro ao excluir conta");
-            // }
-
-            // ⚠️ SIMULAÇÃO (remover quando a rota estiver pronta)
-            await simulateApiCall(2000);
-            alert("✅ Conta excluída com sucesso (SIMULAÇÃO). Você será redirecionado.");
-            auth.logout();
-
+             if (response.ok) {
+                 alert("Conta excluída com sucesso. Você será redirecionado.");
+                 auth.logout();
+             } else {
+                 throw new Error(data.error || "Erro ao excluir conta");
+             }
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
             showMessage(dangerMessage, error.message || "Erro ao excluir conta", "error");
             btnDeleteAccount.disabled = false;
-            btnDeleteAccount.textContent = "🗑️ Excluir Conta Permanentemente";
+            btnDeleteAccount.textContent = "Excluir Conta Permanentemente";
         }
     });
     
@@ -277,9 +242,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     function isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
-    }
-
-    function simulateApiCall(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
     }
 });
