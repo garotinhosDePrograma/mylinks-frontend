@@ -29,18 +29,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     usernameForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
-        const newUsername = document.getElementById("newUsername").value.trim();
+        const new_username = document.getElementById("newUsername").value.trim();
         const senha = document.getElementById("usernamePassword").value;
 
         usernameMessage.textContent = "";
         usernameMessage.className = "message";
 
-        if (newUsername.length < 3) {
+        if (new_username.length < 3) {
             showMessage(usernameMessage, "Username deve ter no mínimo 3 caracteres", "error");
             return;
         }
 
-        if (newUsername === user.username) {
+        if (new_username === user.username) {
             showMessage(usernameMessage, "O novo username é igual ao atual", "info");
             return;
         }
@@ -52,15 +52,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         try {
             const response = await auth.fetchAutenticado(`${API_URL}/auth/update-username`, {
                 method: "PUT",
-                body: JSON.stringify({ newUsername, senha })
+                body: JSON.stringify({ new_username, senha })
             });
 
             const data = await response.json();
 
             if (response.ok) {
-                 user.username = newUsername;
+                 user.username = new_username;
                  localStorage.setItem("user", JSON.stringify(user));
-                 currentUsername.textContent = newUsername;
+                 currentUsername.textContent = new_username;
                  usernameForm.reset();
                  showMessage(usernameMessage, "Username atualizado com sucesso!", "success");
              } else {
