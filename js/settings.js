@@ -1,7 +1,4 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // ========================================
-    // 🔐 VERIFICA SE ESTÁ LOGADO
-    // ========================================
     await auth.verificarLogin();
 
     const user = JSON.parse(localStorage.getItem("user"));
@@ -10,41 +7,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    // ========================================
-    // 🎯 ELEMENTOS DO DOM
-    // ========================================
     const btnVoltar = document.getElementById("btnVoltar");
     const currentUsername = document.getElementById("currentUsername");
     const currentEmail = document.getElementById("currentEmail");
-
-    // Formulários
     const usernameForm = document.getElementById("usernameForm");
     const emailForm = document.getElementById("emailForm");
     const passwordForm = document.getElementById("passwordForm");
     const btnDeleteAccount = document.getElementById("btnDeleteAccount");
-
-    // Mensagens
     const usernameMessage = document.getElementById("usernameMessage");
     const emailMessage = document.getElementById("emailMessage");
     const passwordMessage = document.getElementById("passwordMessage");
     const dangerMessage = document.getElementById("dangerMessage");
 
-    // ========================================
-    // 📋 CARREGA INFORMAÇÕES DO USUÁRIO
-    // ========================================
     currentUsername.textContent = user.username || "N/A";
     currentEmail.textContent = user.email || "N/A";
 
-    // ========================================
-    // ⬅️ BOTÃO VOLTAR
-    // ========================================
     btnVoltar.addEventListener("click", () => {
         window.location.href = "dashboard.html";
     });
 
-    // ========================================
-    // ✏️ ALTERAR USERNAME
-    // ========================================
     usernameForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
@@ -54,7 +35,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         usernameMessage.textContent = "";
         usernameMessage.className = "message";
 
-        // Validações
         if (newUsername.length < 3) {
             showMessage(usernameMessage, "Username deve ter no mínimo 3 caracteres", "error");
             return;
@@ -65,7 +45,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        // Desabilita botão durante requisição
         const submitBtn = usernameForm.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.textContent = "Salvando...";
@@ -79,12 +58,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
-                // Atualiza localStorage
                 user.username = data.username;
                 localStorage.setItem("user", JSON.stringify(user));
                 currentUsername.textContent = data.username;
                 usernameForm.reset();
-                showMessage(usernameMessage, "Username atualizado com sucesso! ✅", "success");
+                showMessage(usernameMessage, "Username atualizado com sucesso!", "success");
             } else {
                 throw new Error(data.error || "Erro ao atualizar username");
             }
@@ -98,9 +76,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ========================================
-    // 📧 ALTERAR E-MAIL
-    // ========================================
     emailForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
@@ -110,7 +85,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         emailMessage.textContent = "";
         emailMessage.className = "message";
 
-        // Validação
         if (!isValidEmail(newEmail)) {
             showMessage(emailMessage, "E-mail inválido", "error");
             return;
@@ -126,32 +100,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         submitBtn.textContent = "Salvando...";
 
         try {
-            // TODO: Implementar rota no backend
-            // const response = await auth.fetchAutenticado(`${API_URL}/auth/update-email`, {
-            //     method: "PUT",
-            //     body: JSON.stringify({ newEmail, password })
-            // });
+             const response = await auth.fetchAutenticado(`${API_URL}/auth/update-email`, {
+                 method: "PUT",
+                 body: JSON.stringify({ newEmail, password })
+             });
 
-            // const data = await response.json();
+             const data = await response.json();
 
-            // if (response.ok) {
-            //     user.email = newEmail;
-            //     localStorage.setItem("user", JSON.stringify(user));
-            //     currentEmail.textContent = newEmail;
-            //     emailForm.reset();
-            //     showMessage(emailMessage, "E-mail atualizado com sucesso! ✅", "success");
-            // } else {
-            //     throw new Error(data.error || "Erro ao atualizar e-mail");
-            // }
-
-            // ⚠️ SIMULAÇÃO (remover quando a rota estiver pronta)
-            await simulateApiCall(1500);
-            user.email = newEmail;
-            localStorage.setItem("user", JSON.stringify(user));
-            currentEmail.textContent = newEmail;
-            emailForm.reset();
-            showMessage(emailMessage, "E-mail atualizado com sucesso! ✅ (SIMULAÇÃO)", "success");
-
+             if (response.ok) {
+                 user.email = newEmail;
+                 localStorage.setItem("user", JSON.stringify(user));
+                 currentEmail.textContent = newEmail;
+                 emailForm.reset();
+                 showMessage(emailMessage, "E-mail atualizado com sucesso!", "success");
+             } else {
+                 throw new Error(data.error || "Erro ao atualizar e-mail");
+             }
         } catch (error) {
             console.error("Erro ao atualizar e-mail:", error);
             showMessage(emailMessage, error.message || "Erro ao atualizar e-mail", "error");
@@ -161,9 +125,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ========================================
-    // 🔒 ALTERAR SENHA
-    // ========================================
     passwordForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
@@ -174,7 +135,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         passwordMessage.textContent = "";
         passwordMessage.className = "message";
 
-        // Validações
         if (newPassword.length < 6) {
             showMessage(passwordMessage, "A nova senha deve ter no mínimo 6 caracteres", "error");
             return;
@@ -204,7 +164,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (response.ok) {
                 passwordForm.reset();
-                showMessage(passwordMessage, "Senha atualizada com sucesso! ✅", "success");
+                showMessage(passwordMessage, "Senha atualizada com sucesso!", "success");
             } else {
                 throw new Error(data.error || "Erro ao atualizar senha");
             }
@@ -218,16 +178,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // ========================================
-    // 🗑️ EXCLUIR CONTA
-    // ========================================
     btnDeleteAccount.addEventListener("click", async () => {
         dangerMessage.textContent = "";
         dangerMessage.className = "message";
 
-        // Confirmação dupla
         const confirmacao1 = confirm(
-            "⚠️ ATENÇÃO!\n\nVocê está prestes a EXCLUIR sua conta permanentemente.\n\nTodos os seus dados, links e configurações serão perdidos para sempre.\n\nDeseja continuar?"
+            "ATENÇÃO!\n\nVocê está prestes a EXCLUIR sua conta permanentemente.\n\nTodos os seus dados, links e configurações serão perdidos para sempre.\n\nDeseja continuar?"
         );
 
         if (!confirmacao1) return;
@@ -249,7 +205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         btnDeleteAccount.disabled = true;
-        btnDeleteAccount.textContent = "🗑️ Excluindo...";
+        btnDeleteAccount.textContent = "Excluindo...";
 
         try {
             const response = await auth.fetchAutenticado(`${API_URL}/auth/delete-account`, {
@@ -260,7 +216,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert("✅ Conta excluída com sucesso. Você será redirecionado.");
+                alert("Conta excluída com sucesso. Você será redirecionado.");
                 auth.logout();
             } else {
                 throw new Error(data.error || "Erro ao excluir conta");
@@ -270,19 +226,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Erro ao excluir conta:", error);
             showMessage(dangerMessage, error.message || "Erro ao excluir conta", "error");
             btnDeleteAccount.disabled = false;
-            btnDeleteAccount.textContent = "🗑️ Excluir Conta Permanentemente";
+            btnDeleteAccount.textContent = "Excluir Conta Permanentemente";
         }
     });
-
-    // ========================================
-    // 🛠️ FUNÇÕES AUXILIARES
-    // ========================================
     
     function showMessage(element, message, type) {
         element.textContent = message;
         element.className = `message ${type}`;
         
-        // Auto-limpa mensagens de sucesso após 5 segundos
         if (type === "success") {
             setTimeout(() => {
                 element.textContent = "";
