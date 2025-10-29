@@ -1,5 +1,3 @@
-const API_URL = window.CONFIG.API_URL;
-
 document.addEventListener("DOMContentLoaded", async () => {
     // ========================================
     // 🔐 VERIFICA SE ESTÁ LOGADO
