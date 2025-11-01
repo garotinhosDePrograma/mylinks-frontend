@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function renderLinks(links) {
         linksList.innerHTML = "";
-
+        
         if (!Array.isArray(links) || links.length === 0) {
             linksList.innerHTML = '<li class="empty-state"><p>Nenhum link adicionado ainda.</p></li>';
             return;
@@ -106,9 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         links.sort((a, b) => (a.ordem || 0) - (b.ordem || 0));
 
         links.forEach(link => {
-            const id = link[0];
-            const titulo = link[2];
-            const url = link[3];
+            const { id, titulo, url } = link;
 
             const li = document.createElement("li");
 
@@ -134,6 +132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             linksList.appendChild(li);
         });
     }
+
 
     function preencherFormulario(link) {
         linkIdInput.value = link.id;
