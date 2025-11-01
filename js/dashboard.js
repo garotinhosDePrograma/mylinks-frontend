@@ -113,12 +113,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             const linkText = document.createElement("a");
             linkText.href = url.startsWith("http") ? url : `https://${url}`;
             linkText.target = "_blank";
-            linkText.textContent = `${link.titulo} → ${link.url}`;
+            linkText.textContent = `${titulo} → ${url}`;
 
             const editBtn = document.createElement("button");
             editBtn.textContent = "Editar";
             editBtn.addEventListener("click", () =>
-                preencherFormulario({ link.id, link.titulo, link.url })
+                preencherFormulario({ id, titulo, url })
             );
 
             const deleteBtn = document.createElement("button");
