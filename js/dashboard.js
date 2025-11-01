@@ -113,7 +113,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const linkText = document.createElement("a");
             linkText.href = url.startsWith("http") ? url : `https://${url}`;
             linkText.target = "_blank";
-            linkText.textContent = `${titulo} → ${url}`;
+            linkText.textContent = `${link.titulo} → ${link.url}`;
 
             const editBtn = document.createElement("button");
             editBtn.textContent = "Editar";
