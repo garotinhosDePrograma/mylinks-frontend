@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const editBtn = document.createElement("button");
             editBtn.textContent = "Editar";
             editBtn.addEventListener("click", () =>
-                preencherFormulario({ id, titulo, url })
+                preencherFormulario({ link.id, link.titulo, link.url })
             );
 
             const deleteBtn = document.createElement("button");
