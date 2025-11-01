@@ -1,4 +1,4 @@
-const CACHE_NAME = "mylinks-cache-v1.57";
+const CACHE_NAME = "mylinks-cache-v1.60";
 
 const urlsToCache = [
   "/",
