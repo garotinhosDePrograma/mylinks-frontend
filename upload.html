@@ -3,25 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyLinks - Atualizar foto de perfil">
+    <meta name="theme-color" content="#667eea">
     <title>MyLinks - Enviar Foto</title>
     <link rel="stylesheet" href="/css/upload.css">
 </head>
 <body>
-    <main>
+    <main role="main">
         <h2>Atualizar Foto de Perfil</h2>
 
-        <div>
-            <img id="preview" src="" alt="Prévia da foto">
+        <div role="img" aria-label="Prévia da foto de perfil">
+            <img 
+                id="preview" 
+                src="" 
+                alt="Prévia da foto de perfil" 
+                loading="lazy">
         </div>
 
-        <form id="uploadForm">
-            <input type="file" id="fotoInput" accept="image/*" required>
-            <button type="submit">Enviar Foto</button>
+        <form id="uploadForm" aria-label="Formulário de upload de foto">
+            <input 
+                type="file" 
+                id="fotoInput" 
+                name="file"
+                accept="image/png, image/jpeg, image/jpg" 
+                required
+                aria-required="true"
+                aria-label="Selecionar foto de perfil"
+                aria-describedby="file-hint">
+            <small id="file-hint" class="form-hint">Formatos: PNG, JPG, JPEG. Máximo: 15MB</small>
+            
+            <button type="submit" aria-busy="false">Enviar Foto</button>
         </form>
 
-        <div id="mensagem">Escolha uma imagem para fazer o upload.</div>
+        <div id="mensagem" role="alert" aria-live="polite">Escolha uma imagem para fazer o upload.</div>
 
-        <button id="voltarBtn">Voltar</button>
+        <button id="voltarBtn" aria-label="Voltar para o dashboard">Voltar</button>
     </main>
 
     <script src="js/config.js"></script>

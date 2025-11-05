@@ -11,6 +11,20 @@ body {
     min-height: 100vh;
 }
 
+*:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
 main {
     display: flex;
     flex-direction: column;
@@ -59,12 +73,21 @@ main > div {
     box-shadow: 0 12px 40px rgba(102, 126, 234, 0.6);
 }
 
+.form-hint {
+    font-size: 0.75rem;
+    color: #888;
+    font-style: italic;
+    margin-top: 8px;
+    display: block;
+    text-align: center;
+}
+
 #uploadForm {
     margin-top: 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 20px;
+    gap: 15px;
     background: rgba(255, 255, 255, 0.05);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
@@ -87,15 +110,10 @@ main > div {
     text-align: center;
 }
 
-#fotoInput:hover {
+#fotoInput:hover,
+#fotoInput:focus {
     border-color: #667eea;
     background: rgba(102, 126, 234, 0.1);
-}
-
-#fotoInput:focus {
-    outline: none;
-    border-color: #667eea;
-    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 #fotoInput::file-selector-button {
@@ -130,12 +148,13 @@ main > div {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-#uploadForm button[type="submit"]:hover {
+#uploadForm button[type="submit"]:hover:not(:disabled),
+#uploadForm button[type="submit"]:focus:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-#uploadForm button[type="submit"]:active {
+#uploadForm button[type="submit"]:active:not(:disabled) {
     transform: translateY(0);
 }
 
@@ -143,6 +162,32 @@ main > div {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
+}
+
+#uploadForm button[type="submit"][aria-busy="true"] {
+    position: relative;
+    color: transparent;
+}
+
+#uploadForm button[type="submit"][aria-busy="true"]::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 #mensagem {
@@ -184,7 +229,8 @@ main > div {
     transition: all 0.3s ease;
 }
 
-#voltarBtn:hover {
+#voltarBtn:hover,
+#voltarBtn:focus {
     background: rgba(255, 255, 255, 0.08);
     color: #e0e0e0;
     border-color: rgba(255, 255, 255, 0.3);
@@ -247,5 +293,47 @@ main > div {
         padding: 8px 16px;
         font-size: 0.85rem;
         margin-right: 10px;
+    }
+
+    #uploadForm button[type="submit"] {
+        font-size: 0.95rem;
+    }
+
+    #mensagem {
+        font-size: 0.85rem;
+    }
+
+    #voltarBtn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (prefers-contrast: high) {
+    * {
+        border-color: #fff !important;
+    }
+    
+    body {
+        background: #000;
+        color: #fff;
+    }
+    
+    button, input {
+        border: 2px solid #fff !important;
+    }
+
+    #preview {
+        border: 4px solid #fff !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

@@ -9,49 +9,123 @@ document.addEventListener("DOMContentLoaded", async () => {
     const params = new URLSearchParams(window.location.search);
     const username = params.get("user");
 
+    function mostrarMensagem(texto, tipo = 'error') {
+        mensagem.textContent = texto;
+        mensagem.setAttribute('role', 'alert');
+        
+        switch(tipo) {
+            case 'success':
+                mensagem.style.color = "#4caf50";
+                mensagem.style.backgroundColor = "rgba(76, 175, 80, 0.1)";
+                mensagem.style.border = "1px solid rgba(76, 175, 80, 0.3)";
+                break;
+            case 'error':
+                mensagem.style.color = "#ff6b6b";
+                mensagem.style.backgroundColor = "rgba(255, 107, 107, 0.1)";
+                mensagem.style.border = "1px solid rgba(255, 107, 107, 0.3)";
+                break;
+            default:
+                mensagem.style.color = "#667eea";
+                mensagem.style.backgroundColor = "rgba(102, 126, 234, 0.1)";
+                mensagem.style.border = "1px solid rgba(102, 126, 234, 0.3)";
+        }
+    }
+
     if (!username) {
-        mensagem.style.color = "red";
-        mensagem.textContent = "Usuário não especificado.";
+        mostrarMensagem("Usuário não especificado na URL.", 'error');
+        usernameEl.textContent = "Usuário não encontrado";
         return;
     }
 
+    usernameEl.textContent = "Carregando...";
+    fotoPerfil.style.opacity = "0.5";
+    linksList.innerHTML = '<li class="empty-state"><p>Carregando links...</p></li>';
+
     try {
         const response = await fetch(`${API_URL}/user/${username}`);
+        
+        if (!response.ok) {
+            if (response.status === 404) {
+                throw new Error("Usuário não encontrado");
+            } else if (response.status >= 500) {
+                throw new Error(window.CONFIG.ERRORS.SERVER);
+            } else {
+                throw new Error(`Erro HTTP ${response.status}`);
+            }
+        }
+        
         const data = await response.json();
 
-        if (!response.ok) {
-            mensagem.style.color = "red";
-            mensagem.textContent = data.error || "Usuário não encontrado.";
-            return;
-        }
-
         usernameEl.textContent = data.username;
+        document.title = `${data.username} - MyLinks`;
 
-        if (data.foto_perfil) {
-            fotoPerfil.src = data.foto_perfil;
-        } else {
+        const img = new Image();
+        img.onload = () => {
+            fotoPerfil.src = img.src;
+            fotoPerfil.style.opacity = "1";
+        };
+        img.onerror = () => {
             fotoPerfil.src = window.CONFIG.DEFAULT_AVATAR;
-        }
+            fotoPerfil.style.opacity = "1";
+        };
+        img.src = data.foto_perfil || window.CONFIG.DEFAULT_AVATAR;
+        
+        fotoPerfil.alt = `Foto de perfil de ${data.username}`;
 
-        if (data.links && data.links.length > 0) {
+        if (data.links && Array.isArray(data.links) && data.links.length > 0) {
+            linksList.innerHTML = "";
+            
             data.links
-                .sort((a, b) => a.ordem - b.ordem)
-                .forEach(link => {
+                .sort((a, b) => (a.ordem || 0) - (b.ordem || 0))
+                .forEach((link, index) => {
                     const li = document.createElement("li");
+                    li.setAttribute('role', 'listitem');
+                    
                     const a = document.createElement("a");
                     a.href = link.url.startsWith("http") ? link.url : `https://${link.url}`;
                     a.textContent = link.titulo;
                     a.target = "_blank";
+                    a.rel = "noopener noreferrer";
+                    a.setAttribute('aria-label', `${link.titulo} - Abre em nova aba`);
+                    
+                    li.style.animationDelay = `${index * 0.1}s`;
+                    
                     li.appendChild(a);
                     linksList.appendChild(li);
                 });
         } else {
-            linksList.innerHTML = '<li class="empty-state"><p>Nenhum link encontrado.</p></li>';
+            linksList.innerHTML = '<li class="empty-state"><p>📭 Nenhum link encontrado.</p></li>';
         }
 
     } catch (error) {
         console.error("Erro ao carregar perfil:", error);
-        mensagem.style.color = "red";
-        mensagem.textContent = "Falha ao carregar dados do usuário.";
+        
+        if (error.name === 'TypeError') {
+            mostrarMensagem(window.CONFIG.ERRORS.OFFLINE, 'error');
+        } else if (error.message === "Usuário não encontrado") {
+            mostrarMensagem("Usuário não encontrado. Verifique se o username está correto.", 'error');
+        } else {
+            mostrarMensagem(error.message || "Falha ao carregar dados do usuário.", 'error');
+        }
+        
+        usernameEl.textContent = username;
+        fotoPerfil.src = window.CONFIG.DEFAULT_AVATAR;
+        fotoPerfil.style.opacity = "1";
+        linksList.innerHTML = '<li class="empty-state"><p>Não foi possível carregar os links.</p></li>';
     }
+    
+    const perfil = document.getElementById("perfil");
+    if (perfil) {
+        perfil.setAttribute('aria-label', `Perfil público de ${username}`);
+    }
+    
+    const linksSection = document.getElementById("linksSection");
+    if (linksSection) {
+        linksSection.setAttribute('aria-label', 'Lista de links do perfil');
+    }
+    
+    const metaDescription = document.createElement('meta');
+    metaDescription.name = "description";
+    metaDescription.content = `Veja todos os links de ${username} em um só lugar`;
+    document.head.appendChild(metaDescription);
 });

@@ -3,36 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyLinks - Organize e compartilhe todos os seus links em um só lugar">
+    <meta name="theme-color" content="#667eea">
     <title>MyLinks - Login</title>
     <link rel="stylesheet" href="/css/index.css">
 </head>
 <body>
-    <main>
+    <main role="main">
         <div id="checkingAuth" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
             <h1>MyLinks</h1>
             <p style="color: #b0b0b0;">Verificando credenciais...</p>
-            <div class="loader active"></div>
+            <div class="loader active" role="status" aria-label="Carregando"></div>
         </div>
 
         <div id="loginContainer" style="display: none;">
             <h1>MyLinks</h1>
             <h2>Entrar na sua conta</h2>
-            <form id="loginForm">
+            <form id="loginForm" aria-label="Formulário de login">
                 <label for="email">E-mail</label>
-                <input type="email" id="email" placeholder="Digite seu e-mail" required>
-                <label for="senha">Senha</label>
-                <input type="password" id="senha" placeholder="Digite sua senha" required>
+                <input 
+                    type="email" 
+                    id="email" 
+                    name="email"
+                    placeholder="Digite seu e-mail" 
+                    autocomplete="email"
+                    required 
+                    aria-required="true">
                 
-                <button type="submit">Entrar</button>
-                <div class="Logloader" id="Logloader"></div>
+                <label for="senha">Senha</label>
+                <input 
+                    type="password" 
+                    id="senha" 
+                    name="password"
+                    placeholder="Digite sua senha" 
+                    autocomplete="current-password"
+                    required 
+                    aria-required="true">
+                
+                <button type="submit" aria-label="Entrar na conta">Entrar</button>
+                <div class="Logloader" id="Logloader" role="status" aria-label="Entrando"></div>
             </form>
             <p>
                 Não tem conta?
                 <a href="register.html">Cadastre-se aqui</a>
             </p>
-            <div id="mensagem"></div>
+            <div id="mensagem" role="alert" aria-live="polite"></div>
         </div>
     </main>
+    
     <script src="js/config.js"></script>
     <script src="js/auth.js"></script>
     <script>
@@ -56,13 +74,44 @@
 
             document.getElementById("checkingAuth").style.display = "none";
             document.getElementById("loginContainer").style.display = "block";
+            
+            const emailInput = document.getElementById("email");
+            if (emailInput) {
+                emailInput.focus();
+            }
         });
 
         let deferredPrompt;
         window.addEventListener("beforeinstallprompt", (e) => {
             e.preventDefault();
             deferredPrompt = e;
-            alert("📲 Dica: você pode instalar o MyLinks pela URL mylinks-352x.onrender.com/download");
+            
+            const notification = document.createElement('div');
+            notification.innerHTML = `
+                <div style="
+                    position: fixed;
+                    bottom: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: rgba(102, 126, 234, 0.95);
+                    color: white;
+                    padding: 15px 25px;
+                    border-radius: 12px;
+                    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+                    z-index: 10000;
+                    text-align: center;
+                    max-width: 90%;
+                " role="alert" aria-live="polite">
+                    📲 Instale o MyLinks no seu dispositivo!
+                    <br>
+                    <small>Acesse: mylinks-352x.onrender.com/download</small>
+                </div>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 8000);
         });
     </script>
 </body>

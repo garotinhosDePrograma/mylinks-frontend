@@ -26,6 +26,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "dashboard.html";
     });
 
+    function showMessage(element, message, type, duration = 5000) {
+        element.textContent = message;
+        element.className = `message ${type}`;
+        element.setAttribute('role', 'alert');
+        
+        if (type === "success" && duration > 0) {
+            setTimeout(() => {
+                element.textContent = "";
+                element.className = "message";
+            }, duration);
+        }
+    }
+
+    function isValidEmail(email) {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+    }
+
+    function toggleFormButton(form, disabled, loadingText = null) {
+        const submitBtn = form.querySelector('button[type="submit"]');
+        if (submitBtn) {
+            submitBtn.disabled = disabled;
+            if (disabled && loadingText) {
+                submitBtn.dataset.originalText = submitBtn.textContent;
+                submitBtn.textContent = loadingText;
+                submitBtn.setAttribute('aria-busy', 'true');
+            } else if (!disabled && submitBtn.dataset.originalText) {
+                submitBtn.textContent = submitBtn.dataset.originalText;
+                delete submitBtn.dataset.originalText;
+                submitBtn.setAttribute('aria-busy', 'false');
+            }
+        }
+    }
+
     usernameForm.addEventListener("submit", async (e) => {
         e.preventDefault();
         
@@ -35,19 +69,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         usernameMessage.textContent = "";
         usernameMessage.className = "message";
 
-        if (newUsername.length < 3) {
-            showMessage(usernameMessage, "Username deve ter no mínimo 3 caracteres", "error");
+        const { MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH } = window.CONFIG.VALIDATION;
+
+        if (newUsername.length < MIN_USERNAME_LENGTH) {
+            showMessage(usernameMessage, `Username deve ter no mínimo ${MIN_USERNAME_LENGTH} caracteres`, "error", 0);
+            return;
+        }
+
+        if (newUsername.length > MAX_USERNAME_LENGTH) {
+            showMessage(usernameMessage, `Username deve ter no máximo ${MAX_USERNAME_LENGTH} caracteres`, "error", 0);
             return;
         }
 
         if (newUsername === user.username) {
-            showMessage(usernameMessage, "O novo username é igual ao atual", "info");
+            showMessage(usernameMessage, "O novo username é igual ao atual", "info", 0);
             return;
         }
 
-        const submitBtn = usernameForm.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Salvando...";
+        if (!/^[a-zA-Z0-9_-]+$/.test(newUsername)) {
+            showMessage(usernameMessage, "Username deve conter apenas letras, números, _ e -", "error", 0);
+            return;
+        }
+
+        toggleFormButton(usernameForm, true, "Salvando...");
 
         try {
             const response = await auth.fetchAutenticado(`${API_URL}/auth/update-username`, {
@@ -69,10 +113,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Erro ao atualizar username:", error);
-            showMessage(usernameMessage, error.message || "Erro ao atualizar username", "error");
+            showMessage(usernameMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
         } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Salvar Username";
+            toggleFormButton(usernameForm, false);
         }
     });
 
@@ -86,42 +129,39 @@ document.addEventListener("DOMContentLoaded", async () => {
         emailMessage.className = "message";
 
         if (!isValidEmail(newEmail)) {
-            showMessage(emailMessage, "E-mail inválido", "error");
+            showMessage(emailMessage, "E-mail inválido", "error", 0);
             return;
         }
 
         if (newEmail === user.email) {
-            showMessage(emailMessage, "O novo e-mail é igual ao atual", "info");
+            showMessage(emailMessage, "O novo e-mail é igual ao atual", "info", 0);
             return;
         }
 
-        const submitBtn = emailForm.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Salvando...";
+        toggleFormButton(emailForm, true, "Salvando...");
 
         try {
-             const response = await auth.fetchAutenticado(`${API_URL}/auth/update-email`, {
-                 method: "PUT",
-                 body: JSON.stringify({ newEmail, password })
-             });
+            const response = await auth.fetchAutenticado(`${API_URL}/auth/update-email`, {
+                method: "PUT",
+                body: JSON.stringify({ newEmail, password })
+            });
 
-             const data = await response.json();
+            const data = await response.json();
 
-             if (response.ok) {
-                 user.email = newEmail;
-                 localStorage.setItem("user", JSON.stringify(user));
-                 currentEmail.textContent = newEmail;
-                 emailForm.reset();
-                 showMessage(emailMessage, "E-mail atualizado com sucesso!", "success");
-             } else {
-                 throw new Error(data.error || "Erro ao atualizar e-mail");
-             }
+            if (response.ok) {
+                user.email = newEmail;
+                localStorage.setItem("user", JSON.stringify(user));
+                currentEmail.textContent = newEmail;
+                emailForm.reset();
+                showMessage(emailMessage, "E-mail atualizado com sucesso!", "success");
+            } else {
+                throw new Error(data.error || "Erro ao atualizar e-mail");
+            }
         } catch (error) {
             console.error("Erro ao atualizar e-mail:", error);
-            showMessage(emailMessage, error.message || "Erro ao atualizar e-mail", "error");
+            showMessage(emailMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
         } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Salvar E-mail";
+            toggleFormButton(emailForm, false);
         }
     });
 
@@ -135,24 +175,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         passwordMessage.textContent = "";
         passwordMessage.className = "message";
 
-        if (newPassword.length < 6) {
-            showMessage(passwordMessage, "A nova senha deve ter no mínimo 6 caracteres", "error");
+        const { MIN_PASSWORD_LENGTH } = window.CONFIG.VALIDATION;
+
+        if (newPassword.length < MIN_PASSWORD_LENGTH) {
+            showMessage(passwordMessage, `A nova senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres`, "error", 0);
             return;
         }
 
         if (newPassword !== confirmPassword) {
-            showMessage(passwordMessage, "As senhas não coincidem", "error");
+            showMessage(passwordMessage, "As senhas não coincidem", "error", 0);
             return;
         }
 
         if (currentPassword === newPassword) {
-            showMessage(passwordMessage, "A nova senha deve ser diferente da atual", "info");
+            showMessage(passwordMessage, "A nova senha deve ser diferente da atual", "info", 0);
             return;
         }
 
-        const submitBtn = passwordForm.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = "Salvando...";
+        toggleFormButton(passwordForm, true, "Salvando...");
 
         try {
             const response = await auth.fetchAutenticado(`${API_URL}/auth/update-password`, {
@@ -171,10 +211,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Erro ao atualizar senha:", error);
-            showMessage(passwordMessage, error.message || "Erro ao atualizar senha", "error");
+            showMessage(passwordMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
         } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = "Salvar Senha";
+            toggleFormButton(passwordForm, false);
         }
     });
 
@@ -183,29 +222,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         dangerMessage.className = "message";
 
         const confirmacao1 = confirm(
-            "ATENÇÃO!\n\nVocê está prestes a EXCLUIR sua conta permanentemente.\n\nTodos os seus dados, links e configurações serão perdidos para sempre.\n\nDeseja continuar?"
+            "⚠️ ATENÇÃO!\n\nVocê está prestes a EXCLUIR sua conta permanentemente.\n\nTodos os seus dados, links e configurações serão perdidos para sempre.\n\nDeseja continuar?"
         );
 
         if (!confirmacao1) return;
 
         const confirmacao2 = prompt(
-            "Para confirmar a exclusão, digite seu username abaixo:\n\n" + user.username
+            `Para confirmar a exclusão, digite seu username abaixo:\n\n"${user.username}"`
         );
 
         if (confirmacao2 !== user.username) {
-            showMessage(dangerMessage, "Username incorreto. Exclusão cancelada.", "info");
+            showMessage(dangerMessage, "Username incorreto. Exclusão cancelada.", "info", 0);
             return;
         }
 
         const senha = prompt("Digite sua senha para confirmar a exclusão:");
 
         if (!senha) {
-            showMessage(dangerMessage, "Senha não fornecida. Exclusão cancelada.", "info");
+            showMessage(dangerMessage, "Senha não fornecida. Exclusão cancelada.", "info", 0);
             return;
         }
 
         btnDeleteAccount.disabled = true;
         btnDeleteAccount.textContent = "Excluindo...";
+        btnDeleteAccount.setAttribute('aria-busy', 'true');
 
         try {
             const response = await auth.fetchAutenticado(`${API_URL}/auth/delete-account`, {
@@ -216,7 +256,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert("Conta excluída com sucesso. Você será redirecionado.");
+                alert("Conta excluída com sucesso. Você será redirecionado para a página inicial.");
                 auth.logout();
             } else {
                 throw new Error(data.error || "Erro ao excluir conta");
@@ -224,26 +264,32 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
-            showMessage(dangerMessage, error.message || "Erro ao excluir conta", "error");
+            showMessage(dangerMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
             btnDeleteAccount.disabled = false;
             btnDeleteAccount.textContent = "Excluir Conta Permanentemente";
+            btnDeleteAccount.setAttribute('aria-busy', 'false');
         }
     });
-    
-    function showMessage(element, message, type) {
-        element.textContent = message;
-        element.className = `message ${type}`;
-        
-        if (type === "success") {
-            setTimeout(() => {
-                element.textContent = "";
-                element.className = "message";
-            }, 5000);
-        }
-    }
 
-    function isValidEmail(email) {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
+    btnVoltar.setAttribute('aria-label', 'Voltar para o dashboard');
+    btnDeleteAccount.setAttribute('aria-label', 'Excluir conta permanentemente - Ação irreversível');
+
+    const newUsernameInput = document.getElementById("newUsername");
+    const newPasswordInput = document.getElementById("newPassword");
+    const confirmPasswordInput = document.getElementById("confirmPassword");
+    
+    if (newPasswordInput && confirmPasswordInput) {
+        const validatePasswordMatch = debounce(() => {
+            if (newPasswordInput.value && confirmPasswordInput.value) {
+                if (newPasswordInput.value !== confirmPasswordInput.value) {
+                    confirmPasswordInput.setCustomValidity("As senhas não coincidem");
+                } else {
+                    confirmPasswordInput.setCustomValidity("");
+                }
+            }
+        }, 500);
+        
+        newPasswordInput.addEventListener("input", validatePasswordMatch);
+        confirmPasswordInput.addEventListener("input", validatePasswordMatch);
     }
 });

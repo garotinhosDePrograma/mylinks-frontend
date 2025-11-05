@@ -11,9 +11,19 @@ body {
     min-height: 100vh;
 }
 
-/* ========================================
-   HEADER
-   ======================================== */
+*:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
 
 header {
     display: flex;
@@ -48,7 +58,8 @@ header h1 {
     transition: all 0.3s ease;
 }
 
-#btnVoltar:hover {
+#btnVoltar:hover,
+#btnVoltar:focus {
     background: rgba(255, 255, 255, 0.08);
     border-color: rgba(255, 255, 255, 0.3);
     transform: translateY(-2px);
@@ -59,10 +70,6 @@ header h1 {
     transform: translateY(0);
 }
 
-/* ========================================
-   MAIN CONTAINER
-   ======================================== */
-
 main {
     max-width: 700px;
     margin: 40px auto;
@@ -71,10 +78,6 @@ main {
     flex-direction: column;
     gap: 30px;
 }
-
-/* ========================================
-   SEÇÕES DE CONFIGURAÇÃO
-   ======================================== */
 
 .config-section {
     background: rgba(255, 255, 255, 0.05);
@@ -100,10 +103,6 @@ main {
     align-items: center;
     gap: 10px;
 }
-
-/* ========================================
-   CARD DE INFORMAÇÕES
-   ======================================== */
 
 .info-card {
     background: rgba(255, 255, 255, 0.03);
@@ -139,10 +138,6 @@ main {
     font-size: 1rem;
 }
 
-/* ========================================
-   FORMULÁRIOS
-   ======================================== */
-
 form {
     display: flex;
     flex-direction: column;
@@ -159,6 +154,13 @@ label {
     font-size: 0.9rem;
     font-weight: 600;
     color: #c0c0c0;
+}
+
+.form-hint {
+    font-size: 0.75rem;
+    color: #888;
+    font-style: italic;
+    margin-top: -3px;
 }
 
 input[type="text"],
@@ -185,15 +187,9 @@ input:focus {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.form-hint {
-    font-size: 0.8rem;
-    color: #888;
-    font-style: italic;
+input:invalid:not(:placeholder-shown) {
+    border-color: #ff6b6b;
 }
-
-/* ========================================
-   BOTÕES
-   ======================================== */
 
 .btn-primary {
     padding: 12px 20px;
@@ -208,12 +204,13 @@ input:focus {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-.btn-primary:hover {
+.btn-primary:hover:not(:disabled),
+.btn-primary:focus:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-.btn-primary:active {
+.btn-primary:active:not(:disabled) {
     transform: translateY(0);
 }
 
@@ -223,9 +220,31 @@ input:focus {
     transform: none;
 }
 
-/* ========================================
-   ZONA DE PERIGO
-   ======================================== */
+.btn-primary[aria-busy="true"] {
+    position: relative;
+    color: transparent;
+}
+
+.btn-primary[aria-busy="true"]::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 .danger-section {
     border-color: rgba(255, 107, 107, 0.3);
@@ -260,7 +279,8 @@ input:focus {
     width: 100%;
 }
 
-.btn-danger:hover {
+.btn-danger:hover,
+.btn-danger:focus {
     background: rgba(255, 107, 107, 0.3);
     border-color: rgba(255, 107, 107, 0.5);
     transform: translateY(-2px);
@@ -271,9 +291,25 @@ input:focus {
     transform: translateY(0);
 }
 
-/* ========================================
-   MENSAGENS DE FEEDBACK
-   ======================================== */
+.btn-danger[aria-busy="true"] {
+    position: relative;
+    color: transparent;
+}
+
+.btn-danger[aria-busy="true"]::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    margin-left: -10px;
+    margin-top: -10px;
+    border: 3px solid rgba(255, 107, 107, 0.3);
+    border-radius: 50%;
+    border-top-color: #ff6b6b;
+    animation: spin 0.8s linear infinite;
+}
 
 .message {
     padding: 12px 15px;
@@ -318,26 +354,22 @@ input:focus {
     }
 }
 
-/* ========================================
-   RESPONSIVIDADE
-   ======================================== */
-
 @media (max-width: 768px) {
     header {
-        flex-direction: row; /* Mantém lado a lado */
+        flex-direction: row;
         gap: 15px;
         padding: 20px;
     }
 
     header h1 {
         font-size: 1.6rem;
-        flex: 1; /* Ocupa espaço disponível */
+        flex: 1;
     }
 
     #btnVoltar {
         font-size: 0.9rem;
         padding: 8px 16px;
-        white-space: nowrap; /* Não quebra texto */
+        white-space: nowrap;
     }
 
     main {
@@ -387,5 +419,40 @@ input:focus {
     input[type="email"],
     input[type="password"] {
         font-size: 0.95rem;
+    }
+
+    .btn-primary,
+    .btn-danger {
+        font-size: 0.95rem;
+    }
+
+    .message {
+        font-size: 0.85rem;
+    }
+}
+
+
+@media (prefers-contrast: high) {
+    * {
+        border-color: #fff !important;
+    }
+    
+    body {
+        background: #000;
+        color: #fff;
+    }
+    
+    button, input {
+        border: 2px solid #fff !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

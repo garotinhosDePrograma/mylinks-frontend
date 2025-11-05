@@ -3,21 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyLinks - Perfil público de usuário">
+    <meta name="theme-color" content="#667eea">
     <title>MyLinks - Perfil Público</title>
     <link rel="stylesheet" href="css/profile.css">
+    
+    <meta property="og:title" content="MyLinks - Perfil">
+    <meta property="og:description" content="Veja todos os meus links em um só lugar">
+    <meta property="og:type" content="profile">
+
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="MyLinks - Perfil">
 </head>
 <body>
-    <main>
-        <div id="perfil">
-            <img id="fotoPerfil" src="" alt="Foto de perfil">
-            <h1 id="username"></h1>
-        </div>
-
-        <section id="linksSection">
-            <ul id="linksList"></ul>
+    <main role="main">
+        <section id="perfil" aria-label="Informações do perfil">
+            <img 
+                id="fotoPerfil" 
+                src="" 
+                alt="Foto de perfil" 
+                loading="lazy">
+            <h1 id="username" aria-live="polite">Carregando...</h1>
         </section>
 
-        <div id="mensagem"></div>
+        <section id="linksSection" aria-labelledby="links-title">
+            <h2 id="links-title" class="visually-hidden">Links do perfil</h2>
+            <ul id="linksList" role="list"></ul>
+        </section>
+
+        <div id="mensagem" role="alert" aria-live="polite"></div>
     </main>
 
     <script src="js/config.js"></script>

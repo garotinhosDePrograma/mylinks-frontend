@@ -3,43 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyLinks - Configurações da conta">
+    <meta name="theme-color" content="#667eea">
     <title>MyLinks - Configurações</title>
     <link rel="stylesheet" href="/css/settings.css">
 </head>
 <body>
-    <header>
+    <header role="banner">
         <h1>⚙️ Configurações</h1>
-        <button id="btnVoltar">← Voltar</button>
+        <button id="btnVoltar" aria-label="Voltar para o dashboard">← Voltar</button>
     </header>
 
-    <main>
-        <section id="userInfoSection" class="config-section">
-            <h2>🪪 Suas Informações</h2>
+    <main role="main">
+        <section id="userInfoSection" class="config-section" aria-labelledby="user-info-title">
+            <h2 id="user-info-title">🪪 Suas Informações</h2>
             <div class="info-card">
                 <div class="info-item">
                     <span class="info-label">Username:</span>
-                    <span class="info-value" id="currentUsername">carregando...</span>
+                    <span class="info-value" id="currentUsername" aria-live="polite">carregando...</span>
                 </div>
                 <div class="info-item">
                     <span class="info-label">E-mail:</span>
-                    <span class="info-value" id="currentEmail">carregando...</span>
+                    <span class="info-value" id="currentEmail" aria-live="polite">carregando...</span>
                 </div>
             </div>
         </section>
 
-        <section id="usernameSection" class="config-section">
-            <h2>✏️ Alterar Username</h2>
-            <form id="usernameForm">
+        <section id="usernameSection" class="config-section" aria-labelledby="username-section-title">
+            <h2 id="username-section-title">✏️ Alterar Username</h2>
+            <form id="usernameForm" aria-label="Formulário para alterar username">
                 <div class="form-group">
                     <label for="newUsername">Novo Username</label>
                     <input 
                         type="text" 
                         id="newUsername" 
+                        name="newUsername"
                         placeholder="Digite o novo username" 
                         minlength="3"
                         maxlength="20"
-                        required>
-                    <small class="form-hint">Mínimo 3 caracteres, máximo 20</small>
+                        pattern="[a-zA-Z0-9_-]+"
+                        autocomplete="off"
+                        required
+                        aria-required="true"
+                        aria-describedby="username-hint-settings">
+                    <small id="username-hint-settings" class="form-hint">Mínimo 3 caracteres, máximo 20. Apenas letras, números, _ e -</small>
                 </div>
 
                 <div class="form-group">
@@ -47,25 +54,31 @@
                     <input 
                         type="password" 
                         id="usernamePassword" 
+                        name="password"
                         placeholder="Digite sua senha" 
-                        required>
+                        autocomplete="current-password"
+                        required
+                        aria-required="true">
                 </div>
 
                 <button type="submit" class="btn-primary">Salvar Username</button>
-                <div class="message" id="usernameMessage"></div>
+                <div class="message" id="usernameMessage" role="alert" aria-live="polite"></div>
             </form>
         </section>
 
-        <section id="emailSection" class="config-section">
-            <h2>📧 Alterar E-mail</h2>
-            <form id="emailForm">
+        <section id="emailSection" class="config-section" aria-labelledby="email-section-title">
+            <h2 id="email-section-title">📧 Alterar E-mail</h2>
+            <form id="emailForm" aria-label="Formulário para alterar e-mail">
                 <div class="form-group">
                     <label for="newEmail">Novo E-mail</label>
                     <input 
                         type="email" 
                         id="newEmail" 
+                        name="newEmail"
                         placeholder="Digite o novo e-mail" 
-                        required>
+                        autocomplete="email"
+                        required
+                        aria-required="true">
                 </div>
 
                 <div class="form-group">
@@ -73,25 +86,31 @@
                     <input 
                         type="password" 
                         id="emailPassword" 
+                        name="password"
                         placeholder="Digite sua senha" 
-                        required>
+                        autocomplete="current-password"
+                        required
+                        aria-required="true">
                 </div>
 
                 <button type="submit" class="btn-primary">Salvar E-mail</button>
-                <div class="message" id="emailMessage"></div>
+                <div class="message" id="emailMessage" role="alert" aria-live="polite"></div>
             </form>
         </section>
 
-        <section id="passwordSection" class="config-section">
-            <h2>🔑 Alterar Senha</h2>
-            <form id="passwordForm">
+        <section id="passwordSection" class="config-section" aria-labelledby="password-section-title">
+            <h2 id="password-section-title">🔑 Alterar Senha</h2>
+            <form id="passwordForm" aria-label="Formulário para alterar senha">
                 <div class="form-group">
                     <label for="currentPassword">Senha Atual</label>
                     <input 
                         type="password" 
                         id="currentPassword" 
+                        name="currentPassword"
                         placeholder="Digite sua senha atual" 
-                        required>
+                        autocomplete="current-password"
+                        required
+                        aria-required="true">
                 </div>
 
                 <div class="form-group">
@@ -99,10 +118,14 @@
                     <input 
                         type="password" 
                         id="newPassword" 
+                        name="newPassword"
                         placeholder="Digite a nova senha" 
                         minlength="6"
-                        required>
-                    <small class="form-hint">Mínimo 6 caracteres</small>
+                        autocomplete="new-password"
+                        required
+                        aria-required="true"
+                        aria-describedby="password-hint-settings">
+                    <small id="password-hint-settings" class="form-hint">Mínimo 6 caracteres</small>
                 </div>
 
                 <div class="form-group">
@@ -110,27 +133,34 @@
                     <input 
                         type="password" 
                         id="confirmPassword" 
+                        name="confirmPassword"
                         placeholder="Digite a nova senha novamente" 
                         minlength="6"
-                        required>
+                        autocomplete="new-password"
+                        required
+                        aria-required="true">
                 </div>
 
                 <button type="submit" class="btn-primary">Salvar Senha</button>
-                <div class="message" id="passwordMessage"></div>
+                <div class="message" id="passwordMessage" role="alert" aria-live="polite"></div>
             </form>
         </section>
 
-        <section id="dangerZone" class="config-section danger-section">
-            <h2>⚠️ Zona de Perigo</h2>
-            <p class="danger-warning">
+        <section id="dangerZone" class="config-section danger-section" aria-labelledby="danger-section-title">
+            <h2 id="danger-section-title">⚠️ Zona de Perigo</h2>
+            <p class="danger-warning" role="alert">
                 As ações abaixo são irreversíveis. Tenha certeza antes de continuar.
             </p>
             
-            <button type="button" id="btnDeleteAccount" class="btn-danger">
+            <button 
+                type="button" 
+                id="btnDeleteAccount" 
+                class="btn-danger"
+                aria-label="Excluir conta permanentemente - Ação irreversível">
                 Excluir Conta Permanentemente
             </button>
             
-            <div class="message" id="dangerMessage"></div>
+            <div class="message" id="dangerMessage" role="alert" aria-live="polite"></div>
         </section>
     </main>
 

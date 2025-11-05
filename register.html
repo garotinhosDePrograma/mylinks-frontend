@@ -3,26 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="MyLinks - Crie sua conta e organize seus links">
+    <meta name="theme-color" content="#667eea">
     <title>MyLinks - Cadastro</title>
     <link rel="stylesheet" href="/css/register.css">
 </head>
 <body>
-    <main>
+    <main role="main">
         <h1>MyLinks</h1>
         <h2>Criar nova conta</h2>
 
-        <form id="registerForm">
+        <form id="registerForm" aria-label="Formulário de cadastro">
             <label for="username">Nome de usuário</label>
-            <input type="text" id="username" placeholder="Digite seu nome de usuário" required>
+            <input 
+                type="text" 
+                id="username" 
+                name="username"
+                placeholder="Digite seu nome de usuário" 
+                minlength="3"
+                maxlength="20"
+                autocomplete="username"
+                required 
+                aria-required="true"
+                aria-describedby="username-hint">
+            <small id="username-hint" class="form-hint">Mínimo 3 caracteres, máximo 20</small>
 
             <label for="email">E-mail</label>
-            <input type="email" id="email" placeholder="Digite seu e-mail" required>
+            <input 
+                type="email" 
+                id="email" 
+                name="email"
+                placeholder="Digite seu e-mail" 
+                autocomplete="email"
+                required 
+                aria-required="true">
 
             <label for="senha">Senha</label>
-            <input type="password" id="senha" placeholder="Digite sua senha" required>
+            <input 
+                type="password" 
+                id="senha" 
+                name="password"
+                placeholder="Digite sua senha" 
+                minlength="6"
+                autocomplete="new-password"
+                required 
+                aria-required="true"
+                aria-describedby="senha-hint">
+            <small id="senha-hint" class="form-hint">Mínimo 6 caracteres</small>
 
-            <button type="submit">Cadastrar</button>
-            <div class="Regloader" id="Regloader"></div>
+            <button type="submit" aria-label="Criar conta">Cadastrar</button>
+            <div class="Regloader" id="Regloader" role="status" aria-label="Cadastrando"></div>
         </form>
 
         <p>
@@ -30,7 +60,7 @@
             <a href="index.html">Entrar</a>
         </p>
 
-        <div id="mensagem"></div>
+        <div id="mensagem" role="alert" aria-live="polite"></div>
     </main>
 
     <script src="js/config.js"></script>

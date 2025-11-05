@@ -4,6 +4,18 @@
     box-sizing: border-box;
 }
 
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
@@ -11,9 +23,19 @@ body {
     min-height: 100vh;
 }
 
-/* ========================================
-   HEADER
-   ======================================== */
+*:focus {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
+
+*:focus:not(:focus-visible) {
+    outline: none;
+}
+
+*:focus-visible {
+    outline: 2px solid #667eea;
+    outline-offset: 2px;
+}
 
 header {
     display: flex;
@@ -25,7 +47,7 @@ header {
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     position: relative;
-    z-index: 1000; /* Garante que header fique acima do main */
+    z-index: 1000;
 }
 
 header h1 {
@@ -70,10 +92,6 @@ header > div {
     font-size: 1rem;
 }
 
-/* ========================================
-   MENU DROPDOWN
-   ======================================== */
-
 .menu-container {
     position: relative;
 }
@@ -99,7 +117,8 @@ header > div {
     padding: 0;
 }
 
-.menu-btn:hover {
+.menu-btn:hover,
+.menu-btn:focus {
     background: rgba(102, 126, 234, 0.2);
     border-color: rgba(102, 126, 234, 0.3);
     transform: translateY(-2px);
@@ -110,16 +129,16 @@ header > div {
     transform: translateY(0);
 }
 
-.menu-btn.active {
+.menu-btn.active,
+.menu-btn[aria-expanded="true"] {
     background: rgba(102, 126, 234, 0.3);
     border-color: rgba(102, 126, 234, 0.5);
 }
 
-/* Dropdown Menu */
 .dropdown-menu {
-    position: fixed; /* Mudou de absolute para fixed */
-    top: auto; /* Remove top fixo */
-    right: 20px; /* Alinha com a margem do header */
+    position: fixed;
+    top: auto;
+    right: 20px;
     min-width: 220px;
     background: rgba(30, 30, 46, 0.98);
     backdrop-filter: blur(20px);
@@ -130,7 +149,7 @@ header > div {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 9999; /* Z-index mais alto */
+    z-index: 9999;
     overflow: hidden;
 }
 
@@ -156,7 +175,8 @@ header > div {
     gap: 12px;
 }
 
-.dropdown-item:hover {
+.dropdown-item:hover,
+.dropdown-item:focus {
     background: rgba(102, 126, 234, 0.2);
 }
 
@@ -168,7 +188,8 @@ header > div {
     color: #ff6b6b;
 }
 
-.dropdown-item.danger:hover {
+.dropdown-item.danger:hover,
+.dropdown-item.danger:focus {
     background: rgba(255, 107, 107, 0.2);
 }
 
@@ -186,10 +207,6 @@ header > div {
     margin: 8px 0;
 }
 
-/* ========================================
-   MAIN CONTAINER
-   ======================================== */
-
 main {
     max-width: 600px;
     margin: 0 auto;
@@ -204,10 +221,6 @@ main h2 {
     text-align: center;
 }
 
-/* ========================================
-   PROFILE LINK SECTION
-   ======================================== */
-
 .profile-link-section {
     margin-bottom: 30px;
     background: rgba(102, 126, 234, 0.1);
@@ -220,8 +233,8 @@ main h2 {
     justify-content: space-between;
     gap: 15px;
     transition: all 0.3s ease;
-    position: relative; /* Adiciona contexto de empilhamento */
-    z-index: 1; /* Menor que o dropdown */
+    position: relative;
+    z-index: 1;
 }
 
 .profile-link-section:hover {
@@ -250,7 +263,8 @@ main h2 {
     transition: color 0.3s ease;
 }
 
-.profile-link-info a:hover {
+.profile-link-info a:hover,
+.profile-link-info a:focus {
     color: #764ba2;
     text-decoration: underline;
 }
@@ -269,7 +283,8 @@ main h2 {
     white-space: nowrap;
 }
 
-#btnCopyProfile:hover {
+#btnCopyProfile:hover,
+#btnCopyProfile:focus {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
@@ -281,14 +296,6 @@ main h2 {
 #btnCopyProfile.copied {
     background: linear-gradient(135deg, #4caf50 0%, #45a049 100%);
 }
-
-#btnCopyProfile.copied::after {
-    content: " ✓";
-}
-
-/* ========================================
-   FORM SECTION
-   ======================================== */
 
 #formSection {
     margin-bottom: 40px;
@@ -336,6 +343,10 @@ main h2 {
     box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
+#linkForm input:invalid:not(:placeholder-shown) {
+    border-color: #ff6b6b;
+}
+
 #saveBtn {
     padding: 12px 20px;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -350,18 +361,20 @@ main h2 {
     box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
 }
 
-#saveBtn:hover {
+#saveBtn:hover:not(:disabled),
+#saveBtn:focus:not(:disabled) {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
 }
 
-#saveBtn:active {
+#saveBtn:active:not(:disabled) {
     transform: translateY(0);
 }
 
-/* ========================================
-   LINKS SECTION
-   ======================================== */
+#saveBtn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 
 #linksSection {
     background: rgba(255, 255, 255, 0.05);
@@ -393,7 +406,8 @@ main h2 {
     margin-bottom: 0;
 }
 
-#linksList li:hover {
+#linksList li:hover,
+#linksList li:focus-within {
     background: rgba(255, 255, 255, 0.05);
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
@@ -409,7 +423,8 @@ main h2 {
     margin-right: 10px;
 }
 
-#linksList li a:hover {
+#linksList li a:hover,
+#linksList li a:focus {
     color: #764ba2;
     text-decoration: underline;
 }
@@ -431,7 +446,8 @@ main h2 {
     border: 1px solid rgba(102, 126, 234, 0.3);
 }
 
-#linksList li button:first-of-type:hover {
+#linksList li button:first-of-type:hover,
+#linksList li button:first-of-type:focus {
     background: rgba(102, 126, 234, 0.3);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(102, 126, 234, 0.2);
@@ -443,15 +459,12 @@ main h2 {
     border: 1px solid rgba(255, 107, 107, 0.3);
 }
 
-#linksList li button:last-of-type:hover {
+#linksList li button:last-of-type:hover,
+#linksList li button:last-of-type:focus {
     background: rgba(255, 107, 107, 0.3);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(255, 107, 107, 0.2);
 }
-
-/* ========================================
-   MESSAGES
-   ======================================== */
 
 #mensagem {
     margin-top: 20px;
@@ -461,6 +474,7 @@ main h2 {
     text-align: center;
     font-weight: 500;
     transition: all 0.3s ease;
+    min-height: 20px;
 }
 
 #mensagem:not(:empty) {
@@ -487,10 +501,6 @@ main h2 {
 .empty-state p {
     font-size: 1.1rem;
 }
-
-/* ========================================
-   RESPONSIVIDADE - TABLET
-   ======================================== */
 
 @media (max-width: 768px) {
     header {
@@ -570,10 +580,6 @@ main h2 {
     }
 }
 
-/* ========================================
-   RESPONSIVIDADE - MOBILE
-   ======================================== */
-
 @media (max-width: 480px) {
     header {
         padding: 12px 15px;
@@ -611,7 +617,7 @@ main h2 {
 
     .dropdown-menu {
         min-width: 180px;
-        right: 15px; /* Alinhado com padding do header mobile */
+        right: 15px;
     }
 
     .dropdown-item {
@@ -711,10 +717,6 @@ main h2 {
     }
 }
 
-/* ========================================
-   RESPONSIVIDADE - MOBILE PEQUENO
-   ======================================== */
-
 @media (max-width: 360px) {
     header h1 {
         font-size: 1.2rem;
@@ -738,7 +740,7 @@ main h2 {
 
     .dropdown-menu {
         min-width: 160px;
-        right: 10px; /* Alinhado com padding menor */
+        right: 10px;
     }
 
     main {
@@ -747,5 +749,31 @@ main h2 {
 
     main h2 {
         font-size: 1.2rem;
+    }
+}
+
+@media (prefers-contrast: high) {
+    * {
+        border-color: #fff !important;
+    }
+    
+    body {
+        background: #000;
+        color: #fff;
+    }
+    
+    button, input, select, textarea {
+        border: 2px solid #fff !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
