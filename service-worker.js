@@ -1,9 +1,9 @@
-const CACHE_NAME = "mylinks-cache-v1.62";
+const CACHE_NAME = "mylinks-cache-v1.63";
 
 const urlsToCache = [
   "/",
   "/index.html",
-  "index.css",
+  "/css/index.css",
   "/manifest.json",
   "/icons/icon-192x192.png",
   "/icons/icon-512x512.png"
