@@ -272,7 +272,7 @@ const auth = {
 
     _isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.text(email);
+        return emailRegex.test(email);
     }
 };
 
