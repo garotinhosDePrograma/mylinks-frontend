@@ -87,7 +87,7 @@ const auth = {
             throw new Error(`Senha deve ter no mínimo ${window.CONFIG.VALIDATION.MIN_PASSWORD_LENGTH} caracteres`);
         }
 
-        if (this._isValidEmail(email)) {
+        if (!this._isValidEmail(email)) {
             throw new Error("E-mail inválido");
         }
 
