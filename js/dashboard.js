@@ -601,7 +601,7 @@ function limparResultados() {
 }
 
 function navegarParaPerfil(username) {
-    window.location.href = `/${encodeURIComponent(username)}`;
+    window.location.href = `${API_URL}/${encodeURIComponent(username)}`;
 }
 
 function escapeHtml(text) {
