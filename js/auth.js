@@ -6,25 +6,25 @@ const AppState = {
         isAuthenticated: false,
         isLoading: false
     },
-
+    
     _listeners: [],
-
+    
     getState() {
-        return { ...this._state};
+        return { ...this._state };
     },
-
+    
     setState(newState) {
         this._state = { ...this._state, ...newState };
         this._listeners.forEach(listener => listener(this._state));
     },
-
+    
     subscribe(listener) {
         this._listeners.push(listener);
         return () => {
             this._listeners = this._listeners.filter(l => l !== listener);
         };
     },
-
+    
     initialize() {
         const userStr = localStorage.getItem("user");
         if (userStr) {
@@ -57,10 +57,10 @@ const auth = {
                 localStorage.setItem("refreshToken", data.refresh_token);
                 localStorage.setItem("tokenExp", expiraEm);
                 localStorage.setItem("user", JSON.stringify(data.user));
-
-                AppState.setState({
-                    user: data.user,
-                    isAuthenticated: true
+                
+                AppState.setState({ 
+                    user: data.user, 
+                    isAuthenticated: true 
                 });
 
                 window.location.href = "dashboard.html";
@@ -69,11 +69,11 @@ const auth = {
             }
         } catch (err) {
             console.error("Erro no login:", err);
-
+            
             if (err.name === 'TypeError') {
                 throw new Error(window.CONFIG.ERRORS.OFFLINE);
             }
-
+            
             throw err;
         }
     },
@@ -82,15 +82,15 @@ const auth = {
         if (username.length < window.CONFIG.VALIDATION.MIN_USERNAME_LENGTH) {
             throw new Error(`Username deve ter no mínimo ${window.CONFIG.VALIDATION.MIN_USERNAME_LENGTH} caracteres`);
         }
-
+        
         if (senha.length < window.CONFIG.VALIDATION.MIN_PASSWORD_LENGTH) {
             throw new Error(`Senha deve ter no mínimo ${window.CONFIG.VALIDATION.MIN_PASSWORD_LENGTH} caracteres`);
         }
-
+        
         if (!this._isValidEmail(email)) {
             throw new Error("E-mail inválido");
         }
-
+        
         try {
             const res = await fetch(`${API_URL}/auth/register`, {
                 method: "POST",
@@ -108,11 +108,11 @@ const auth = {
             }
         } catch (err) {
             console.error("Erro no registro:", err);
-
+            
             if (err.name === 'TypeError') {
                 throw new Error(window.CONFIG.ERRORS.OFFLINE);
             }
-
+            
             throw err;
         }
     },
@@ -122,7 +122,7 @@ const auth = {
         const user = localStorage.getItem("user");
 
         if (!refreshToken || !user) {
-            console.warn("Sem credenciais salvas - Redirecionando para login...");
+            console.warn("Sem credenciais salvas - Redirecionando para login");
             this.logout();
             return false;
         }
@@ -139,14 +139,14 @@ const auth = {
 
         console.log("Access token expirado, renovando...");
         const novoToken = await this.renovarToken();
-
+        
         if (novoToken) {
             console.log("Token renovado com sucesso!");
             AppState.setState({ isAuthenticated: true });
             return true;
         }
 
-        console.error("Não foi possível renovar o token - Redirecionando para login...");
+        console.error("Não foi possível renovar o token - Redirecionando para login");
         this.logout();
         return false;
     },
@@ -165,7 +165,7 @@ const auth = {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: Bearer `${refreshToken}`,
+                    Authorization: `Bearer ${refreshToken}`,
                 },
             });
 
@@ -173,7 +173,7 @@ const auth = {
 
             if (res.ok && data.access_token) {
                 const agora = Date.now();
-                const expiraEm = agora + window.CONFIG.TOKEN_EXP_TIME;
+                const expiraEm = agora + window.CONFIG.TOKEN_EXPIRATION_TIME;
 
                 localStorage.setItem("accessToken", data.access_token);
                 localStorage.setItem("tokenExp", expiraEm);
@@ -187,16 +187,16 @@ const auth = {
                     console.error("Refresh token inválido - Limpando credenciais");
                     return null;
                 }
-
+                
                 return null;
             }
         } catch (err) {
             console.error("Erro ao renovar token:", err);
-
+            
             if (err.name === 'TypeError') {
                 console.error(window.CONFIG.ERRORS.OFFLINE);
             }
-
+            
             return null;
         }
     },
@@ -258,18 +258,18 @@ const auth = {
     logout() {
         console.log("Fazendo logout...");
         localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshtoken");
+        localStorage.removeItem("refreshToken");
         localStorage.removeItem("tokenExp");
         localStorage.removeItem("user");
-
-        AppState.setState({
-            user: null,
-            isAuthenticated: false
+        
+        AppState.setState({ 
+            user: null, 
+            isAuthenticated: false 
         });
-
+        
         window.location.href = "index.html";
     },
-
+    
     _isValidEmail(email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
