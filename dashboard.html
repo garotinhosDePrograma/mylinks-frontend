@@ -3,70 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Dashboard MyLinks - Gerencie seus links">
+    <meta name="theme-color" content="#667eea">
+    <meta name="referrer" content="no-referrer">
     <title>MyLinks - Dashboard</title>
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
 <body>
-    <header>
+    <header role="banner">
         <h1>MyLinks</h1>
         <div>
             <div id="user-info">
-                <img id="fotoPerfil" src="" alt="Foto de perfil">
+                <img id="fotoPerfil" src="" alt="Foto de perfil" loading="lazy">
             </div>
-            <span id="usernameDisplay"></span>
+            <span id="usernameDisplay" aria-live="polite"></span>
             
-            <div class="menu-container">
-                <button id="btnMenu" class="menu-btn" title="Menu">
+            <nav class="menu-container" aria-label="Menu principal">
+                <button 
+                    id="btnMenu" 
+                    class="menu-btn" 
+                    aria-label="Menu de opções"
+                    aria-expanded="false"
+                    aria-haspopup="true"
+                    aria-controls="dropdownMenu">
                     ⋮
                 </button>
-                <div id="dropdownMenu" class="dropdown-menu">
-                    <button class="dropdown-item" id="menuUpload">
-                        <span class="dropdown-icon">📸</span>
+                <div id="dropdownMenu" class="dropdown-menu" role="menu">
+                    <button class="dropdown-item" id="menuUpload" role="menuitem">
+                        <span class="dropdown-icon" aria-hidden="true">📸</span>
                         Alterar Foto
                     </button>
-                    <button class="dropdown-item" id="menuConfig">
-                        <span class="dropdown-icon">⚙️</span>
+                    <button class="dropdown-item" id="menuConfig" role="menuitem">
+                        <span class="dropdown-icon" aria-hidden="true">⚙️</span>
                         Configurações
                     </button>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item" id="menuLogout">
-                        <span class="dropdown-icon">⬅️</span>
+                    <div class="dropdown-divider" role="separator"></div>
+                    <button class="dropdown-item" id="menuLogout" role="menuitem">
+                        <span class="dropdown-icon" aria-hidden="true">⬅️</span>
                         Sair
                     </button>
                 </div>
-            </div>
+            </nav>
         </div>
     </header>
 
-    <main>
-        <div class="profile-link-section">
+    <main role="main">
+        <section class="profile-link-section" aria-labelledby="profile-link-title">
             <div class="profile-link-info">
-                <p>Seu perfil público:</p>
-                <a href="#" id="profileLink" target="_blank"></a>
+                <p id="profile-link-title">Seu perfil público:</p>
+                <a href="#" id="profileLink" target="_blank" rel="noopener noreferrer"></a>
             </div>
-            <button id="btnCopyProfile">📋 Copiar Link</button>
-        </div>
+            <button id="btnCopyProfile" aria-label="Copiar link do perfil">📋 Copiar Link</button>
+        </section>
 
-        <section id="formSection">
-            <form id="linkForm">
+        <!-- SEÇÃO DE BUSCA DE PERFIS -->
+        <section class="search-section" aria-labelledby="search-title">
+            <h3 id="search-title">🔍 Buscar Perfil</h3>
+            <div class="search-input-wrapper">
+                <input 
+                    type="text" 
+                    id="searchProfileInput" 
+                    placeholder="Digite o nome de usuário..."
+                    aria-label="Buscar perfil de usuário"
+                    autocomplete="off">
+                <button id="searchProfileBtn" class="search-btn" aria-label="Buscar perfil">
+                    Buscar
+                    <span class="search-loader" id="searchLoader"></span>
+                </button>
+            </div>
+            <div id="searchMessage" class="search-message" role="alert" aria-live="polite"></div>
+            <div id="searchResults" class="search-results" role="region" aria-label="Resultados da busca"></div>
+        </section>
+
+        <section id="formSection" aria-labelledby="form-title">
+            <h2 id="form-title" class="visually-hidden">Adicionar ou editar link</h2>
+            <form id="linkForm" aria-label="Formulário de link">
                 <input type="hidden" id="linkId">
 
                 <label for="titulo">Título</label>
-                <input type="text" id="titulo" placeholder="Ex: Meu GitHub" required>
+                <input 
+                    type="text" 
+                    id="titulo" 
+                    name="titulo"
+                    placeholder="Ex: Meu GitHub" 
+                    required 
+                    aria-required="true">
 
                 <label for="url">URL</label>
-                <input type="url" id="url" placeholder="https://..." required>
+                <input 
+                    type="url" 
+                    id="url" 
+                    name="url"
+                    placeholder="https://..." 
+                    required 
+                    aria-required="true"
+                    pattern="https?://.+">
 
                 <button type="submit" id="saveBtn">Adicionar Link</button>
             </form>
         </section>
+        
         <h2>Seus Links</h2>
 
-        <section id="linksSection">
-            <ul id="linksList"></ul>
+        <section id="linksSection" aria-labelledby="links-title">
+            <h3 id="links-title" class="visually-hidden">Lista de links cadastrados</h3>
+            <ul id="linksList" role="list"></ul>
         </section>
 
-        <div id="mensagem"></div>
+        <div id="mensagem" role="alert" aria-live="polite"></div>
     </main>
 
     <script src="/js/config.js"></script>
