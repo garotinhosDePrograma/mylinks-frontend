@@ -1,3 +1,21 @@
+const SEARCH_CONFIG = {
+    minUsernameLength: 3,
+    debounceDelay: 300,
+    maxResults: 10
+};
+
+let debounceTimer;
+let searchProfileInput;
+let searchProfileBtn;
+let searchLoader;
+let searchMessage;
+let searchResults;
+
+function debounceFunc(callback, delay = 300) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(callback, delay);
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
     await auth.verificarLogin();
 
@@ -25,6 +43,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     usernameDisplay.textContent = `Olá ${user.username}!`;
 
+    inicializarBuscaPerfis();
+
     function posicionarDropdown() {
         if (dropdownMenu.classList.contains("show")) {
             const btnRect = btnMenu.getBoundingClientRect();
@@ -48,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    const debouncedReposition = debounce(() => {
+    const debouncedReposition = debounceFunc(() => {
         posicionarDropdown();
     }, window.CONFIG.DEBOUNCE_DELAY);
 
@@ -100,20 +120,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const data = await response.json();
             
-            const img = new Image();
-            img.onload = () => {
-                fotoPerfil.src = img.src;
-                setFotoLoading(false);
-            };
-            img.onerror = () => {
+            if (data.foto_perfil) {
+                const img = new Image();
+                img.crossOrigin = "anonymous";
+                img.referrerPolicy = "no-referrer";
+                
+                img.onload = () => {
+                    fotoPerfil.src = img.src;
+                    fotoPerfil.loading = "eager";
+                    fotoPerfil.setAttribute("crossorigin", "anonymous");
+                    setFotoLoading(false);
+                };
+                img.onerror = () => {
+                    fotoPerfil.src = window.CONFIG.DEFAULT_AVATAR;
+                    fotoPerfil.loading = "eager";
+                    setFotoLoading(false);
+                };
+                img.src = data.foto_perfil;
+            } else {
                 fotoPerfil.src = window.CONFIG.DEFAULT_AVATAR;
+                fotoPerfil.loading = "eager";
                 setFotoLoading(false);
-            };
-            img.src = data.foto_perfil || window.CONFIG.DEFAULT_AVATAR;
+            }
             
         } catch (err) {
             console.error("Erro ao carregar foto:", err);
             fotoPerfil.src = window.CONFIG.DEFAULT_AVATAR;
+            fotoPerfil.loading = "eager";
             setFotoLoading(false);
             
             mostrarMensagem(err.message || window.CONFIG.ERRORS.NETWORK, 'error');
@@ -332,3 +365,269 @@ document.addEventListener("DOMContentLoaded", async () => {
     btnMenu.setAttribute('aria-expanded', 'false');
     btnMenu.setAttribute('aria-hashpopup', 'true');
 });
+
+function inicializarBuscaPerfis() {
+    searchProfileInput = document.getElementById("searchProfileInput");
+    searchProfileBtn = document.getElementById("searchProfileBtn");
+    searchLoader = document.getElementById("searchLoader");
+    searchMessage = document.getElementById("searchMessage");
+    searchResults = document.getElementById("searchResults");
+
+    if (!searchProfileInput || !searchProfileBtn) {
+        console.warn("⚠️ Elementos de busca não encontrados");
+        return;
+    }
+
+    searchProfileBtn.addEventListener("click", () => {
+        executarBuscaPerfil();
+    });
+
+    searchProfileInput.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            executarBuscaPerfil();
+        }
+    });
+
+    searchProfileInput.addEventListener("input", (e) => {
+        const username = e.target.value.trim();
+
+        if (username.length < SEARCH_CONFIG.minUsernameLength) {
+            limparResultados();
+            return;
+        }
+
+        debounceSearchFunc(() => {
+            executarBuscaPerfil(username);
+        });
+    });
+}
+
+async function executarBuscaPerfil(username = null) {
+    username = username || searchProfileInput.value.trim();
+
+    try {
+        username = validarUsername(username);
+    } catch (error) {
+        mostrarSearchMensagem(error.message, "error");
+        searchResults.innerHTML = "";
+        return;
+    }
+
+    searchProfileBtn.disabled = true;
+    searchLoader.classList.add("active");
+
+    try {
+        const usuarios = await buscarUsuarios(username);
+
+        if (!usuarios || usuarios.length === 0) {
+            mostrarSearchMensagem("Nenhum usuário encontrado", "info");
+            searchResults.innerHTML =
+                '<div class="search-no-results">😔 Nenhum resultado encontrado</div>';
+            return;
+        }
+
+        searchResults.innerHTML = "";
+        usuarios.forEach((usuario, index) => {
+            if (usuario && usuario.username) {
+                const resultItem = renderPerfilEncontrado(usuario);
+                if (resultItem) {
+                    resultItem.style.animationDelay = `${index * 0.05}s`;
+                    searchResults.appendChild(resultItem);
+                }
+            }
+        });
+
+        const resultadosValidos = searchResults.children.length;
+        if (resultadosValidos === 0) {
+            mostrarSearchMensagem("Nenhum usuário encontrado", "info");
+            searchResults.innerHTML =
+                '<div class="search-no-results">😔 Nenhum resultado encontrado</div>';
+        } else {
+            mostrarSearchMensagem(
+                `${resultadosValidos} resultado(s) encontrado(s)`,
+                "info"
+            );
+        }
+    } catch (error) {
+        console.error("Erro na busca:", error);
+        mostrarSearchMensagem(
+            error.message || "Erro ao buscar perfis",
+            "error"
+        );
+    } finally {
+        searchProfileBtn.disabled = false;
+        searchLoader.classList.remove("active");
+    }
+}
+
+function renderPerfilEncontrado(usuario) {
+    const profileDiv = document.createElement("div");
+    profileDiv.className = "search-profile-result";
+
+    if (!usuario || !usuario.username) {
+        console.warn("Dados de usuário inválidos:", usuario);
+        return null;
+    }
+
+    const avatar =
+        usuario.foto_perfil || criarAvatarPadrao(usuario.username);
+
+    let linksCount = 0;
+    if (usuario.links_count !== undefined) {
+        linksCount = usuario.links_count;
+    } else if (Array.isArray(usuario.links)) {
+        linksCount = usuario.links.length;
+    }
+    
+    const links = Array.isArray(usuario.links) ? usuario.links : [];
+
+    profileDiv.innerHTML = `
+        <div class="profile-result-content">
+            <img 
+                src="${avatar}" 
+                alt="Foto de ${escapeHtml(usuario.username)}" 
+                class="profile-result-avatar"
+                loading="eager"
+                referrerpolicy="no-referrer"
+                crossorigin="anonymous"
+                onerror="this.src='${criarAvatarPadrao(usuario.username)}'">
+            <div class="profile-result-details">
+                <h4>${escapeHtml(usuario.username)}</h4>
+                <p class="profile-links-count">
+                    🔗 ${linksCount} link${linksCount !== 1 ? "s" : ""}
+                </p>
+                <div class="profile-links-preview">
+                    ${
+                        links && links.length > 0
+                            ? links
+                                  .slice(0, 3)
+                                  .map(
+                                      (link) =>
+                                          `<span class="link-preview-tag" title="${escapeHtml(
+                                              link.titulo || "Sem título"
+                                          )}">${escapeHtml(
+                                              link.titulo || "Sem título"
+                                          )}</span>`
+                                  )
+                                  .join("")
+                            : ""
+                    }
+                </div>
+            </div>
+        </div>
+        <button 
+            class="profile-visit-btn" 
+            data-username="${usuario.username}"
+            aria-label="Visitar perfil de ${usuario.username}">
+            Visitar →
+        </button>
+    `;
+
+    const visitBtn = profileDiv.querySelector(".profile-visit-btn");
+    if (visitBtn) {
+        visitBtn.addEventListener("click", () => {
+            navegarParaPerfil(usuario.username);
+        });
+    }
+
+    return profileDiv;
+}
+
+async function buscarUsuarios(searchTerm) {
+    try {
+        if (
+            !searchTerm ||
+            searchTerm.length < SEARCH_CONFIG.minUsernameLength
+        ) {
+            return [];
+        }
+
+        const response = await fetch(
+            `${API_URL}/user/${encodeURIComponent(searchTerm)}`
+        );
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                return [];
+            } else if (response.status >= 500) {
+                throw new Error("Erro no servidor ao buscar usuário");
+            }
+        }
+
+        const data = await response.json();
+        
+        console.log("Dados recebidos do servidor:", data);
+        
+        return data ? [data] : [];
+    } catch (error) {
+        console.error("Erro ao buscar usuário:", error);
+        return [];
+    }
+}
+
+function validarUsername(username) {
+    username = username.trim().toLowerCase();
+
+    if (!username) {
+        throw new Error("Digite um nome de usuário");
+    }
+
+    if (username.length < SEARCH_CONFIG.minUsernameLength) {
+        throw new Error(
+            `Username deve ter pelo menos ${SEARCH_CONFIG.minUsernameLength} caracteres`
+        );
+    }
+
+    if (username.length > 20) {
+        throw new Error("Username muito longo (máximo 20 caracteres)");
+    }
+
+    if (!/^[a-z0-9_-]+$/.test(username)) {
+        throw new Error("Username contém caracteres inválidos");
+    }
+
+    return username;
+}
+
+function debounceSearchFunc(callback, delay = SEARCH_CONFIG.debounceDelay) {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(callback, delay);
+}
+
+function limparResultados() {
+    if (searchResults) searchResults.innerHTML = "";
+    if (searchMessage) searchMessage.textContent = "";
+}
+
+function navegarParaPerfil(username) {
+    window.location.href = `/${encodeURIComponent(username)}`;
+}
+
+function escapeHtml(text) {
+    if (!text || typeof text !== "string") {
+        return "";
+    }
+
+    const map = {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    };
+    return text.replace(/[&<>"']/g, (m) => map[m]);
+}
+
+function criarAvatarPadrao(username) {
+    const letra = username.charAt(0).toUpperCase();
+    return `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23667eea'/%3E%3Ctext x='50' y='60' font-size='50' fill='white' font-weight='bold' text-anchor='middle'%3E${letra}%3C/text%3E%3C/svg%3E`;
+}
+
+function mostrarSearchMensagem(texto, tipo = "info") {
+    if (!searchMessage) return;
+
+    searchMessage.textContent = texto;
+    searchMessage.className = `search-message ${tipo}`;
+    searchMessage.setAttribute("role", "alert");
+}
