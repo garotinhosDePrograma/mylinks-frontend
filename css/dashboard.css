@@ -827,6 +827,7 @@ main h2 {
         padding: 12px 20px;
         gap: 12px;
         align-items: stretch;
+        justify-content: flex-start;
     }
 
     header h1 {
@@ -839,6 +840,7 @@ main h2 {
     .header-left {
         max-width: none;
         justify-content: flex-start;
+        width: 100%;
     }
 
     .header-search {
@@ -936,16 +938,19 @@ main h2 {
 
 @media (max-width: 480px) {
     header {
-        padding: 12px 15px;
-        gap: 12px;
+        padding: 10px 15px;
+        gap: 10px;
     }
 
     header h1 {
         font-size: 1.3rem;
+        position: static;
+        transform: none;
     }
 
     .header-left {
         gap: 10px;
+        width: 100%;
     }
 
     .header-search {
@@ -1020,7 +1025,11 @@ main h2 {
     }
 
     .header-right {
+        justify-content: flex-end;
         gap: 10px;
+        width: 100%;
+        position: static;
+        transform: none;
     }
 
     #usernameDisplay {
@@ -1148,15 +1157,18 @@ main h2 {
 
 @media (max-width: 360px) {
     header {
-        padding: 10px 12px;
+        padding: 8px 12px;
     }
 
     header h1 {
         font-size: 1.1rem;
+        position: static;
+        transform: none;
     }
 
     .header-left {
         gap: 8px;
+        width: 100%;
     }
 
     .header-search input {
@@ -1193,6 +1205,11 @@ main h2 {
     .dropdown-menu {
         min-width: 160px;
         right: 10px;
+    }
+
+    .header-right {
+        position: static;
+        transform: none;
     }
 
     main {
