@@ -10,6 +10,7 @@ let searchProfileBtn;
 let searchLoader;
 let searchMessage;
 let searchResults;
+let searchDropdown;
 
 function debounceFunc(callback, delay = 300) {
     clearTimeout(debounceTimer);
@@ -43,6 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     usernameDisplay.textContent = `Olá ${user.username}!`;
 
+    // Inicializar busca no header
     inicializarBuscaPerfis();
 
     function posicionarDropdown() {
@@ -66,6 +68,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnMenu.classList.remove("active");
             btnMenu.setAttribute('aria-expanded', 'false');
         }
+
+        // Fechar dropdown de busca ao clicar fora
+        if (searchDropdown && 
+            !searchDropdown.contains(e.target) && 
+            !searchProfileInput.contains(e.target) &&
+            !searchProfileBtn.contains(e.target)) {
+            searchDropdown.classList.remove("show");
+        }
     });
 
     const debouncedReposition = debounceFunc(() => {
@@ -75,11 +85,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     window.addEventListener("resize", debouncedReposition);
 
     document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape" && dropdownMenu.classList.contains("show")) {
-            dropdownMenu.classList.remove("show");
-            btnMenu.classList.remove("active");
-            btnMenu.setAttribute('aria-expanded', 'false');
-            btnMenu.focus();
+        if (e.key === "Escape") {
+            if (dropdownMenu.classList.contains("show")) {
+                dropdownMenu.classList.remove("show");
+                btnMenu.classList.remove("active");
+                btnMenu.setAttribute('aria-expanded', 'false');
+                btnMenu.focus();
+            }
+            
+            if (searchDropdown && searchDropdown.classList.contains("show")) {
+                searchDropdown.classList.remove("show");
+                searchProfileInput.focus();
+            }
         }
     });
 
@@ -372,6 +389,7 @@ function inicializarBuscaPerfis() {
     searchLoader = document.getElementById("searchLoader");
     searchMessage = document.getElementById("searchMessage");
     searchResults = document.getElementById("searchResults");
+    searchDropdown = document.getElementById("searchDropdown");
 
     if (!searchProfileInput || !searchProfileBtn) {
         console.warn("⚠️ Elementos de busca não encontrados");
@@ -389,11 +407,18 @@ function inicializarBuscaPerfis() {
         }
     });
 
+    searchProfileInput.addEventListener("focus", () => {
+        if (searchResults.children.length > 0) {
+            searchDropdown.classList.add("show");
+        }
+    });
+
     searchProfileInput.addEventListener("input", (e) => {
         const username = e.target.value.trim();
 
         if (username.length < SEARCH_CONFIG.minUsernameLength) {
             limparResultados();
+            searchDropdown.classList.remove("show");
             return;
         }
 
@@ -411,11 +436,13 @@ async function executarBuscaPerfil(username = null) {
     } catch (error) {
         mostrarSearchMensagem(error.message, "error");
         searchResults.innerHTML = "";
+        searchDropdown.classList.add("show");
         return;
     }
 
     searchProfileBtn.disabled = true;
     searchLoader.classList.add("active");
+    searchDropdown.classList.add("show");
 
     try {
         const usuarios = await buscarUsuarios(username);
@@ -497,23 +524,20 @@ function renderPerfilEncontrado(usuario) {
                 <p class="profile-links-count">
                     🔗 ${linksCount} link${linksCount !== 1 ? "s" : ""}
                 </p>
+                ${links && links.length > 0 ? `
                 <div class="profile-links-preview">
-                    ${
-                        links && links.length > 0
-                            ? links
-                                  .slice(0, 3)
-                                  .map(
-                                      (link) =>
-                                          `<span class="link-preview-tag" title="${escapeHtml(
-                                              link.titulo || "Sem título"
-                                          )}">${escapeHtml(
-                                              link.titulo || "Sem título"
-                                          )}</span>`
-                                  )
-                                  .join("")
-                            : ""
-                    }
-                </div>
+                    ${links
+                        .slice(0, 3)
+                        .map(
+                            (link) =>
+                                `<span class="link-preview-tag" title="${escapeHtml(
+                                    link.titulo || "Sem título"
+                                )}">${escapeHtml(
+                                    link.titulo || "Sem título"
+                                )}</span>`
+                        )
+                        .join("")}
+                </div>` : ''}
             </div>
         </div>
         <button 
@@ -630,4 +654,13 @@ function mostrarSearchMensagem(texto, tipo = "info") {
     searchMessage.textContent = texto;
     searchMessage.className = `search-message ${tipo}`;
     searchMessage.setAttribute("role", "alert");
+}
+
+function isValidUrl(string) {
+    try {
+        const url = new URL(string.startsWith('http') ? string : `https://${string}`);
+        return url.protocol === "http:" || url.protocol === "https:";
+    } catch (_) {
+        return false;
+    }
 }
