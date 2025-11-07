@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Dashboard MyLinks - Gerencie seus links">
     <meta name="theme-color" content="#667eea">
+    <meta name="referrer" content="no-referrer">
     <title>MyLinks - Dashboard</title>
     <link rel="stylesheet" href="/css/dashboard.css">
 </head>
@@ -53,6 +54,24 @@
                 <a href="#" id="profileLink" target="_blank" rel="noopener noreferrer"></a>
             </div>
             <button id="btnCopyProfile" aria-label="Copiar link do perfil">📋 Copiar Link</button>
+        </section>
+
+        <section class="search-section" aria-labelledby="search-title">
+            <h3 id="search-title">🔍 Buscar Perfil</h3>
+            <div class="search-input-wrapper">
+                <input 
+                    type="text" 
+                    id="searchProfileInput" 
+                    placeholder="Digite o nome de usuário..."
+                    aria-label="Buscar perfil de usuário"
+                    autocomplete="off">
+                <button id="searchProfileBtn" class="search-btn" aria-label="Buscar perfil">
+                    Buscar
+                    <span class="search-loader" id="searchLoader"></span>
+                </button>
+            </div>
+            <div id="searchMessage" class="search-message" role="alert" aria-live="polite"></div>
+            <div id="searchResults" class="search-results" role="region" aria-label="Resultados da busca"></div>
         </section>
 
         <section id="formSection" aria-labelledby="form-title">
