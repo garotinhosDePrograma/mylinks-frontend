@@ -823,24 +823,28 @@ main h2 {
 
 @media (max-width: 768px) {
     header {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
         padding: 12px 20px;
         gap: 12px;
-        align-items: stretch;
-        justify-content: flex-start;
+        align-items: center;
+        justify-content: space-between;
     }
 
     header h1 {
         font-size: 1.6rem;
         position: static;
         transform: none;
-        align-self: flex-start;
+        flex-shrink: 0;
+        width: auto;
+        order: 1;
     }
 
     .header-left {
         max-width: none;
         justify-content: flex-start;
         width: 100%;
+        order: 3;
     }
 
     .header-search {
@@ -870,9 +874,10 @@ main h2 {
     .header-right {
         justify-content: flex-end;
         gap: 12px;
-        width: 100%;
         position: static;
         transform: none;
+        flex-shrink: 0;
+        order: 2;
     }
 
     #fotoPerfil {
@@ -940,17 +945,23 @@ main h2 {
     header {
         padding: 10px 15px;
         gap: 10px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
     }
 
     header h1 {
         font-size: 1.3rem;
         position: static;
         transform: none;
+        order: 1;
     }
 
     .header-left {
         gap: 10px;
         width: 100%;
+        order: 3;
     }
 
     .header-search {
@@ -1027,9 +1038,10 @@ main h2 {
     .header-right {
         justify-content: flex-end;
         gap: 10px;
-        width: 100%;
         position: static;
         transform: none;
+        order: 2;
+        flex-shrink: 0;
     }
 
     #usernameDisplay {
@@ -1158,17 +1170,23 @@ main h2 {
 @media (max-width: 360px) {
     header {
         padding: 8px 12px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
     }
 
     header h1 {
         font-size: 1.1rem;
         position: static;
         transform: none;
+        order: 1;
     }
 
     .header-left {
         gap: 8px;
         width: 100%;
+        order: 3;
     }
 
     .header-search input {
@@ -1210,6 +1228,8 @@ main h2 {
     .header-right {
         position: static;
         transform: none;
+        order: 2;
+        flex-shrink: 0;
     }
 
     main {
