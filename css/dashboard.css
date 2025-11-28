@@ -37,8 +37,6 @@ body {
     outline-offset: 2px;
 }
 
-/* ========== HEADER ========== */
-
 header {
     display: flex;
     flex-direction: row;
@@ -78,8 +76,6 @@ header h1 {
     max-width: 600px;
     width: 100%;
 }
-
-/* ========== SEARCH NO HEADER ========== */
 
 .header-search {
     position: relative;
@@ -169,8 +165,6 @@ header h1 {
         transform: rotate(360deg);
     }
 }
-
-/* ========== DROPDOWN DE RESULTADOS ========== */
 
 .search-dropdown {
     position: absolute;
@@ -372,8 +366,6 @@ header h1 {
     }
 }
 
-/* ========== HEADER RIGHT ========== */
-
 .header-right {
     display: flex;
     align-items: center;
@@ -526,8 +518,6 @@ header h1 {
     background: rgba(255, 255, 255, 0.1);
     margin: 8px 0;
 }
-
-/* ========== MAIN CONTENT ========== */
 
 main {
     max-width: 600px;
@@ -812,8 +802,6 @@ main h2 {
 .empty-state p {
     font-size: 1.1rem;
 }
-
-/* ========== RESPONSIVE ========== */
 
 @media (max-width: 1024px) {
     .header-search {
@@ -1265,4 +1253,5 @@ main h2 {
         transition-duration: 0.01ms !important;
         scroll-behavior: auto !important;
     }
+
 }
