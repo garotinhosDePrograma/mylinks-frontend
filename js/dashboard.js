@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     usernameDisplay.textContent = `Olá ${user.username}!`;
 
-    // Inicializar busca no header
     inicializarBuscaPerfis();
 
     function posicionarDropdown() {
@@ -69,7 +68,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnMenu.setAttribute('aria-expanded', 'false');
         }
 
-        // Fechar dropdown de busca ao clicar fora
         if (searchDropdown && 
             !searchDropdown.contains(e.target) && 
             !searchProfileInput.contains(e.target) &&
@@ -116,6 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const profileUrl = `${API_URL}/${user.username}`;
     profileLink.href = profileUrl;
+    profileLink.target = "_blank";
     profileLink.textContent = profileUrl;
 
     function setFotoLoading(loading) {
