@@ -365,7 +365,7 @@ Este é um projeto acadêmico, mas sugestões são bem-vindas!
 
 ---
 
-## 👨‍💻 Desenvolvedor
+## 👨‍💻 Desenvolvedores
 
 **[Luiz, Thalis, Diego, Renan e João]**  
 ---
