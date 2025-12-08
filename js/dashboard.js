@@ -624,9 +624,7 @@ function limparResultados() {
 }
 
 function navegarParaPerfil(username) {
-    url = `${API_URL}/${encodeURIComponent(username)}`;
-    window.location.href = url;
-    url.target = "_blank";
+    window.location.href = `${API_URL}/${encodeURIComponent(username)}`;
 }
 
 function escapeHtml(text) {
