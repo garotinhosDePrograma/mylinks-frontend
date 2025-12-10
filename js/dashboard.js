@@ -606,7 +606,7 @@ function validarUsername(username) {
         throw new Error("Username muito longo (máximo 20 caracteres)");
     }
 
-    if (!/^[a-z0-9_-]+$/.test(username)) {
+    if (!/^[a-z0-9\s_-]+$/.test(username)) {
         throw new Error("Username contém caracteres inválidos");
     }
 
