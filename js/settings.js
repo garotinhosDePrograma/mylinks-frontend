@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
-        if (!/^[a-zA-Z0-9_-]+$/.test(newUsername)) {
+        if (!/^[a-zA-Z0-9\s_-]+$/.test(newUsername)) {
             showMessage(usernameMessage, "Username deve conter apenas letras, números, _ e -", "error", 0);
             return;
         }
