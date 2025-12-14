@@ -7,12 +7,6 @@
     <link rel="stylesheet" href="/css/intro.css">
 </head>
 <body>
-    <div id="checkingAuth" style="display: flex; flex-direction: column; align-items: center; gap: 20px;">
-        <h1>MyLinks</h1>
-        <p style="color: #b0b0b0;">Verificando credenciais...</p>
-        <div class="loader active" role="status" aria-label="Carregando"></div>
-    </div>
-    
     <header>
         <div class="logo">MyLinks</div>
         <div class="header-buttons">
@@ -48,30 +42,5 @@
             </div>
         </section>
     </main>
-
-    <script src="/js/config.js"></script>
-    <script src="/js/auth.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const refreshToken = localStorage.getItem("refreshToken");
-            const user = localStorage.getItem("user");
-            
-            if (refreshToken && user) {
-                console.log("Credenciais encontradas, verificando validade...");
-                
-                const isValid = await auth.verificarLogin();
-                
-                if (isValid) {
-                    console.log("Usuário já está logado, redirecionando...");
-                    window.location.href = "dashboard.html";
-                    return;
-                }
-                
-                console.log("Credenciais inválidas");
-            }
-
-            document.getElementById("checkingAuth").style.display = "none";
-        });
-    </script>
 </body>
 </html>
