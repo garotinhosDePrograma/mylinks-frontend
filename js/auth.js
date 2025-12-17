@@ -101,7 +101,7 @@ const auth = {
             const data = await res.json();
 
             if (res.ok) {
-                mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.");
+                mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.", 'success');
                 window.location.href = "login.html";
             } else {
                 throw new Error(data.error || "Erro ao registrar usuário");
