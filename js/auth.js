@@ -101,7 +101,7 @@ const auth = {
             const data = await res.json();
 
             if (res.ok) {
-                mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.", 'success');
+                mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.");
                 setTimeout(function() { 
                     window.location.href = "login.html";
                 }, 5000);
