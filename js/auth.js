@@ -102,7 +102,7 @@ const auth = {
 
             if (res.ok) {
                 alert("Cadastro realizado com sucesso! Faça login para continuar.");
-                window.location.href = "index.html";
+                window.location.href = "login.html";
             } else {
                 throw new Error(data.error || "Erro ao registrar usuário");
             }
