@@ -102,7 +102,9 @@ const auth = {
 
             if (res.ok) {
                 mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.", 'success');
-                window.location.href = "login.html";
+                setTimeout(() { 
+                    window.location.href = "login.html";
+                }, 5000);
             } else {
                 throw new Error(data.error || "Erro ao registrar usuário");
             }
