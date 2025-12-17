@@ -102,7 +102,7 @@ const auth = {
 
             if (res.ok) {
                 mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.", 'success');
-                setTimeout(() { 
+                setTimeout(function() { 
                     window.location.href = "login.html";
                 }, 5000);
             } else {
