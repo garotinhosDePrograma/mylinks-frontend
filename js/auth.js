@@ -311,8 +311,6 @@ function toggleLoading(formType, mostrar) {
 function mostrarMensagem(texto, tipo = 'info', duracao = 5000) {
     const mensagem = document.getElementById("mensagem");
     mensagem.textContent = texto;
-    mensagem.className = '';
-    mensagem.setAttribute('role', 'alert');
         
     switch(tipo) {
         case 'success':
