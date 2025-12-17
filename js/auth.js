@@ -101,7 +101,7 @@ const auth = {
             const data = await res.json();
 
             if (res.ok) {
-                alert("Cadastro realizado com sucesso! Faça login para continuar.");
+                mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.");
                 window.location.href = "login.html";
             } else {
                 throw new Error(data.error || "Erro ao registrar usuário");
@@ -303,6 +303,37 @@ function toggleLoading(formType, mostrar) {
             submitBtn.disabled = false;
             submitBtn.textContent = buttonText.default;
         }
+    }
+}
+
+function mostrarMensagem(texto, tipo = 'info', duracao = 5000) {
+    mensagem.textContent = texto;
+    mensagem.className = '';
+    mensagem.setAttribute('role', 'alert');
+        
+    switch(tipo) {
+        case 'success':
+            mensagem.style.color = "#4caf50";
+            mensagem.style.backgroundColor = "rgba(76, 175, 80, 0.1)";
+            mensagem.style.border = "1px solid rgba(76, 175, 80, 0.3)";
+            break;
+        case 'error':
+            mensagem.style.color = "#ff6b6b";
+            mensagem.style.backgroundColor = "rgba(255, 107, 107, 0.1)";
+            mensagem.style.border = "1px solid rgba(255, 107, 107, 0.3)";
+            break;
+        default:
+            mensagem.style.color = "#667eea";
+            mensagem.style.backgroundColor = "rgba(102, 126, 234, 0.1)";
+            mensagem.style.border = "1px solid rgba(102, 126, 234, 0.3)";
+    }
+        
+    if (tipo === 'success' && duracao > 0) {
+        setTimeout(() => {
+            mensagem.textContent = "";
+            mensagem.style.backgroundColor = "";
+            mensagem.style.border = "";
+        }, duracao);
     }
 }
 
