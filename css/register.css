@@ -161,11 +161,18 @@ a:focus {
 }
 
 #mensagem {
-    margin-top: 15px;
-    color: #ff6b6b;
-    font-size: 0.9rem;
+    margin-top: 20px;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 0.95rem;
     text-align: center;
+    font-weight: 500;
+    transition: all 0.3s ease;
     min-height: 20px;
+}
+
+#mensagem:not(:empty) {
+    animation: fadeIn 0.3s ease;
 }
 
 @keyframes spin {
