@@ -20,7 +20,7 @@ function debounceFunc(callback, delay = 300) {
 document.addEventListener("DOMContentLoaded", async () => {
     await auth.verificarLogin();
 
-    const user = JSON.parse(storage.get("user"));
+    const user = storage.get("user");
     const mensagem = document.getElementById("mensagem");
     const usernameDisplay = document.getElementById("usernameDisplay");
     const fotoPerfil = document.getElementById("fotoPerfil");
