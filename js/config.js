@@ -1,7 +1,7 @@
 const CONFIG = {
     API_URL: "https://pygre.onrender.com",
     DEFAULT_AVATAR: "assets/default-avatar.png",
-    TOKEN_EXP_TIME: 60 * 60 * 1000,
+    TOKEN_EXP_TIME: 15 * 60 * 1000,
 
     ERRORS: {
         NETWORK: "Erro de conexão. Verifique a internet.",
