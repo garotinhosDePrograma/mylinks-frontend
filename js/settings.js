@@ -26,6 +26,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.location.href = "dashboard.html";
     });
 
+    networkMonitor.subscribe((status) => {
+        const botoes = document.querySelectorAll('button[type="submit"]');
+
+        if (status === 'offline') {
+            botoes.forEach(btn => {
+                btn.disabled = true;
+                btn.dataset.originalText = btn.textContent;
+                btn.textContent = 'Offline';
+            });
+        } else {
+            botoes.forEach(btn => {
+                btn.disabled = false;
+                if (btn.dataset.originalText) {
+                    btn.textContent = btn.dataset.originalText;
+                }
+            });
+        }
+    });
+
     function showMessage(element, message, type, duration = 5000) {
         element.textContent = message;
         element.className = `message ${type}`;
