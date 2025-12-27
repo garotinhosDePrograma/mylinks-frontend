@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (response.ok) {
                 user.username = data.username;
-                localStorage.setItem("user", JSON.stringify(user));
+                storage.set("user", user, 7*24*60*60*1000);
                 currentUsername.textContent = data.username;
                 usernameForm.reset();
                 showMessage(usernameMessage, "Username atualizado com sucesso!", "success");
@@ -169,7 +169,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (response.ok) {
                 user.email = newEmail;
-                localStorage.setItem("user", JSON.stringify(user));
+                storage.set("user", user, 7*24*60*60*1000);
                 currentEmail.textContent = newEmail;
                 emailForm.reset();
                 showMessage(emailMessage, "E-mail atualizado com sucesso!", "success");
