@@ -44,12 +44,14 @@
                 id="senha" 
                 name="password"
                 placeholder="Digite sua senha" 
-                minlength="6"
+                minlength="10"
                 autocomplete="new-password"
                 required 
                 aria-required="true"
                 aria-describedby="senha-hint">
-            <small id="senha-hint" class="form-hint">Mínimo 6 caracteres</small>
+            <small id="senha-hint" class="form-hint">
+                Mínimo 10 caracteres com MAIÚSCULA, minúscula, número e caractere especial (!@#$%)
+            </small>
 
             <button type="submit" aria-label="Criar conta">Cadastrar</button>
             <div class="Regloader" id="Regloader" role="status" aria-label="Cadastrando"></div>
