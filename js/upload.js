@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     await auth.verificarLogin();
 
-    const token = localStorage.getItem("accessToken");
+    const token = storage.get("accessToken");
     const uploadForm = document.getElementById("uploadForm");
     const fotoInput = document.getElementById("fotoInput");
     const preview = document.getElementById("preview");
@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = storage.get("user");
 
     if (user) {
         try {
