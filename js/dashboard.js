@@ -98,6 +98,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
+    networkMonitor.subscribe((status) => {
+        const botoes = document.querySelectorAll('button[type="submit"]');
+
+        if (status === 'offline') {
+            botoes.forEach(btn => {
+                btn.disabled = true;
+                btn.dataset.originalText = btn.textContent;
+                btn.textContent = 'Offline';
+            });
+        } else {
+            botoes.forEach(btn => {
+                btn.disabled = false;
+                if (btn.dataset.originalText) {
+                    btn.textContent = btn.dataset.originalText;
+                }
+            });
+        }
+    });
+
     menuUpload.addEventListener("click", () => {
         window.location.href = "upload.html";
     });
@@ -421,9 +440,9 @@ function inicializarBuscaPerfis() {
             return;
         }
 
-        debounceSearchFunc(() => {
+        window.debounce(() => {
             executarBuscaPerfil(username);
-        });
+        }, 300, 'search-profile')();
     });
 }
 
@@ -611,11 +630,6 @@ function validarUsername(username) {
     }
 
     return username;
-}
-
-function debounceSearchFunc(callback, delay = SEARCH_CONFIG.debounceDelay) {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(callback, delay);
 }
 
 function limparResultados() {

@@ -35,3 +35,22 @@ const CONFIG = {
 };
 
 window.CONFIG = CONFIG;
+
+window.debounce = (() => {
+    const timers = new Map();
+
+    return (fn, delay = 300, key = 'default') => {
+        return function(...args) {
+            if (timers.has(key)) {
+                clearTimeout(timers.get(key));
+            }
+
+            const timer = setTimeout(() => {
+                fn.apply(this, args);
+                timers.delete(key);
+            }, delay);
+
+            timers.set(key, timer);
+        };
+    };
+})();
