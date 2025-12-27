@@ -58,8 +58,8 @@
     <script src="/js/auth.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", async () => {
-            const refreshToken = localStorage.getItem("refreshToken");
-            const user = localStorage.getItem("user");
+            const refreshToken = storage.get("refreshToken");
+            const user = storage.get("user");
             
             if (refreshToken && user) {
                 console.log("Credenciais encontradas, verificando validade...");
