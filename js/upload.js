@@ -186,7 +186,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     };
                     img.src = data.foto_perfil;
 
-                    const user = JSON.parse(localStorage.getItem("user"));
+                    const user = storage.get("user"));
                     if (user) {
                         user.foto_perfil = data.foto_perfil;
                         localStorage.setItem("user", JSON.stringify(user));
