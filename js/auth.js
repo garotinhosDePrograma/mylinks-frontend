@@ -53,10 +53,10 @@ const auth = {
                 const agora = Date.now();
                 const expiraEm = agora + window.CONFIG.TOKEN_EXP_TIME;
 
-                localStorage.setItem("accessToken", data.access_token);
-                localStorage.setItem("refreshToken", data.refresh_token);
-                localStorage.setItem("tokenExp", expiraEm);
-                localStorage.setItem("user", JSON.stringify(data.user));
+                storage.set("accessToken", data.access_token, window.CONFIG.TOKEN_EXP_TIME);
+                storage.set("refreshToken", data.refresh_token, 7 * 24 * 60 * 60 * 1000);
+                storage.set("tokenExp", expiraEm, window.CONFIG.TOKEN_EXP_TIME);
+                storage.set("user", data.user, 7 * 24 * 60 * 60 * 1000);
                 
                 AppState.setState({ 
                     user: data.user, 
@@ -120,8 +120,8 @@ const auth = {
     },
 
     async verificarLogin() {
-        const refreshToken = localStorage.getItem("refreshToken");
-        const user = localStorage.getItem("user");
+        const refreshToken = storage.get("refreshToken");
+        const user = storage.get("user");
 
         if (!refreshToken || !user) {
             console.warn("Sem credenciais salvas - Redirecionando para login");
@@ -129,8 +129,8 @@ const auth = {
             return false;
         }
 
-        const token = localStorage.getItem("accessToken");
-        const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
+        const token = storage.get("accessToken");
+        const tokenExp = parseInt(storage.get("tokenExp"), 10);
         const agora = Date.now();
 
         if (token && agora < tokenExp) {
@@ -154,7 +154,7 @@ const auth = {
     },
 
     async renovarToken() {
-        const refreshToken = localStorage.getItem("refreshToken");
+        const refreshToken = storage.get("refreshToken");
         if (!refreshToken) {
             console.warn("Refresh token não encontrado");
             return null;
@@ -177,8 +177,8 @@ const auth = {
                 const agora = Date.now();
                 const expiraEm = agora + window.CONFIG.TOKEN_EXPIRATION_TIME;
 
-                localStorage.setItem("accessToken", data.access_token);
-                localStorage.setItem("tokenExp", expiraEm);
+                storage.set("accessToken", data.access_token, window.CONFIG.TOKEN_EXP_TIME);
+                storage.set("tokenExp", expiraEm, window.CONFIG.TOKEN_EXP_TIME);
 
                 console.log("Token renovado com sucesso!");
                 return data.access_token;
@@ -204,8 +204,8 @@ const auth = {
     },
 
     async fetchAutenticado(url, options = {}) {
-        let token = localStorage.getItem("accessToken");
-        const tokenExp = parseInt(localStorage.getItem("tokenExp"), 10);
+        let token = storage.get("accessToken");
+        const tokenExp = parseInt(storage.get("tokenExp"), 10);
         const agora = Date.now();
 
         if (!token || agora > tokenExp) {
@@ -259,10 +259,10 @@ const auth = {
 
     logout() {
         console.log("Fazendo logout...");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("tokenExp");
-        localStorage.removeItem("user");
+        storage.remove("accessToken");
+        storage.remove("refreshToken");
+        storage.remove("tokenExp");
+        storage.remove("user");
         
         AppState.setState({ 
             user: null, 

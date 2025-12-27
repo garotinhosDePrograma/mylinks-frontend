@@ -9,7 +9,7 @@ class NetworkMonitor {
         window.addEventListener('online', () => {
             this.isOnline = true;
             this.notifyListeners('online');
-            this.showNotification('Conexão restaurada', 'sucess');
+            this.showNotification('Conexão restaurada', 'success');
         });
 
         window.addEventListener('offline', () => {

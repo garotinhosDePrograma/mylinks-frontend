@@ -59,7 +59,7 @@ class StorageManager {
 
             try {
                 const data = JSON.parse(localStorage.getItem(key));
-                if (data.expiresAt && now > expiresAt) {
+                if (data.expiresAt && now > data.expiresAt) {
                     localStorage.remove(key);
                 }
             } catch (e) {
