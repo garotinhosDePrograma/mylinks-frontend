@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async () => {
     await auth.verificarLogin();
 
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = JSON.parse(storage.get("user"));
     if (!user) {
         window.location.href = "index.html";
         return;
