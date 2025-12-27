@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         return;
     }
 
-    usernameDisplay.textContent = `Olá ${user.username}!`;
+    usernameDisplay.textContent = `Olá, ${user.username}!`;
 
     inicializarBuscaPerfis();
 
@@ -624,7 +624,8 @@ function limparResultados() {
 }
 
 function navegarParaPerfil(username) {
-    window.location.href = `${API_URL}/${encodeURIComponent(username)}`;
+    const url = `${API_URL}/${encodeURIComponent(username)}`;
+    window.open(url, '_blank');
 }
 
 function escapeHtml(text) {
