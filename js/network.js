@@ -14,7 +14,7 @@ class NetworkMonitor {
             this.isOnline = true;
             this.notifyListeners('online');
             this.showNotification({
-                title: 'Conexão restaurada',
+                title: '✅ Conexão Restaurada',
                 message: 'Você está online novamente',
                 type: 'success',
                 duration: 4000,
@@ -26,11 +26,11 @@ class NetworkMonitor {
             this.isOnline = false;
             this.notifyListeners('offline');
             this.showNotification({
-                title: 'Sem conexão',
+                title: '⚠️ Sem Conexão',
                 message: 'Verifique sua internet',
                 type: 'warning',
                 duration: 0,
-                icon: '🛜'
+                icon: '📡'
             });
         });
     }
@@ -50,17 +50,17 @@ class NetworkMonitor {
                 display: flex;
                 flex-direction: column;
                 gap: 10px;
-                width: 400px;
+                max-width: 400px;
             }
-            
+
             .network-notification {
                 pointer-events: all;
                 background: rgba(255, 255, 255, 0.98);
                 backdrop-filter: blur(20px);
                 border-radius: 16px;
                 padding: 16px 20px;
-                box-shadow: 0 8px 32px rgba(0,0,0,0.15),
-                           0 2px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15),
+                           0 2px 8px rgba(0, 0, 0, 0.1);
                 display: flex;
                 align-items: flex-start;
                 gap: 12px;
@@ -70,7 +70,7 @@ class NetworkMonitor {
                 overflow: hidden;
                 animation: slideInRight 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
             }
-            
+
             .network-notification::before {
                 content: '';
                 position: absolute;
@@ -81,30 +81,30 @@ class NetworkMonitor {
                 background: linear-gradient(90deg, transparent, currentColor, transparent);
                 animation: shimmer 2s infinite;
             }
-            
+
             @keyframes shimmer {
                 0% { transform: translateX(-100%); }
-                100% { tranform: translateX(100%); }
+                100% { transform: translateX(100%); }
             }
-            
+
             .network-notification.success {
                 border-left-color: #4caf50;
                 background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(255, 255, 255, 0.98) 50%);
             }
-            
+
             .network-notification.success::before {
                 color: #4caf50;
             }
-            
+
             .network-notification.warning {
                 border-left-color: #ff9800;
-                background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 255, 255, 0.98));
+                background: linear-gradient(135deg, rgba(255, 152, 0, 0.1) 0%, rgba(255, 255, 255, 0.98) 50%);
             }
-            
+
             .network-notification.warning::before {
                 color: #ff9800;
             }
-            
+
             .network-notification.error {
                 border-left-color: #f44336;
                 background: linear-gradient(135deg, rgba(244, 67, 54, 0.1) 0%, rgba(255, 255, 255, 0.98) 50%);
@@ -122,7 +122,7 @@ class NetworkMonitor {
             .network-notification.info::before {
                 color: #2196f3;
             }
-            
+
             .network-notification-icon {
                 font-size: 28px;
                 flex-shrink: 0;
@@ -133,20 +133,20 @@ class NetworkMonitor {
                 height: 40px;
                 border-radius: 50%;
                 background: rgba(255, 255, 255, 0.8);
-                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
                 animation: bounce 0.6s ease;
             }
-            
+
             @keyframes bounce {
                 0%, 100% { transform: translateY(0); }
-                50% { tranform: translateY(-5px); }
+                50% { transform: translateY(-5px); }
             }
-            
+
             .network-notification-content {
                 flex: 1;
                 min-width: 0;
             }
-            
+
             .network-notification-title {
                 font-size: 15px;
                 font-weight: 700;
@@ -156,14 +156,14 @@ class NetworkMonitor {
                 align-items: center;
                 gap: 8px;
             }
-            
-            network-notification-message {
+
+            .network-notification-message {
                 font-size: 13px;
                 color: #666;
                 margin: 0;
-                min-height: 1.4;
+                line-height: 1.4;
             }
-            
+
             .network-notification-close {
                 background: none;
                 border: none;
@@ -181,7 +181,7 @@ class NetworkMonitor {
                 transition: all 0.2s ease;
                 flex-shrink: 0;
             }
-            
+
             .network-notification-close:hover {
                 background: rgba(0, 0, 0, 0.05);
                 color: #333;
@@ -198,7 +198,7 @@ class NetworkMonitor {
                 transform-origin: left;
                 animation: progressBar linear forwards;
             }
-            
+
             .network-notification.success .network-notification-progress {
                 color: #4caf50;
             }
@@ -214,7 +214,7 @@ class NetworkMonitor {
             .network-notification.info .network-notification-progress {
                 color: #2196f3;
             }
-            
+
             @keyframes progressBar {
                 from { transform: scaleX(1); }
                 to { transform: scaleX(0); }
@@ -230,7 +230,7 @@ class NetworkMonitor {
                     opacity: 1;
                 }
             }
-            
+
             .network-notification.closing {
                 animation: slideOutRight 0.3s ease forwards;
             }
@@ -245,7 +245,7 @@ class NetworkMonitor {
                     opacity: 0;
                 }
             }
-            
+
             @media (prefers-color-scheme: dark) {
                 .network-notification {
                     background: rgba(30, 30, 46, 0.98);
@@ -272,7 +272,7 @@ class NetworkMonitor {
                 .network-notification-title {
                     color: #e0e0e0;
                 }
-                
+
                 .network-notification-message {
                     color: #b0b0b0;
                 }
@@ -290,7 +290,7 @@ class NetworkMonitor {
                     color: #e0e0e0;
                 }
             }
-            
+
             @media (max-width: 768px) {
                 .network-notification-container {
                     left: 10px;
@@ -319,7 +319,7 @@ class NetworkMonitor {
                     font-size: 12px;
                 }
             }
-            
+
             .network-notification.warning .network-notification-icon {
                 animation: bounce 0.6s ease, pulse 2s ease-in-out infinite;
             }
@@ -333,7 +333,7 @@ class NetworkMonitor {
                                0 0 0 8px rgba(255, 152, 0, 0.1);
                 }
             }
-            
+
             .network-notification.success .network-notification-icon {
                 animation: bounce 0.6s ease, checkmark 0.8s ease;
             }
@@ -343,7 +343,7 @@ class NetworkMonitor {
                 50% { transform: scale(1.2); }
                 100% { transform: scale(1); }
             }
-            
+
             @media (prefers-reduced-motion: reduce) {
                 .network-notification,
                 .network-notification-icon,
@@ -379,7 +379,7 @@ class NetworkMonitor {
 
     showNotification(options) {
         const {
-            title =  'Notificação',
+            title = 'Notificação',
             message = '',
             type = 'info',
             duration = 5000,
@@ -391,11 +391,11 @@ class NetworkMonitor {
             return;
         }
 
-        this.showNotification = true;
+        this.isShowingNotification = true;
 
         const container = document.getElementById('network-notification-container');
         if (!container) {
-            console.error("Container de notificações não encontrado");
+            console.error('Container de notificações não encontrado');
             return;
         }
 
@@ -410,8 +410,8 @@ class NetworkMonitor {
                 <h4 class="network-notification-title">${title}</h4>
                 ${message ? `<p class="network-notification-message">${message}</p>` : ''}
             </div>
-            <button
-                class="network-notification-close"
+            <button 
+                class="network-notification-close" 
                 aria-label="Fechar notificação"
                 title="Fechar">
                 ×
@@ -440,24 +440,24 @@ class NetworkMonitor {
         if (!notification || !notification.parentElement) return;
 
         notification.classList.add('closing');
-
+        
         setTimeout(() => {
             if (notification.parentElement) {
                 notification.parentElement.removeChild(notification);
             }
-
+            
             this.currentNotification = null;
             this.isShowingNotification = false;
 
             if (this.notificationQueue.length > 0) {
                 const next = this.notificationQueue.shift();
-                setTimeout(() => this.isShowingNotification(next), 300);
+                setTimeout(() => this.showNotification(next), 300);
             }
         }, 300);
     }
 
     playNotificationSound(type) {
-        if (window.AudioContext && !window.webkitAudioContext) return;
+        if (!window.AudioContext && !window.webkitAudioContext) return;
 
         try {
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -472,7 +472,7 @@ class NetworkMonitor {
                 warning: 600,
                 error: 400,
                 info: 700
-            }
+            };
 
             oscillator.frequency.value = frequencies[type] || 700;
             oscillator.type = 'sine';
@@ -483,7 +483,7 @@ class NetworkMonitor {
             oscillator.start(audioContext.currentTime);
             oscillator.stop(audioContext.currentTime + 0.1);
         } catch (e) {
-
+            
         }
     }
 
@@ -497,16 +497,6 @@ class NetworkMonitor {
         });
     }
 
-    warning(title, message, duration = 0) {
-        this.showNotification({
-            title,
-            message,
-            type: 'warning',
-            duration,
-            icon: '⚠️'
-        });
-    }
-
     error(title, message, duration = 6000) {
         this.showNotification({
             title,
@@ -514,6 +504,16 @@ class NetworkMonitor {
             type: 'error',
             duration,
             icon: '❌'
+        });
+    }
+
+    warning(title, message, duration = 0) {
+        this.showNotification({
+            title,
+            message,
+            type: 'warning',
+            duration,
+            icon: '⚠️'
         });
     }
 
