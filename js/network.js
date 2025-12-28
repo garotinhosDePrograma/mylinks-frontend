@@ -29,7 +29,7 @@ class NetworkMonitor {
                 title: '⚠️ Sem Conexão',
                 message: 'Verifique sua internet',
                 type: 'warning',
-                duration: 0,
+                duration: 6000,
                 icon: '📡'
             });
         });
@@ -507,7 +507,7 @@ class NetworkMonitor {
         });
     }
 
-    warning(title, message, duration = 0) {
+    warning(title, message, duration = 6000) {
         this.showNotification({
             title,
             message,
