@@ -251,14 +251,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         if (confirmacao2 !== user.username) {
-            showMessage(dangerMessage, "Username incorreto. Exclusão cancelada.", "info", 0);
+            networkMonitor.info(dangerMessage, "Username incorreto. Exclusão cancelada.", 4000);
             return;
         }
 
         const senha = prompt("Digite sua senha para confirmar a exclusão:");
 
         if (!senha) {
-            showMessage(dangerMessage, "Senha não fornecida. Exclusão cancelada.", "info", 0);
+            networkMonitor.info(dangerMessage, "Senha não fornecida. Exclusão cancelada.", 4000);
             return;
         }
 
@@ -275,7 +275,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
-                alert("Conta excluída com sucesso. Você será redirecionado para a página inicial.");
+                networkMonitor.success("Exclusão concluída", "Conta excluída com sucesso. Você será redirecionado para a página inicial.", 4000);
                 auth.logout();
             } else {
                 throw new Error(data.error || "Erro ao excluir conta");
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
-            showMessage(dangerMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
+            networkMonitor.error(dangerMessage, error.message || window.CONFIG.ERRORS.NETWORK, 6000);
             btnDeleteAccount.disabled = false;
             btnDeleteAccount.textContent = "Excluir Conta Permanentemente";
             btnDeleteAccount.setAttribute('aria-busy', 'false');
