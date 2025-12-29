@@ -278,6 +278,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 networkMonitor.success("Exclusão concluída", "Conta excluída com sucesso. Você será redirecionado para a página inicial.", 4000);
                 auth.logout();
             } else {
+                networkMonitor.error("ERRO", data.error || "Erro ao excluir conta", 6000);
                 throw new Error(data.error || "Erro ao excluir conta");
             }
 
