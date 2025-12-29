@@ -230,20 +230,28 @@ const auth = {
             });
             
             if (!response.ok) {
+                let errorMessage;
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error;
+                } catch {
+                    errorMessage = null;
+                }
+                
                 switch (response.status) {
                     case 401:
                         this.logout();
-                        throw new Error(window.CONFIG.ERRORS.UNAUTHORIZED);
+                        throw new Error(errorMessage || window.CONFIG.ERRORS.UNAUTHORIZED);
                     case 403:
-                        throw new Error(window.CONFIG.ERRORS.FORBIDDEN);
+                        throw new Error(errorMessage || window.CONFIG.ERRORS.FORBIDDEN);
                     case 404:
-                        throw new Error(window.CONFIG.ERRORS.NOT_FOUND);
+                        throw new Error(errorMessage || window.CONFIG.ERRORS.NOT_FOUND);
                     case 500:
                     case 502:
                     case 503:
-                        throw new Error(window.CONFIG.ERRORS.SERVER);
+                        throw new Error(errorMessage || window.CONFIG.ERRORS.SERVER);
                     default:
-                        throw new Error(`Erro HTTP ${response.status}`);
+                        throw new Error(errorMessage || `Erro HTTP ${response.status}`);
                 }
             }
             
