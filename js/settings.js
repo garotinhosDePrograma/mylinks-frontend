@@ -251,14 +251,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         );
 
         if (confirmacao2 !== user.username) {
-            networkMonitor.info(dangerMessage, "Username incorreto. Exclusão cancelada.", 4000);
+            networkMonitor.info("INFO", "Username incorreto. Exclusão cancelada.", 4000);
             return;
         }
 
         const senha = prompt("Digite sua senha para confirmar a exclusão:");
 
         if (!senha) {
-            networkMonitor.info(dangerMessage, "Senha não fornecida. Exclusão cancelada.", 4000);
+            networkMonitor.info("INFO", "Senha não fornecida. Exclusão cancelada.", 4000);
             return;
         }
 
@@ -283,7 +283,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
-            networkMonitor.error(dangerMessage, error.message || window.CONFIG.ERRORS.NETWORK, 6000);
+            networkMonitor.error("ERRO", error.message || window.CONFIG.ERRORS.NETWORK, 6000);
             btnDeleteAccount.disabled = false;
             btnDeleteAccount.textContent = "Excluir Conta Permanentemente";
             btnDeleteAccount.setAttribute('aria-busy', 'false');
