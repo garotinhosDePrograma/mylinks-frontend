@@ -3,34 +3,33 @@ const googleAuth = {
         try {
             const response = await fetch(`${API_URL}/auth/google`);
             const data = await response.json();
-
+            
             if (data.auth_url) {
-                storage.set("google_oauth_state", data.state, 5*60*1000);
-
-                window.location.href = auth_url;
+                storage.set("google_oauth_state", data.state, 5 * 60 * 1000); // 5 minutos
+                
+                window.location.href = data.auth_url;
             } else {
-                networkMonitor.error("ERRO", "URL de autenticação não recebida", 6000);
                 throw new Error("URL de autenticação não recebida");
             }
         } catch (error) {
-            console.error("Erro ao iniciar login com google:", error);
-            networkMonitor.error("ERRO", "Não foi possível conectar com Google", 6000);
+            console.error("Erro ao iniciar login com Google:", error);
+            throw new Error("Não foi possível conectar com o Google");
         }
     },
 
     handleCallback() {
         const params = new URLSearchParams(window.location.search);
-
+        
         const accessToken = params.get("access_token");
         const refreshToken = params.get("refresh_token");
         const userId = params.get("user_id");
         const username = params.get("username");
         const email = params.get("email");
-        const fotoPerfil = params.get("foto_perfol");
+        const fotoPerfil = params.get("foto_perfil");
         const error = params.get("error");
-
+        
         window.history.replaceState({}, document.title, window.location.pathname);
-
+        
         if (error) {
             const errorMessages = {
                 "access_denied": "Você negou o acesso ao Google",
@@ -39,42 +38,42 @@ const googleAuth = {
                 "google_error": "Erro ao comunicar com o Google",
                 "server_error": "Erro no servidor"
             };
-
-            networkMonitor.error("ERRO", errorMessages[error] || "Erro desconhecido ao fazer login", 6000);
+            
+            throw new Error(errorMessages[error] || "Erro desconhecido ao fazer login com Google");
         }
-
+        
         if (accessToken && refreshToken && userId) {
             const agora = Date.now();
             const expiraEm = agora + window.CONFIG.TOKEN_EXP_TIME;
-
+            
             storage.set("accessToken", accessToken, window.CONFIG.TOKEN_EXP_TIME);
-            storage.set("refreshToken", refreshToken, 7*24*60*60*1000);
+            storage.set("refreshToken", refreshToken, 7 * 24 * 60 * 60 * 1000);
             storage.set("tokenExp", expiraEm, window.CONFIG.TOKEN_EXP_TIME);
-
+            
             const user = {
                 id: parseInt(userId),
                 username: username,
                 email: email,
                 foto_perfil: fotoPerfil || window.CONFIG.DEFAULT_AVATAR
             };
-
-            storage.set("user", user, 7*24*60*60*1000);
-
-            AppState.setState({
-                user: user,
-                isAuthenticated: true
+            
+            storage.set("user", user, 7 * 24 * 60 * 60 * 1000);
+            
+            AppState.setState({ 
+                user: user, 
+                isAuthenticated: true 
             });
-
+            
             return true;
         }
-
+        
         return false;
     },
 
-    initGoogleIndentityServices(onSuccess, onError) {
-        if (!document.getElementById('google-indentity-script')) {
-            const script = document.createElement("script");
-            script.id = 'google-indentity-script';
+    initGoogleIdentityServices(onSuccess, onError) {
+        if (!document.getElementById('google-identity-script')) {
+            const script = document.createElement('script');
+            script.id = 'google-identity-script';
             script.src = 'https://accounts.google.com/gsi/client';
             script.async = true;
             script.defer = true;
@@ -88,9 +87,9 @@ const googleAuth = {
     },
 
     setupGoogleButton(onSuccess, onError) {
-        if (typeof google === "undefined") {
-            console.error("Google Indentity Services não carregado");
-            if (onError) onError(new Error("Google não disponível"));
+        if (typeof google === 'undefined') {
+            console.error('Google Identity Services não carregado');
+            if (onError) onError(new Error('Google não disponível'));
             return;
         }
 
@@ -101,7 +100,7 @@ const googleAuth = {
                     await this.handleGoogleCredential(response.credential);
                     if (onSuccess) onSuccess();
                 } catch (error) {
-                    console.error("Erro no login com Google:", console.error);
+                    console.error('Erro no login com Google:', error);
                     if (onError) onError(error);
                 }
             },
@@ -124,20 +123,22 @@ const googleAuth = {
             );
         }
 
-        google.accounts.id.prompt();
+        // google.accounts.id.prompt();
     },
 
     async handleGoogleCredential(idToken) {
         try {
             const response = await fetch(`${API_URL}/auth/google/mobile`, {
-                method: "POST",
-                headers: { "Content-Type": "application" },
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
                 body: JSON.stringify({ id_token: idToken })
             });
 
             if (!response.ok) {
                 const error = await response.json();
-                networkMonitor.error("ERRO", error.error || "Erro ao autenticar com Google", 6000);
+                throw new Error(error.error || 'Erro ao autenticar com Google');
             }
 
             const data = await response.json();
@@ -147,22 +148,22 @@ const googleAuth = {
                 const expiraEm = agora + window.CONFIG.TOKEN_EXP_TIME;
 
                 storage.set("accessToken", data.access_token, window.CONFIG.TOKEN_EXP_TIME);
-                storage.set("refreshToken", data.refresh_token, 7*24*60*60*1000);
+                storage.set("refreshToken", data.refresh_token, 7 * 24 * 60 * 60 * 1000);
                 storage.set("tokenExp", expiraEm, window.CONFIG.TOKEN_EXP_TIME);
-                storage.set("user", data.user, 7*24*60*60*1000);
+                storage.set("user", data.user, 7 * 24 * 60 * 60 * 1000);
 
-                AppState.setState({
-                    user: data.user,
-                    isAuthenticated: true
+                AppState.setState({ 
+                    user: data.user, 
+                    isAuthenticated: true 
                 });
 
                 window.location.href = "dashboard.html";
             } else {
-                networkMonitor.error("ERRO", "Tokens não recebidos do servidor", 6000);
+                throw new Error('Tokens não recebidos do servidor');
             }
         } catch (error) {
-            console.error("Erro ao processar credencial do Google:", error);
-            networkMonitor.error("ERRO", error, 6000);
+            console.error('Erro ao processar credencial do Google:', error);
+            throw error;
         }
     }
 };
@@ -175,20 +176,20 @@ if (window.location.pathname.includes('login.html')) {
             const hasTokens = googleAuth.handleCallback();
             if (hasTokens) {
                 networkMonitor.success(
-                    "Login com Google realizado com sucesso!",
+                    "Login com Google realizado!",
                     "Redirecionando...",
                     2000
                 );
                 setTimeout(() => {
-                    window.location.href = "dashboard.html";
+                    window.location.href = 'dashboard.html';
                 }, 2000);
             }
         } catch (error) {
-            console.error("Erro ao processar callback:", error);
+            console.error('Erro ao processar callback:', error);
             networkMonitor.error(
-                "Erro no login",
+                "Erro no Login",
                 error.message,
-                6000
+                5000
             );
         }
     });
