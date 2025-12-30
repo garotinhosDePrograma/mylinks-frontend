@@ -216,10 +216,13 @@ const googleAuth = {
             // Adicionar evento ao botão
             const customButton = document.getElementById('customGoogleButton');
             if (customButton) {
-                customButton.addEventListener('click', (e) => {
+                customButton.addEventListener('click', async (e) => {
                     e.preventDefault();
-                    this.showDebug('Botão clicado! Abrindo prompt do Google...');
-                    google.accounts.id.prompt();
+                    this.showDebug('Botão clicado! Iniciando login...');
+                    
+                    // Em mobile, usar SEMPRE o redirect (mais confiável)
+                    this.showDebug('Redirecionando para Google OAuth...', 'success');
+                    await this.loginWithRedirect();
                 });
                 
                 this.showDebug('Botão configurado com sucesso!', 'success');
