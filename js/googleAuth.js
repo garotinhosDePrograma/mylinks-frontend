@@ -1,10 +1,74 @@
-// js/googleAuth.js - VERSÃO CORRIGIDA
-
 const googleAuth = {
-    // ❌ REMOVER: Este método redireciona para o backend (causando o erro)
-    // async loginWithRedirect() { ... }
-    
-    // ✅ MANTER: Este é o método correto para SPAs
+    async loginWithRedirect() {
+        try {
+            const response = await fetch(`${API_URL}/auth/google`);
+            const data = await response.json();
+            
+            if (data.auth_url) {
+                storage.set("google_oauth_state", data.state, 5 * 60 * 1000);
+                window.location.href = data.auth_url;
+            } else {
+                throw new Error("URL de autenticação não recebida");
+            }
+        } catch (error) {
+            console.error("Erro ao iniciar login com Google:", error);
+            throw new Error("Não foi possível conectar com o Google");
+        }
+    },
+
+    handleCallback() {
+        const params = new URLSearchParams(window.location.search);
+        
+        const accessToken = params.get("access_token");
+        const refreshToken = params.get("refresh_token");
+        const userId = params.get("user_id");
+        const username = params.get("username");
+        const email = params.get("email");
+        const fotoPerfil = params.get("foto_perfil");
+        const error = params.get("error");
+        
+        window.history.replaceState({}, document.title, window.location.pathname);
+        
+        if (error) {
+            const errorMessages = {
+                "access_denied": "Você negou o acesso ao Google",
+                "no_code": "Código de autorização não recebido",
+                "no_email": "Não foi possível obter seu email do Google",
+                "google_error": "Erro ao comunicar com o Google",
+                "server_error": "Erro no servidor"
+            };
+            
+            throw new Error(errorMessages[error] || "Erro desconhecido ao fazer login com Google");
+        }
+        
+        if (accessToken && refreshToken && userId) {
+            const agora = Date.now();
+            const expiraEm = agora + window.CONFIG.TOKEN_EXP_TIME;
+            
+            storage.set("accessToken", accessToken, window.CONFIG.TOKEN_EXP_TIME);
+            storage.set("refreshToken", refreshToken, 7 * 24 * 60 * 60 * 1000);
+            storage.set("tokenExp", expiraEm, window.CONFIG.TOKEN_EXP_TIME);
+            
+            const user = {
+                id: parseInt(userId),
+                username: username,
+                email: email,
+                foto_perfil: fotoPerfil || window.CONFIG.DEFAULT_AVATAR
+            };
+            
+            storage.set("user", user, 7 * 24 * 60 * 60 * 1000);
+            
+            AppState.setState({ 
+                user: user, 
+                isAuthenticated: true 
+            });
+            
+            return true;
+        }
+        
+        return false;
+    },
+
     initGoogleIdentityServices(onSuccess, onError) {
         if (!document.getElementById('google-identity-script')) {
             const script = document.createElement('script');
@@ -46,7 +110,6 @@ const googleAuth = {
         }
 
         try {
-            // Inicializa o Google Identity Services
             google.accounts.id.initialize({
                 client_id: window.CONFIG.GOOGLE_CLIENT_ID,
                 callback: async (response) => {
@@ -63,7 +126,6 @@ const googleAuth = {
                 itp_support: true
             });
 
-            // Cria o botão personalizado
             buttonContainer.innerHTML = `
                 <button type="button" class="google-btn-custom" id="customGoogleButton">
                     <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -78,14 +140,12 @@ const googleAuth = {
 
             const customButton = document.getElementById('customGoogleButton');
             if (customButton) {
-                customButton.addEventListener('click', () => {
-                    // ✅ Usa o prompt do Google (popup) em vez de redirect
-                    google.accounts.id.prompt((notification) => {
-                        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                            console.log('Google One Tap não foi exibido:', notification.getNotDisplayedReason());
-                        }
-                    });
+                customButton.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    await this.loginWithRedirect();
                 });
+            } else {
+                if (onError) onError(new Error('Falha ao criar botão'));
             }
         } catch (error) {
             if (onError) onError(error);
@@ -94,7 +154,6 @@ const googleAuth = {
 
     async handleGoogleCredential(idToken) {
         try {
-            // Envia o token para o endpoint mobile da API
             const response = await fetch(`${API_URL}/auth/google/mobile`, {
                 method: 'POST',
                 headers: {
@@ -150,9 +209,30 @@ const googleAuth = {
 
 window.googleAuth = googleAuth;
 
-// Inicializa quando a página carrega
 if (window.location.pathname.includes('login.html')) {
     document.addEventListener('DOMContentLoaded', () => {
+        try {
+            const hasTokens = googleAuth.handleCallback();
+            if (hasTokens) {
+                networkMonitor.success(
+                    "Login com Google realizado!",
+                    "Redirecionando...",
+                    2000
+                );
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 2000);
+                return;
+            }
+        } catch (error) {
+            console.error('Erro ao processar callback:', error);
+            networkMonitor.error(
+                "Erro no Login",
+                error.message,
+                5000
+            );
+        }
+        
         googleAuth.initGoogleIdentityServices(
             () => {
                 console.log("Login com Google bem-sucedido");
