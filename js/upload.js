@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const user = storage.get("user");
                     if (user) {
                         user.foto_perfil = data.foto_perfil;
-                        storage.set("user", user);
+                        storage.set("user", user, 7*24*60*60*1000);
                     }
                 }
 
