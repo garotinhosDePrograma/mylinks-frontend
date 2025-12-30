@@ -258,7 +258,9 @@ a:focus {
         transition-duration: 0.01ms !important;
     }
 }
+/* Adicione estas correções ao arquivo css/index.css */
 
+/* Container do botão Google - melhor centralização */
 .google-signin-container {
     display: flex;
     justify-content: center;
@@ -273,6 +275,7 @@ a:focus {
     justify-content: center;
 }
 
+/* Botão customizado do Google - alinhamento corrigido */
 .google-btn-custom {
     width: 100%;
     max-width: 300px;
@@ -310,18 +313,25 @@ a:focus {
     outline-offset: 2px;
 }
 
+/* Ícone do Google - tamanho fixo e sem flex-shrink */
 .google-icon {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
+    display: block;
 }
 
+/* Texto do botão - alinhamento vertical perfeito */
 .google-btn-custom span {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    line-height: 1;
+    display: flex;
+    align-items: center;
 }
 
+/* Divisor entre opções */
 .divider-container {
     display: flex;
     align-items: center;
@@ -344,10 +354,12 @@ a:focus {
     font-weight: 500;
 }
 
+/* Responsividade */
 @media (max-width: 480px) {
     .google-btn-custom {
         font-size: 0.9rem;
         padding: 11px 18px;
+        max-width: 100%;
     }
     
     .google-icon {
@@ -365,7 +377,6 @@ a:focus {
     .google-btn-custom {
         font-size: 0.85rem;
         padding: 10px 16px;
-        max-width: 100%;
     }
     
     .google-signin-container {
