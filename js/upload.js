@@ -186,10 +186,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     };
                     img.src = data.foto_perfil;
 
-                    const user = storage.get("user"));
+                    const user = storage.get("user");
                     if (user) {
                         user.foto_perfil = data.foto_perfil;
-                        localStorage.setItem("user", JSON.stringify(user));
+                        storage.set("user", user);
                     }
                 }
 
@@ -218,7 +218,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    voltarBtn.addEventListener("click", () => {
+    voltarBtn.addEventListener("click", (e) => {
+        e.preventDefault();
         window.location.href = "dashboard.html";
     });
 
