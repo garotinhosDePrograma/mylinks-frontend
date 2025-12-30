@@ -32,7 +32,7 @@ const CONFIG = {
     },
 
     DEBOUNCE_DELAY: 250,
-    GOOGLE_CLIENT_ID: "seu_client_aqui.apps.googleusercontent.com",
+    GOOGLE_CLIENT_ID: "http://47448876385-8s4q2bts7i07o1cmaf4j64ihg2vs5soi.apps.googleusercontent.com",
 };
 
 window.CONFIG = CONFIG;
