@@ -70,7 +70,7 @@ const googleAuth = {
     },
 
     initGoogleIdentityServices(onSuccess, onError) {
-        console.log("🔄 Iniciando Google Identity Services...");
+        console.log("🔄 Iniciando Google Identity Services com FedCM...");
         
         if (!document.getElementById('google-identity-script')) {
             const script = document.createElement('script');
@@ -104,7 +104,7 @@ const googleAuth = {
     },
 
     setupGoogleButton(onSuccess, onError) {
-        console.log("🔧 Configurando botão do Google...");
+        console.log("🔧 Configurando botão do Google com FedCM...");
         
         if (typeof google === 'undefined') {
             console.error('❌ Google Identity Services não está disponível');
@@ -120,7 +120,7 @@ const googleAuth = {
         }
 
         try {
-            // Inicializar Google Identity Services
+            // Inicializar com suporte a FedCM
             google.accounts.id.initialize({
                 client_id: window.CONFIG.GOOGLE_CLIENT_ID,
                 callback: async (response) => {
@@ -133,8 +133,11 @@ const googleAuth = {
                         if (onError) onError(error);
                     }
                 },
+                // Configurações para FedCM
+                use_fedcm_for_prompt: true,
                 auto_select: false,
-                cancel_on_tap_outside: true
+                cancel_on_tap_outside: true,
+                itp_support: true
             });
 
             // Criar botão customizado
@@ -155,36 +158,13 @@ const googleAuth = {
             if (customButton) {
                 customButton.addEventListener('click', (e) => {
                     e.preventDefault();
-                    console.log("🖱️ Botão Google clicado");
+                    console.log("🖱️ Botão Google clicado - Disparando prompt FedCM");
                     
-                    // Disparar prompt do Google
-                    google.accounts.id.prompt((notification) => {
-                        if (notification.isNotDisplayed()) {
-                            const reason = notification.getNotDisplayedReason();
-                            console.log("⚠️ Prompt não exibido:", reason);
-                            
-                            if (reason === 'suppressed_by_user' || reason === 'tap_outside') {
-                                networkMonitor.info(
-                                    "Login Cancelado",
-                                    "Você cancelou o login com Google",
-                                    3000
-                                );
-                            } else {
-                                networkMonitor.error(
-                                    "Erro no Login",
-                                    "Não foi possível abrir o login do Google. Tente novamente.",
-                                    5000
-                                );
-                            }
-                        } else if (notification.isSkippedMoment()) {
-                            console.log("⏭️ Prompt ignorado:", notification.getSkippedReason());
-                        } else {
-                            console.log("✅ Prompt do Google exibido");
-                        }
-                    });
+                    // Usar FedCM-aware prompt
+                    google.accounts.id.prompt();
                 });
                 
-                console.log("✅ Botão do Google configurado com sucesso");
+                console.log("✅ Botão do Google configurado com FedCM");
             } else {
                 console.error("❌ Falha ao criar botão customizado");
                 if (onError) onError(new Error('Falha ao criar botão'));
@@ -261,7 +241,7 @@ if (window.location.pathname.includes('login.html')) {
     console.log("📄 Página de login detectada");
     
     document.addEventListener('DOMContentLoaded', () => {
-        console.log("🚀 DOM carregado, inicializando Google Auth...");
+        console.log("🚀 DOM carregado, inicializando Google Auth com FedCM...");
         
         // Processar callback se houver
         try {
