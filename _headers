@@ -1,0 +1,8 @@
+/*
+  Permissions-Policy: identity-credentials-get=(self "https://accounts.google.com")
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
+  Cross-Origin-Embedder-Policy: credentialless
+  
+/login.html
+  Permissions-Policy: identity-credentials-get=(self "https://accounts.google.com")
+  Cross-Origin-Opener-Policy: same-origin-allow-popups
