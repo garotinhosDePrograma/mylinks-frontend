@@ -1,78 +1,23 @@
 const googleAuth = {
-    // Função para mostrar mensagens na tela (já que não tem console)
-    showDebug(message, type = 'info') {
-        const debugDiv = document.getElementById('debug-messages') || this.createDebugContainer();
-        const msgElement = document.createElement('div');
-        msgElement.style.padding = '10px';
-        msgElement.style.margin = '5px 0';
-        msgElement.style.borderRadius = '5px';
-        msgElement.style.fontSize = '12px';
-        
-        if (type === 'error') {
-            msgElement.style.backgroundColor = '#ffebee';
-            msgElement.style.color = '#c62828';
-        } else if (type === 'success') {
-            msgElement.style.backgroundColor = '#e8f5e9';
-            msgElement.style.color = '#2e7d32';
-        } else {
-            msgElement.style.backgroundColor = '#e3f2fd';
-            msgElement.style.color = '#1565c0';
-        }
-        
-        msgElement.textContent = `${new Date().toLocaleTimeString()}: ${message}`;
-        debugDiv.appendChild(msgElement);
-        
-        // Scroll automático para última mensagem
-        debugDiv.scrollTop = debugDiv.scrollHeight;
-        
-        // Limita a 10 mensagens
-        if (debugDiv.children.length > 10) {
-            debugDiv.removeChild(debugDiv.firstChild);
-        }
-    },
-    
-    createDebugContainer() {
-        const container = document.createElement('div');
-        container.id = 'debug-messages';
-        container.style.position = 'fixed';
-        container.style.bottom = '10px';
-        container.style.left = '10px';
-        container.style.right = '10px';
-        container.style.maxHeight = '200px';
-        container.style.overflow = 'auto';
-        container.style.backgroundColor = 'rgba(0,0,0,0.8)';
-        container.style.color = 'white';
-        container.style.padding = '10px';
-        container.style.borderRadius = '10px';
-        container.style.zIndex = '999999';
-        container.style.fontSize = '11px';
-        document.body.appendChild(container);
-        return container;
-    },
-
     async loginWithRedirect() {
         try {
-            this.showDebug('Iniciando login com redirecionamento...');
             const response = await fetch(`${API_URL}/auth/google`);
             const data = await response.json();
             
             if (data.auth_url) {
                 storage.set("google_oauth_state", data.state, 5 * 60 * 1000);
-                this.showDebug('Redirecionando para Google...', 'success');
                 window.location.href = data.auth_url;
             } else {
                 throw new Error("URL de autenticação não recebida");
             }
         } catch (error) {
-            this.showDebug(`Erro: ${error.message}`, 'error');
+            console.error("Erro ao iniciar login com Google:", error);
             throw new Error("Não foi possível conectar com o Google");
         }
     },
 
     handleCallback() {
         const params = new URLSearchParams(window.location.search);
-        
-        this.showDebug('Verificando callback do Google...');
         
         const accessToken = params.get("access_token");
         const refreshToken = params.get("refresh_token");
@@ -82,7 +27,6 @@ const googleAuth = {
         const fotoPerfil = params.get("foto_perfil");
         const error = params.get("error");
         
-        // Limpar URL
         window.history.replaceState({}, document.title, window.location.pathname);
         
         if (error) {
@@ -94,13 +38,10 @@ const googleAuth = {
                 "server_error": "Erro no servidor"
             };
             
-            this.showDebug(`Erro no callback: ${errorMessages[error]}`, 'error');
             throw new Error(errorMessages[error] || "Erro desconhecido ao fazer login com Google");
         }
         
         if (accessToken && refreshToken && userId) {
-            this.showDebug('Tokens recebidos! Salvando...', 'success');
-            
             const agora = Date.now();
             const expiraEm = agora + window.CONFIG.TOKEN_EXP_TIME;
             
@@ -122,17 +63,13 @@ const googleAuth = {
                 isAuthenticated: true 
             });
             
-            this.showDebug('Login concluído! Tokens salvos.', 'success');
             return true;
         }
         
-        this.showDebug('Nenhum token encontrado no callback');
         return false;
     },
 
     initGoogleIdentityServices(onSuccess, onError) {
-        this.showDebug('Iniciando Google Identity Services...');
-        
         if (!document.getElementById('google-identity-script')) {
             const script = document.createElement('script');
             script.id = 'google-identity-script';
@@ -141,23 +78,19 @@ const googleAuth = {
             script.defer = true;
             
             script.onload = () => {
-                this.showDebug('Script do Google carregado!', 'success');
                 setTimeout(() => this.setupGoogleButton(onSuccess, onError), 100);
             };
             
             script.onerror = () => {
-                this.showDebug('ERRO ao carregar script do Google', 'error');
                 if (onError) onError(new Error('Falha ao carregar Google Identity Services'));
             };
             
             document.head.appendChild(script);
         } else {
-            this.showDebug('Script do Google já existe');
             setTimeout(() => {
                 if (typeof google !== 'undefined') {
                     this.setupGoogleButton(onSuccess, onError);
                 } else {
-                    this.showDebug('Aguardando Google ficar disponível...');
                     setTimeout(() => this.setupGoogleButton(onSuccess, onError), 500);
                 }
             }, 100);
@@ -165,32 +98,25 @@ const googleAuth = {
     },
 
     setupGoogleButton(onSuccess, onError) {
-        this.showDebug('Configurando botão do Google...');
-        
         if (typeof google === 'undefined') {
-            this.showDebug('Google Identity Services não disponível!', 'error');
             if (onError) onError(new Error('Google não disponível'));
             return;
         }
 
         const buttonContainer = document.getElementById('google-signin-button');
         if (!buttonContainer) {
-            this.showDebug('Container do botão não encontrado!', 'error');
             if (onError) onError(new Error('Container não encontrado'));
             return;
         }
 
         try {
-            // Inicializar Google Identity
             google.accounts.id.initialize({
                 client_id: window.CONFIG.GOOGLE_CLIENT_ID,
                 callback: async (response) => {
-                    this.showDebug('Credencial do Google recebida!', 'success');
                     try {
                         await this.handleGoogleCredential(response.credential);
                         if (onSuccess) onSuccess();
                     } catch (error) {
-                        this.showDebug(`Erro no login: ${error.message}`, 'error');
                         if (onError) onError(error);
                     }
                 },
@@ -200,7 +126,6 @@ const googleAuth = {
                 itp_support: true
             });
 
-            // Criar botão customizado
             buttonContainer.innerHTML = `
                 <button type="button" class="google-btn-custom" id="customGoogleButton">
                     <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -213,32 +138,21 @@ const googleAuth = {
                 </button>
             `;
 
-            // Adicionar evento ao botão
             const customButton = document.getElementById('customGoogleButton');
             if (customButton) {
                 customButton.addEventListener('click', async (e) => {
                     e.preventDefault();
-                    this.showDebug('Botão clicado! Iniciando login...');
-                    
-                    // Em mobile, usar SEMPRE o redirect (mais confiável)
-                    this.showDebug('Redirecionando para Google OAuth...', 'success');
                     await this.loginWithRedirect();
                 });
-                
-                this.showDebug('Botão configurado com sucesso!', 'success');
             } else {
-                this.showDebug('Falha ao criar botão customizado!', 'error');
                 if (onError) onError(new Error('Falha ao criar botão'));
             }
         } catch (error) {
-            this.showDebug(`Erro ao configurar: ${error.message}`, 'error');
             if (onError) onError(error);
         }
     },
 
     async handleGoogleCredential(idToken) {
-        this.showDebug('Processando credencial do Google...');
-        
         try {
             const response = await fetch(`${API_URL}/auth/google/mobile`, {
                 method: 'POST',
@@ -256,8 +170,6 @@ const googleAuth = {
             const data = await response.json();
 
             if (data.access_token && data.refresh_token) {
-                this.showDebug('Tokens recebidos do servidor!', 'success');
-                
                 const agora = Date.now();
                 const expiraEm = agora + window.CONFIG.TOKEN_EXP_TIME;
 
@@ -271,8 +183,6 @@ const googleAuth = {
                     isAuthenticated: true 
                 });
 
-                this.showDebug('Login concluído! Redirecionando em 2s...', 'success');
-                
                 networkMonitor.success(
                     "Login Realizado",
                     "Redirecionando para o dashboard...",
@@ -286,7 +196,7 @@ const googleAuth = {
                 throw new Error('Tokens não recebidos do servidor');
             }
         } catch (error) {
-            this.showDebug(`ERRO: ${error.message}`, 'error');
+            console.error('Erro ao processar credencial:', error);
             networkMonitor.error(
                 "Erro no Login",
                 error.message || "Falha ao autenticar com Google",
@@ -297,21 +207,13 @@ const googleAuth = {
     }
 };
 
-// Exportar para uso global
 window.googleAuth = googleAuth;
 
-// Auto-inicialização na página de login
 if (window.location.pathname.includes('login.html')) {
-    googleAuth.showDebug('Página de login detectada!');
-    
     document.addEventListener('DOMContentLoaded', () => {
-        googleAuth.showDebug('DOM carregado! Inicializando...');
-        
-        // Processar callback se houver
         try {
             const hasTokens = googleAuth.handleCallback();
             if (hasTokens) {
-                googleAuth.showDebug('Callback processado! Redirecionando...', 'success');
                 networkMonitor.success(
                     "Login com Google realizado!",
                     "Redirecionando...",
@@ -323,7 +225,7 @@ if (window.location.pathname.includes('login.html')) {
                 return;
             }
         } catch (error) {
-            googleAuth.showDebug(`Erro no callback: ${error.message}`, 'error');
+            console.error('Erro ao processar callback:', error);
             networkMonitor.error(
                 "Erro no Login",
                 error.message,
@@ -331,16 +233,15 @@ if (window.location.pathname.includes('login.html')) {
             );
         }
         
-        // Inicializar botão do Google
         googleAuth.initGoogleIdentityServices(
             () => {
-                googleAuth.showDebug('Login bem-sucedido!', 'success');
+                console.log("Login com Google bem-sucedido");
             },
             (error) => {
-                googleAuth.showDebug(`Erro: ${error.message}`, 'error');
+                console.error("Erro no login com Google:", error);
                 networkMonitor.error(
                     "Erro no Login",
-                    "Não foi possível carregar o login com Google.",
+                    "Não foi possível carregar o login com Google. Tente novamente mais tarde.",
                     5000
                 );
             }
