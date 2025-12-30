@@ -7,7 +7,6 @@
     <meta name="theme-color" content="#667eea">
     <title>MyLinks - Login</title>
     <link rel="stylesheet" href="/css/index.css">
-    <script src="/js/googleAuth.js" defer></script>
 </head>
 <body>
     <main role="main">
@@ -36,12 +35,14 @@
                     aria-required="true">
                 
                 <button type="submit" aria-label="Entrar na conta">Entrar</button>
-                <div style="text-align: center; margin: 20px 0;">
-                    <p style="color: #888; font-size: 0.9rem;">ou</p>
-                    <div id="google-signin-button"></div>
-                </div>
                 <div class="Logloader" id="Logloader" role="status" aria-label="Entrando"></div>
             </form>
+
+            <div style="text-align: center; margin: 20px 0;">
+                <p style="color: #888; font-size: 0.9rem;">ou</p>
+                <div id="google-signin-button"></div>
+            </div>
+            
             <p>
                 Não tem conta?
                 <a href="register.html">Cadastre-se aqui</a>
@@ -53,5 +54,7 @@
     <script src="/js/storage.js"></script>
     <script src="/js/config.js"></script>
     <script src="/js/auth.js"></script>
+    <script src="/js/network.js"></script>
+    <script src="/js/googleAuth.js" defer></script>
 </body>
 </html>
