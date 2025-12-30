@@ -268,16 +268,58 @@ a:focus {
 }
 
 #google-signin-button {
+    width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
-    width: 100%;
 }
 
-#google-signin-button > div {
-    width: 100% !important;
-    max-width: 250px;
-    margin: 0 auto;
+.google-btn-custom {
+    width: 100%;
+    max-width: 300px;
+    padding: 12px 20px;
+    background: #fff;
+    color: #3c4043;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.google-btn-custom:hover {
+    background: #f8f9fa;
+    border-color: #c6c6c6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.google-btn-custom:active {
+    transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
+}
+
+.google-btn-custom:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+}
+
+.google-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+}
+
+.google-btn-custom span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .divider-container {
@@ -302,14 +344,15 @@ a:focus {
     font-weight: 500;
 }
 
-#loginForm {
-    width: 100%;
-    max-width: 300px;
-}
-
 @media (max-width: 480px) {
-    #google-signin-button > div {
-        max-width: 100%;
+    .google-btn-custom {
+        font-size: 0.9rem;
+        padding: 11px 18px;
+    }
+    
+    .google-icon {
+        width: 18px;
+        height: 18px;
     }
     
     .divider-container span {
@@ -319,11 +362,13 @@ a:focus {
 }
 
 @media (max-width: 360px) {
-    .google-signin-container {
-        margin: 15px 0;
+    .google-btn-custom {
+        font-size: 0.85rem;
+        padding: 10px 16px;
+        max-width: 100%;
     }
     
-    .divider-container {
+    .google-signin-container {
         margin: 15px 0;
     }
 }
