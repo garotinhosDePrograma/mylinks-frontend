@@ -124,7 +124,7 @@ const googleAuth = {
             );
         }
 
-        // google.accounts.id.prompt();
+        google.accounts.id.prompt();
     },
 
     async handleGoogleCredential(idToken) {
