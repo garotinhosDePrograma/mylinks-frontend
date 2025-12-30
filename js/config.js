@@ -31,7 +31,8 @@ const CONFIG = {
         BLOCKED_DOMAINS: ['malicious.com', 'spam.com']
     },
 
-    DEBOUNCE_DELAY: 250
+    DEBOUNCE_DELAY: 250,
+    GOOGLE_CLIENT_ID: "seu_client_aqui.apps.googleusercontent.com",
 };
 
 window.CONFIG = CONFIG;
