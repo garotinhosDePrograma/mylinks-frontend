@@ -71,45 +71,74 @@ const googleAuth = {
     },
 
     initGoogleIdentityServices(onSuccess, onError) {
+        console.log("Iniciando Google Identity Services...");
+        
         if (!document.getElementById('google-identity-script')) {
             const script = document.createElement('script');
             script.id = 'google-identity-script';
             script.src = 'https://accounts.google.com/gsi/client';
             script.async = true;
             script.defer = true;
+            
             script.onload = () => {
+                console.log("Script do Google carregado com sucesso");
                 this.setupGoogleButton(onSuccess, onError);
             };
+            
+            script.onerror = () => {
+                console.error("Erro ao carregar script do Google");
+                if (onError) onError(new Error('Falha ao carregar Google Identity Services'));
+            };
+            
             document.head.appendChild(script);
         } else {
-            this.setupGoogleButton(onSuccess, onError);
+            console.log("Script do Google já carregado, configurando botão...");
+            setTimeout(() => {
+                if (typeof google !== 'undefined') {
+                    this.setupGoogleButton(onSuccess, onError);
+                } else {
+                    console.warn("Google ainda não disponível, aguardando...");
+                    setTimeout(() => {
+                        this.setupGoogleButton(onSuccess, onError);
+                    }, 500);
+                }
+            }, 100);
         }
     },
 
     setupGoogleButton(onSuccess, onError) {
+        console.log("🔧 Configurando botão do Google...");
+        
         if (typeof google === 'undefined') {
-            console.error('Google Identity Services não carregado');
+            console.error('Google Identity Services não está disponível');
             if (onError) onError(new Error('Google não disponível'));
             return;
         }
 
-        google.accounts.id.initialize({
-            client_id: window.CONFIG.GOOGLE_CLIENT_ID,
-            callback: async (response) => {
-                try {
-                    await this.handleGoogleCredential(response.credential);
-                    if (onSuccess) onSuccess();
-                } catch (error) {
-                    console.error('Erro no login com Google:', error);
-                    if (onError) onError(error);
-                }
-            },
-            auto_select: false,
-            cancel_on_tap_outside: true
-        });
-
         const buttonContainer = document.getElementById('google-signin-button');
-        if (buttonContainer) {
+        if (!buttonContainer) {
+            console.error('Container do botão não encontrado');
+            if (onError) onError(new Error('Container não encontrado'));
+            return;
+        }
+
+        try {
+            google.accounts.id.initialize({
+                client_id: window.CONFIG.GOOGLE_CLIENT_ID,
+                callback: async (response) => {
+                    console.log("Credencial do Google recebida");
+                    try {
+                        await this.handleGoogleCredential(response.credential);
+                        if (onSuccess) onSuccess();
+                    } catch (error) {
+                        console.error('Erro no login com Google:', error);
+                        if (onError) onError(error);
+                    }
+                },
+                auto_select: false,
+                cancel_on_tap_outside: true
+            });
+
             google.accounts.id.renderButton(
                 buttonContainer,
                 {
@@ -121,9 +150,12 @@ const googleAuth = {
                     logo_alignment: 'left'
                 }
             );
+            
+            console.log("Botão do Google renderizado com sucesso");
+        } catch (error) {
+            console.error("Erro ao configurar botão:", error);
+            if (onError) onError(error);
         }
-
-        // google.accounts.id.prompt();
     },
 
     async handleGoogleCredential(idToken) {
@@ -171,7 +203,11 @@ const googleAuth = {
 window.googleAuth = googleAuth;
 
 if (window.location.pathname.includes('login.html')) {
+    console.log("Página de login detectada");
+    
     document.addEventListener('DOMContentLoaded', () => {
+        console.log("DOM carregado, inicializando autenticação Google...");
+        
         try {
             const hasTokens = googleAuth.handleCallback();
             if (hasTokens) {
@@ -183,6 +219,7 @@ if (window.location.pathname.includes('login.html')) {
                 setTimeout(() => {
                     window.location.href = 'dashboard.html';
                 }, 2000);
+                return;
             }
         } catch (error) {
             console.error('Erro ao processar callback:', error);
@@ -192,5 +229,19 @@ if (window.location.pathname.includes('login.html')) {
                 5000
             );
         }
+        
+        googleAuth.initGoogleIdentityServices(
+            () => {
+                console.log("Login com Google bem-sucedido");
+            },
+            (error) => {
+                console.error("Erro no login com Google:", error);
+                networkMonitor.error(
+                    "Erro no Login",
+                    "Não foi possível carregar o login com Google",
+                    5000
+                );
+            }
+        );
     });
 }
