@@ -258,15 +258,28 @@ a:focus {
         transition-duration: 0.01ms !important;
     }
 }
-/* VERSÃO ALTERNATIVA - Estilo minimalista que combina com o design do site */
+
+.google-signin-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    width: 100%;
+}
+
+#google-signin-button {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
 
 .google-btn-custom {
     width: 100%;
     max-width: 300px;
     padding: 12px 20px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #e0e0e0;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #fff;
+    color: #3c4043;
+    border: 1px solid #dadce0;
     border-radius: 8px;
     font-size: 0.95rem;
     font-weight: 600;
@@ -277,52 +290,85 @@ a:focus {
     justify-content: center;
     gap: 12px;
     transition: all 0.3s ease;
-    backdrop-filter: blur(10px);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .google-btn-custom:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255, 255, 255, 0.2);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    background: #f8f9fa;
+    border-color: #c6c6c6;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
 }
 
 .google-btn-custom:active {
     transform: translateY(0);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
 }
 
 .google-btn-custom:focus {
-    outline: 2px solid #667eea;
+    outline: 2px solid #4285f4;
     outline-offset: 2px;
 }
 
-/* Ícone do Google em versão monocromática */
 .google-icon {
     width: 20px;
     height: 20px;
     flex-shrink: 0;
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
 }
 
-.google-btn-custom:hover .google-icon {
-    opacity: 1;
+.google-btn-custom span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-/* OU versão com gradiente roxo igual aos outros botões */
-.google-btn-custom.gradient-style {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+.divider-container {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 20px 0;
+    width: 100%;
 }
 
-.google-btn-custom.gradient-style:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+.divider-container::before,
+.divider-container::after {
+    content: '';
+    flex: 1;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.google-btn-custom.gradient-style .google-icon {
-    filter: brightness(0) invert(1);
-    opacity: 1;
+.divider-container span {
+    padding: 0 15px;
+    color: #888;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+@media (max-width: 480px) {
+    .google-btn-custom {
+        font-size: 0.9rem;
+        padding: 11px 18px;
+    }
+    
+    .google-icon {
+        width: 18px;
+        height: 18px;
+    }
+    
+    .divider-container span {
+        font-size: 0.85rem;
+        padding: 0 10px;
+    }
+}
+
+@media (max-width: 360px) {
+    .google-btn-custom {
+        font-size: 0.85rem;
+        padding: 10px 16px;
+        max-width: 100%;
+    }
+    
+    .google-signin-container {
+        margin: 15px 0;
+    }
 }
