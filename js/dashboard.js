@@ -184,6 +184,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             fotoPerfil.loading = "eager";
             setFotoLoading(false);
             
+            networkMonitor.error(
+                "Erro ao Carregar Foto",
+                err.message || window.CONFIG.ERRORS.NETWORK,
+                4000
+            );
             mostrarMensagem(err.message || window.CONFIG.ERRORS.NETWORK, 'error');
         }
     }
@@ -197,6 +202,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             renderLinks(links);
         } catch (error) {
             console.error(error);
+            networkMonitor.error(
+                "Erro ao Carregar Links",
+                "Não foi possível carregar seus links",
+                5000
+            );
             mostrarMensagem(error.message || "Não foi possível carregar seus links.", 'error');
         }
     }
@@ -253,6 +263,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         linkForm.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         document.getElementById("titulo").focus();
+        
+        networkMonitor.info(
+            "Modo Edição",
+            `Editando: ${link.titulo}`,
+            3000
+        );
     }
 
     function limparFormulario() {
@@ -302,11 +318,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         mostrarMensagem("", 'info');
 
         if (!titulo || !url) {
+            networkMonitor.warning("Validação", "Preencha todos os campos", 4000);
             mostrarMensagem("Preencha todos os campos.", 'error', 0);
             return;
         }
 
         if (!isValidUrl(url)) {
+            networkMonitor.warning("URL Inválida", window.CONFIG.ERRORS.INVALID_URL, 5000);
             mostrarMensagem(window.CONFIG.ERRORS.INVALID_URL, 'error', 0);
             return;
         }
@@ -327,17 +345,27 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
-                mostrarMensagem(
-                    id ? window.CONFIG.SUCCESS.LINK_UPDATED : window.CONFIG.SUCCESS.LINK_CREATED, 
-                    'success'
+                const successMsg = id ? window.CONFIG.SUCCESS.LINK_UPDATED : window.CONFIG.SUCCESS.LINK_CREATED;
+                
+                networkMonitor.success(
+                    id ? "Link Atualizado!" : "Link Criado!",
+                    successMsg,
+                    3000
                 );
+                
+                mostrarMensagem(successMsg, 'success');
                 limparFormulario();
                 carregarLinks();
             } else {
-                mostrarMensagem(data.error || "Erro ao salvar link.", 'error', 0);
+                throw new Error(data.error || "Erro ao salvar link");
             }
         } catch (error) {
             console.error("Erro:", error);
+            networkMonitor.error(
+                "Erro ao Salvar",
+                error.message || window.CONFIG.ERRORS.NETWORK,
+                5000
+            );
             mostrarMensagem(error.message || window.CONFIG.ERRORS.NETWORK, 'error', 0);
         } finally {
             saveBtn.disabled = false;
@@ -356,13 +384,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
+                networkMonitor.success(
+                    "Link Excluído!",
+                    window.CONFIG.SUCCESS.LINK_DELETED,
+                    3000
+                );
                 mostrarMensagem(window.CONFIG.SUCCESS.LINK_DELETED, 'success');
                 carregarLinks();
             } else {
-                mostrarMensagem(data.error || "Erro ao excluir link.", 'error', 0);
+                throw new Error(data.error || "Erro ao excluir link");
             }
         } catch (error) {
             console.error(error);
+            networkMonitor.error(
+                "Erro ao Excluir",
+                error.message || "Falha ao excluir o link",
+                5000
+            );
             mostrarMensagem(error.message || "Falha ao excluir o link.", 'error', 0);
         }
     }
@@ -373,6 +411,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             btnCopyProfile.textContent = "Copiado!";
             btnCopyProfile.classList.add("copied");
             btnCopyProfile.setAttribute('aria-label', 'Link copiado para área de transferência');
+
+            networkMonitor.success(
+                "Link Copiado!",
+                window.CONFIG.SUCCESS.LINK_COPIED,
+                2000
+            );
 
             setTimeout(() => {
                 btnCopyProfile.textContent = "📋 Copiar Link";
@@ -389,6 +433,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.execCommand('copy');
             document.body.removeChild(input);
             
+            networkMonitor.success(
+                "Link Copiado!",
+                window.CONFIG.SUCCESS.LINK_COPIED,
+                2000
+            );
             mostrarMensagem(window.CONFIG.SUCCESS.LINK_COPIED, 'success');
         }
     });
@@ -496,6 +545,11 @@ async function executarBuscaPerfil(username = null) {
         }
     } catch (error) {
         console.error("Erro na busca:", error);
+        networkMonitor.error(
+            "Erro na Busca",
+            error.message || "Erro ao buscar perfis",
+            4000
+        );
         mostrarSearchMensagem(
             error.message || "Erro ao buscar perfis",
             "error"
@@ -604,6 +658,13 @@ async function buscarUsuarios(searchTerm) {
         return data ? [data] : [];
     } catch (error) {
         console.error("Erro ao buscar usuário:", error);
+        if (error.name === 'TypeError') {
+            networkMonitor.error(
+                "Sem Conexão",
+                window.CONFIG.ERRORS.OFFLINE,
+                5000
+            );
+        }
         return [];
     }
 }
