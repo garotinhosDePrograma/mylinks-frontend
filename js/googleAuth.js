@@ -1,3 +1,6 @@
+const response = await fetch(`${API_URL}/auth/google/config`);
+const { client_id } = await response.json();
+
 const googleAuth = {
     async loginWithRedirect() {
         try {
@@ -111,7 +114,7 @@ const googleAuth = {
 
         try {
             google.accounts.id.initialize({
-                client_id: window.CONFIG.GOOGLE_CLIENT_ID,
+                client_id: client_id,
                 callback: async (response) => {
                     try {
                         await this.handleGoogleCredential(response.credential);
