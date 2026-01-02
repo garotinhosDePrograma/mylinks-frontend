@@ -63,7 +63,15 @@ const auth = {
                     isAuthenticated: true 
                 });
 
-                window.location.href = "dashboard.html";
+                networkMonitor.success(
+                    "Login Realizado!",
+                    "Redirecionando para o dashboard...",
+                    2000
+                );
+
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 2000);
             } else {
                 throw new Error(data.error || "Erro ao fazer login");
             }
@@ -71,8 +79,19 @@ const auth = {
             console.error("Erro no login:", err);
             
             if (err.name === 'TypeError') {
+                networkMonitor.error(
+                    "Sem Conexão",
+                    window.CONFIG.ERRORS.OFFLINE,
+                    6000
+                );
                 throw new Error(window.CONFIG.ERRORS.OFFLINE);
             }
+            
+            networkMonitor.error(
+                "Erro no Login",
+                err.message || "E-mail ou senha incorretos",
+                5000
+            );
             
             throw err;
         }
@@ -80,14 +99,19 @@ const auth = {
 
     async register(username, email, senha) {
         if (username.length < window.CONFIG.VALIDATION.MIN_USERNAME_LENGTH) {
-            throw new Error(`Username deve ter no mínimo ${window.CONFIG.VALIDATION.MIN_USERNAME_LENGTH} caracteres`);
+            const errorMsg = `Username deve ter no mínimo ${window.CONFIG.VALIDATION.MIN_USERNAME_LENGTH} caracteres`;
+            networkMonitor.warning("Validação", errorMsg, 4000);
+            throw new Error(errorMsg);
         }
         
         if (senha.length < window.CONFIG.VALIDATION.MIN_PASSWORD_LENGTH) {
-            throw new Error(`Senha deve ter no mínimo ${window.CONFIG.VALIDATION.MIN_PASSWORD_LENGTH} caracteres`);
+            const errorMsg = `Senha deve ter no mínimo ${window.CONFIG.VALIDATION.MIN_PASSWORD_LENGTH} caracteres`;
+            networkMonitor.warning("Validação", errorMsg, 4000);
+            throw new Error(errorMsg);
         }
         
         if (!this._isValidEmail(email)) {
+            networkMonitor.warning("Validação", "E-mail inválido", 4000);
             throw new Error("E-mail inválido");
         }
         
@@ -101,6 +125,11 @@ const auth = {
             const data = await res.json();
 
             if (res.ok) {
+                networkMonitor.success(
+                    "Cadastro Realizado!",
+                    "Redirecionando para o login...",
+                    3000
+                );
                 mostrarMensagem("Cadastro realizado com sucesso! Faça login para continuar.", 'success');
                 setTimeout(function() { 
                     window.location.href = "login.html";
@@ -112,8 +141,19 @@ const auth = {
             console.error("Erro no registro:", err);
             
             if (err.name === 'TypeError') {
+                networkMonitor.error(
+                    "Sem Conexão",
+                    window.CONFIG.ERRORS.OFFLINE,
+                    6000
+                );
                 throw new Error(window.CONFIG.ERRORS.OFFLINE);
             }
+            
+            networkMonitor.error(
+                "Erro no Cadastro",
+                err.message || "Não foi possível criar a conta",
+                5000
+            );
             
             throw err;
         }
@@ -149,6 +189,11 @@ const auth = {
         }
 
         console.error("Não foi possível renovar o token - Redirecionando para login");
+        networkMonitor.warning(
+            "Sessão Expirada",
+            "Faça login novamente",
+            4000
+        );
         this.logout();
         return false;
     },
@@ -187,7 +232,6 @@ const auth = {
 
                 if (data.error === "Refresh token expirado" || data.error === "Token inválido") {
                     console.error("Refresh token inválido - Limpando credenciais");
-                    return null;
                 }
                 
                 return null;
@@ -214,6 +258,11 @@ const auth = {
             
             if (!token) {
                 console.error("Não foi possível renovar token");
+                networkMonitor.error(
+                    "Sessão Expirada",
+                    "Faça login novamente",
+                    4000
+                );
                 this.logout();
                 throw new Error(window.CONFIG.ERRORS.UNAUTHORIZED);
             }
@@ -240,15 +289,30 @@ const auth = {
                 
                 switch (response.status) {
                     case 401:
+                        networkMonitor.warning(
+                            "Não Autorizado",
+                            "Sessão expirada. Redirecionando...",
+                            3000
+                        );
                         this.logout();
                         throw new Error(errorMessage || window.CONFIG.ERRORS.UNAUTHORIZED);
                     case 403:
+                        networkMonitor.error(
+                            "Acesso Negado",
+                            errorMessage || window.CONFIG.ERRORS.FORBIDDEN,
+                            5000
+                        );
                         throw new Error(errorMessage || window.CONFIG.ERRORS.FORBIDDEN);
                     case 404:
                         throw new Error(errorMessage || window.CONFIG.ERRORS.NOT_FOUND);
                     case 500:
                     case 502:
                     case 503:
+                        networkMonitor.error(
+                            "Erro no Servidor",
+                            errorMessage || window.CONFIG.ERRORS.SERVER,
+                            6000
+                        );
                         throw new Error(errorMessage || window.CONFIG.ERRORS.SERVER);
                     default:
                         throw new Error(errorMessage || `Erro HTTP ${response.status}`);
@@ -259,6 +323,11 @@ const auth = {
             
         } catch (err) {
             if (err.name === 'TypeError') {
+                networkMonitor.error(
+                    "Sem Conexão",
+                    window.CONFIG.ERRORS.OFFLINE,
+                    6000
+                );
                 throw new Error(window.CONFIG.ERRORS.OFFLINE);
             }
             throw err;
@@ -277,7 +346,15 @@ const auth = {
             isAuthenticated: false 
         });
         
-        window.location.href = "index.html";
+        networkMonitor.info(
+            "Logout Realizado",
+            "Até logo!",
+            2000
+        );
+        
+        setTimeout(() => {
+            window.location.href = "index.html";
+        }, 2000);
     },
     
     _isValidEmail(email) {
@@ -419,6 +496,7 @@ document.addEventListener("DOMContentLoaded", () => {
             mensagem.textContent = "";
 
             if (!username || !email || !senha) {
+                networkMonitor.warning("Validação", "Preencha todos os campos", 4000);
                 mensagem.style.color = "#ff6b6b";
                 mensagem.textContent = "Preencha todos os campos.";
                 return;
