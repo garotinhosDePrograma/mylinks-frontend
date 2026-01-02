@@ -32,7 +32,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (!username) {
-        mostrarMensagem("Usuário não especificado na URL.", 'error');
+        const errorMsg = "Usuário não especificado na URL.";
+        networkMonitor.error("URL Inválida", errorMsg, 6000);
+        mostrarMensagem(errorMsg, 'error');
         usernameEl.textContent = "Usuário não encontrado";
         return;
     }
@@ -93,18 +95,45 @@ document.addEventListener("DOMContentLoaded", async () => {
                     li.appendChild(a);
                     linksList.appendChild(li);
                 });
+            
+            networkMonitor.success(
+                "Perfil Carregado!",
+                `${data.links.length} link${data.links.length !== 1 ? 's' : ''} encontrado${data.links.length !== 1 ? 's' : ''}`,
+                3000
+            );
         } else {
             linksList.innerHTML = '<li class="empty-state"><p>📭 Nenhum link encontrado.</p></li>';
+            
+            networkMonitor.info(
+                "Perfil Vazio",
+                `${data.username} ainda não adicionou nenhum link`,
+                4000
+            );
         }
 
     } catch (error) {
         console.error("Erro ao carregar perfil:", error);
         
         if (error.name === 'TypeError') {
+            networkMonitor.error(
+                "Sem Conexão",
+                window.CONFIG.ERRORS.OFFLINE,
+                6000
+            );
             mostrarMensagem(window.CONFIG.ERRORS.OFFLINE, 'error');
         } else if (error.message === "Usuário não encontrado") {
+            networkMonitor.warning(
+                "Usuário Não Encontrado",
+                "Verifique se o username está correto",
+                5000
+            );
             mostrarMensagem("Usuário não encontrado. Verifique se o username está correto.", 'error');
         } else {
+            networkMonitor.error(
+                "Erro ao Carregar Perfil",
+                error.message || "Falha ao carregar dados do usuário",
+                5000
+            );
             mostrarMensagem(error.message || "Falha ao carregar dados do usuário.", 'error');
         }
         
