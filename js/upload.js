@@ -60,6 +60,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("Erro ao carregar foto atual:", err);
             preview.src = window.CONFIG.DEFAULT_AVATAR;
             preview.style.opacity = "1";
+            networkMonitor.warning(
+                "Aviso",
+                "Não foi possível carregar a foto atual",
+                3000
+            );
         }
     }
 
@@ -89,13 +94,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const { ALLOWED_IMAGE_TYPES, MAX_FILE_SIZE } = window.CONFIG.VALIDATION;
         
         if (!ALLOWED_IMAGE_TYPES.includes(file.type)) {
-            mostrarMensagem("Formato inválido. Use PNG, JPG ou JPEG.", 'error');
+            const errorMsg = "Formato inválido. Use PNG, JPG ou JPEG.";
+            networkMonitor.warning("Formato Inválido", errorMsg, 4000);
+            mostrarMensagem(errorMsg, 'error');
             return false;
         }
 
         if (file.size > MAX_FILE_SIZE) {
             const maxSizeMB = MAX_FILE_SIZE / (1024 * 1024);
-            mostrarMensagem(`Imagem muito grande. Máximo: ${maxSizeMB}MB.`, 'error');
+            const errorMsg = `Imagem muito grande. Máximo: ${maxSizeMB}MB.`;
+            networkMonitor.warning("Arquivo Grande", errorMsg, 5000);
+            mostrarMensagem(errorMsg, 'error');
             return false;
         }
         
@@ -120,9 +129,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             img.onload = () => {
                 preview.src = img.src;
                 preview.style.opacity = "1";
+                networkMonitor.info(
+                    "Imagem Selecionada",
+                    `${file.name} (${(file.size / 1024).toFixed(1)} KB)`,
+                    3000
+                );
                 mostrarMensagem(`Imagem selecionada: ${file.name}`, 'info');
             };
             img.onerror = () => {
+                networkMonitor.error(
+                    "Erro na Prévia",
+                    "Não foi possível carregar a imagem",
+                    4000
+                );
                 mostrarMensagem("Erro ao carregar prévia da imagem.", 'error');
                 preview.style.opacity = "1";
                 fotoInput.value = "";
@@ -131,6 +150,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
         
         reader.onerror = () => {
+            networkMonitor.error(
+                "Erro ao Ler Arquivo",
+                "Não foi possível ler o arquivo selecionado",
+                4000
+            );
             mostrarMensagem("Erro ao ler arquivo.", 'error');
             preview.style.opacity = "1";
             fotoInput.value = "";
@@ -146,6 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const file = fotoInput.files[0];
         
         if (!file) {
+            networkMonitor.warning("Validação", "Selecione uma imagem antes de enviar", 4000);
             mostrarMensagem("Selecione uma imagem antes de enviar.", 'error');
             return;
         }
@@ -164,6 +189,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         preview.style.opacity = "0.5";
 
+        networkMonitor.info(
+            "Enviando Foto",
+            "Aguarde enquanto enviamos sua imagem...",
+            0
+        );
+
         try {
             const response = await fetch(`${API_URL}/auth/upload`, {
                 method: "POST",
@@ -176,6 +207,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
+                networkMonitor.success(
+                    "Foto Enviada!",
+                    window.CONFIG.SUCCESS.PHOTO_UPLOADED,
+                    3000
+                );
                 mostrarMensagem(window.CONFIG.SUCCESS.PHOTO_UPLOADED, 'success');
                 
                 if (data.foto_perfil) {
@@ -195,7 +231,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 setTimeout(() => {
                     window.location.href = "dashboard.html";
-                }, 2000);
+                }, 3000);
                 
             } else {
                 throw new Error(data.error || data.message || "Erro ao enviar foto");
@@ -206,8 +242,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             preview.style.opacity = "1";
             
             if (error.name === 'TypeError') {
+                networkMonitor.error(
+                    "Sem Conexão",
+                    window.CONFIG.ERRORS.OFFLINE,
+                    6000
+                );
                 mostrarMensagem(window.CONFIG.ERRORS.OFFLINE, 'error');
             } else {
+                networkMonitor.error(
+                    "Erro no Upload",
+                    error.message || window.CONFIG.ERRORS.NETWORK,
+                    5000
+                );
                 mostrarMensagem(error.message || window.CONFIG.ERRORS.NETWORK, 'error');
             }
             
