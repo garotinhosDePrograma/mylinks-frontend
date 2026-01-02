@@ -2,10 +2,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     await auth.verificarLogin();
 
     const user = storage.get("user");
-    if (!user) {
-        window.location.href = "index.html";
-        return;
-    }
 
     const btnVoltar = document.getElementById("btnVoltar");
     const currentUsername = document.getElementById("currentUsername");
@@ -91,22 +87,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         const { MIN_USERNAME_LENGTH, MAX_USERNAME_LENGTH } = window.CONFIG.VALIDATION;
 
         if (newUsername.length < MIN_USERNAME_LENGTH) {
-            showMessage(usernameMessage, `Username deve ter no mínimo ${MIN_USERNAME_LENGTH} caracteres`, "error", 0);
+            const errorMsg = `Username deve ter no mínimo ${MIN_USERNAME_LENGTH} caracteres`;
+            networkMonitor.warning("Validação", errorMsg, 4000);
+            showMessage(usernameMessage, errorMsg, "error", 0);
             return;
         }
 
         if (newUsername.length > MAX_USERNAME_LENGTH) {
-            showMessage(usernameMessage, `Username deve ter no máximo ${MAX_USERNAME_LENGTH} caracteres`, "error", 0);
+            const errorMsg = `Username deve ter no máximo ${MAX_USERNAME_LENGTH} caracteres`;
+            networkMonitor.warning("Validação", errorMsg, 4000);
+            showMessage(usernameMessage, errorMsg, "error", 0);
             return;
         }
 
         if (newUsername === user.username) {
+            networkMonitor.info("Aviso", "O novo username é igual ao atual", 3000);
             showMessage(usernameMessage, "O novo username é igual ao atual", "info", 0);
             return;
         }
 
         if (!/^[a-zA-Z0-9\s_-]+$/.test(newUsername)) {
-            showMessage(usernameMessage, "Username deve conter apenas letras, números, _ e -", "error", 0);
+            const errorMsg = "Username deve conter apenas letras, números, _ e -";
+            networkMonitor.warning("Validação", errorMsg, 4000);
+            showMessage(usernameMessage, errorMsg, "error", 0);
             return;
         }
 
@@ -125,6 +128,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 storage.set("user", user, 7*24*60*60*1000);
                 currentUsername.textContent = data.username;
                 usernameForm.reset();
+                
+                networkMonitor.success(
+                    "Username Atualizado!",
+                    "Seu username foi alterado com sucesso",
+                    4000
+                );
                 showMessage(usernameMessage, "Username atualizado com sucesso!", "success");
             } else {
                 throw new Error(data.error || "Erro ao atualizar username");
@@ -132,6 +141,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Erro ao atualizar username:", error);
+            networkMonitor.error(
+                "Erro ao Atualizar",
+                error.message || window.CONFIG.ERRORS.NETWORK,
+                5000
+            );
             showMessage(usernameMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
         } finally {
             toggleFormButton(usernameForm, false);
@@ -148,11 +162,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         emailMessage.className = "message";
 
         if (!isValidEmail(newEmail)) {
+            networkMonitor.warning("Validação", "E-mail inválido", 4000);
             showMessage(emailMessage, "E-mail inválido", "error", 0);
             return;
         }
 
         if (newEmail === user.email) {
+            networkMonitor.info("Aviso", "O novo e-mail é igual ao atual", 3000);
             showMessage(emailMessage, "O novo e-mail é igual ao atual", "info", 0);
             return;
         }
@@ -172,12 +188,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 storage.set("user", user, 7*24*60*60*1000);
                 currentEmail.textContent = newEmail;
                 emailForm.reset();
+                
+                networkMonitor.success(
+                    "E-mail Atualizado!",
+                    "Seu e-mail foi alterado com sucesso",
+                    4000
+                );
                 showMessage(emailMessage, "E-mail atualizado com sucesso!", "success");
             } else {
                 throw new Error(data.error || "Erro ao atualizar e-mail");
             }
         } catch (error) {
             console.error("Erro ao atualizar e-mail:", error);
+            networkMonitor.error(
+                "Erro ao Atualizar",
+                error.message || window.CONFIG.ERRORS.NETWORK,
+                5000
+            );
             showMessage(emailMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
         } finally {
             toggleFormButton(emailForm, false);
@@ -197,16 +224,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         const { MIN_PASSWORD_LENGTH } = window.CONFIG.VALIDATION;
 
         if (newPassword.length < MIN_PASSWORD_LENGTH) {
-            showMessage(passwordMessage, `A nova senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres`, "error", 0);
+            const errorMsg = `A nova senha deve ter no mínimo ${MIN_PASSWORD_LENGTH} caracteres`;
+            networkMonitor.warning("Validação", errorMsg, 4000);
+            showMessage(passwordMessage, errorMsg, "error", 0);
             return;
         }
 
         if (newPassword !== confirmPassword) {
+            networkMonitor.warning("Validação", "As senhas não coincidem", 4000);
             showMessage(passwordMessage, "As senhas não coincidem", "error", 0);
             return;
         }
 
         if (currentPassword === newPassword) {
+            networkMonitor.info("Aviso", "A nova senha deve ser diferente da atual", 3000);
             showMessage(passwordMessage, "A nova senha deve ser diferente da atual", "info", 0);
             return;
         }
@@ -223,6 +254,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (response.ok) {
                 passwordForm.reset();
+                
+                networkMonitor.success(
+                    "Senha Atualizada!",
+                    "Sua senha foi alterada com sucesso",
+                    4000
+                );
                 showMessage(passwordMessage, "Senha atualizada com sucesso!", "success");
             } else {
                 throw new Error(data.error || "Erro ao atualizar senha");
@@ -230,6 +267,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Erro ao atualizar senha:", error);
+            networkMonitor.error(
+                "Erro ao Atualizar",
+                error.message || window.CONFIG.ERRORS.NETWORK,
+                5000
+            );
             showMessage(passwordMessage, error.message || window.CONFIG.ERRORS.NETWORK, "error", 0);
         } finally {
             toggleFormButton(passwordForm, false);
@@ -244,21 +286,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             "⚠️ ATENÇÃO!\n\nVocê está prestes a EXCLUIR sua conta permanentemente.\n\nTodos os seus dados, links e configurações serão perdidos para sempre.\n\nDeseja continuar?"
         );
 
-        if (!confirmacao1) return;
+        if (!confirmacao1) {
+            networkMonitor.info("Cancelado", "Exclusão de conta cancelada", 3000);
+            return;
+        }
 
         const confirmacao2 = prompt(
             `Para confirmar a exclusão, digite seu username abaixo:\n\n"${user.username}"`
         );
 
         if (confirmacao2 !== user.username) {
-            networkMonitor.info("INFO", "Username incorreto. Exclusão cancelada.", 4000);
+            networkMonitor.warning("Verificação Falhou", "Username incorreto. Exclusão cancelada.", 4000);
             return;
         }
 
         const senha = prompt("Digite sua senha para confirmar a exclusão:");
 
         if (!senha) {
-            networkMonitor.info("INFO", "Senha não fornecida. Exclusão cancelada.", 4000);
+            networkMonitor.info("Cancelado", "Senha não fornecida. Exclusão cancelada.", 4000);
             return;
         }
 
@@ -275,16 +320,26 @@ document.addEventListener("DOMContentLoaded", async () => {
             const data = await response.json();
 
             if (response.ok) {
-                networkMonitor.success("Exclusão concluída", "Conta excluída com sucesso. Você será redirecionado para a página inicial.", 4000);
-                auth.logout();
+                networkMonitor.success(
+                    "Conta Excluída",
+                    "Sua conta foi excluída com sucesso. Você será redirecionado para a página inicial.",
+                    5000
+                );
+                
+                setTimeout(() => {
+                    auth.logout();
+                }, 5000);
             } else {
-                networkMonitor.error("ERRO", data.error || "Erro ao excluir conta", 6000);
                 throw new Error(data.error || "Erro ao excluir conta");
             }
 
         } catch (error) {
             console.error("Erro ao excluir conta:", error);
-            networkMonitor.error("ERRO", error.message || window.CONFIG.ERRORS.NETWORK, 6000);
+            networkMonitor.error(
+                "Erro ao Excluir Conta",
+                error.message || window.CONFIG.ERRORS.NETWORK,
+                6000
+            );
             btnDeleteAccount.disabled = false;
             btnDeleteAccount.textContent = "Excluir Conta Permanentemente";
             btnDeleteAccount.setAttribute('aria-busy', 'false');
