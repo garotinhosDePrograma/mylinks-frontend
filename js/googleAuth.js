@@ -142,7 +142,7 @@ const googleAuth = {
             if (customButton) {
                 customButton.addEventListener('click', async (e) => {
                     e.preventDefault();
-                    await this.loginWithRedirect();
+                    alert("Botão desativado.");
                 });
             } else {
                 if (onError) onError(new Error('Falha ao criar botão'));
