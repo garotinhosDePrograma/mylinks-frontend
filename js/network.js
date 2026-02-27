@@ -487,7 +487,7 @@ class NetworkMonitor {
         }
     }
 
-    success(title, message, duration = 4000) {
+    /* success(title, message, duration = 4000) {
         this.showNotification({
             title,
             message,
@@ -525,7 +525,7 @@ class NetworkMonitor {
             duration,
             icon: 'ℹ️'
         });
-    }
+    } */
 }
 
 window.networkMonitor = new NetworkMonitor();
